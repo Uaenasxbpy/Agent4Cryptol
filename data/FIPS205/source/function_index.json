@@ -1,0 +1,204 @@
+{
+  "functions": [
+    {
+      "function_id": "alg_001_gen_len2",
+      "name": "gen_len2(n, lgw)",
+      "label": "Algorithm 1",
+      "page_start": 10,
+      "page_end": 10,
+      "file": "functions/alg_001_gen_len2.json"
+    },
+    {
+      "function_id": "alg_002_to_int",
+      "name": "toInt(X, n)",
+      "label": "Algorithm 2",
+      "page_start": 15,
+      "page_end": 15,
+      "file": "functions/alg_002_to_int.json"
+    },
+    {
+      "function_id": "alg_003_to_byte",
+      "name": "toByte(x, n)",
+      "label": "Algorithm 3",
+      "page_start": 15,
+      "page_end": 15,
+      "file": "functions/alg_003_to_byte.json"
+    },
+    {
+      "function_id": "alg_004_base_2b",
+      "name": "base_2b(X, b, out_len)",
+      "label": "Algorithm 4",
+      "page_start": 16,
+      "page_end": 16,
+      "file": "functions/alg_004_base_2b.json"
+    },
+    {
+      "function_id": "alg_005_chain",
+      "name": "chain(X, i, s, PK.seed, ADRS)",
+      "label": "Algorithm 5",
+      "page_start": 18,
+      "page_end": 18,
+      "file": "functions/alg_005_chain.json"
+    },
+    {
+      "function_id": "alg_006_wots_pk_gen",
+      "name": "wots_pkGen(SK.seed, PK.seed, ADRS)",
+      "label": "Algorithm 6",
+      "page_start": 18,
+      "page_end": 18,
+      "file": "functions/alg_006_wots_pk_gen.json"
+    },
+    {
+      "function_id": "alg_007_wots_sign",
+      "name": "wots_sign(M, SK.seed, PK.seed, ADRS)",
+      "label": "Algorithm 7",
+      "page_start": 20,
+      "page_end": 20,
+      "file": "functions/alg_007_wots_sign.json"
+    },
+    {
+      "function_id": "alg_008_wots_pk_from_sig",
+      "name": "wots_pkFromSig(sig, M, PK.seed, ADRS)",
+      "label": "Algorithm 8",
+      "page_start": 21,
+      "page_end": 21,
+      "file": "functions/alg_008_wots_pk_from_sig.json"
+    },
+    {
+      "function_id": "alg_009_xmss_node",
+      "name": "xmss_node(SK.seed, i, z, PK.seed, ADRS)",
+      "label": "Algorithm 9",
+      "page_start": 23,
+      "page_end": 23,
+      "file": "functions/alg_009_xmss_node.json"
+    },
+    {
+      "function_id": "alg_010_xmss_sign",
+      "name": "xmss_sign(M, SK.seed, idx, PK.seed, ADRS)",
+      "label": "Algorithm 10",
+      "page_start": 24,
+      "page_end": 24,
+      "file": "functions/alg_010_xmss_sign.json"
+    },
+    {
+      "function_id": "alg_011_xmss_pk_from_sig",
+      "name": "xmss_pkFromSig(idx, SIG_XMSS, M, PK.seed, ADRS)",
+      "label": "Algorithm 11",
+      "page_start": 25,
+      "page_end": 25,
+      "file": "functions/alg_011_xmss_pk_from_sig.json"
+    },
+    {
+      "function_id": "alg_012_ht_sign",
+      "name": "ht_sign(M, SK.seed, PK.seed, idxtree, idxleaf)",
+      "label": "Algorithm 12",
+      "page_start": 27,
+      "page_end": 27,
+      "file": "functions/alg_012_ht_sign.json"
+    },
+    {
+      "function_id": "alg_013_ht_verify",
+      "name": "ht_verify(M, SIG_HT, PK.seed, idxtree, idxleaf, PK.root)",
+      "label": "Algorithm 13",
+      "page_start": 28,
+      "page_end": 28,
+      "file": "functions/alg_013_ht_verify.json"
+    },
+    {
+      "function_id": "alg_014_fors_sk_gen",
+      "name": "fors_skGen(SK.seed, PK.seed, ADRS, idx)",
+      "label": "Algorithm 14",
+      "page_start": 29,
+      "page_end": 29,
+      "file": "functions/alg_014_fors_sk_gen.json"
+    },
+    {
+      "function_id": "alg_015_fors_node",
+      "name": "fors_node(SK.seed, i, z, PK.seed, ADRS)",
+      "label": "Algorithm 15",
+      "page_start": 30,
+      "page_end": 30,
+      "file": "functions/alg_015_fors_node.json"
+    },
+    {
+      "function_id": "alg_016_fors_sign",
+      "name": "fors_sign(md, SK.seed, PK.seed, ADRS)",
+      "label": "Algorithm 16",
+      "page_start": 31,
+      "page_end": 31,
+      "file": "functions/alg_016_fors_sign.json"
+    },
+    {
+      "function_id": "alg_017_fors_pk_from_sig",
+      "name": "fors_pkFromSig(SIG_FORS, md, PK.seed, ADRS)",
+      "label": "Algorithm 17",
+      "page_start": 32,
+      "page_end": 32,
+      "file": "functions/alg_017_fors_pk_from_sig.json"
+    },
+    {
+      "function_id": "alg_018_slh_keygen_internal",
+      "name": "slh_keygen_internal(SK.seed, SK.prf, PK.seed)",
+      "label": "Algorithm 18",
+      "page_start": 34,
+      "page_end": 34,
+      "file": "functions/alg_018_slh_keygen_internal.json"
+    },
+    {
+      "function_id": "alg_019_slh_sign_internal",
+      "name": "slh_sign_internal(M, SK, addrnd)",
+      "label": "Algorithm 19",
+      "page_start": 35,
+      "page_end": 35,
+      "file": "functions/alg_019_slh_sign_internal.json"
+    },
+    {
+      "function_id": "alg_020_slh_verify_internal",
+      "name": "slh_verify_internal(M, SIG, PK)",
+      "label": "Algorithm 20",
+      "page_start": 36,
+      "page_end": 36,
+      "file": "functions/alg_020_slh_verify_internal.json"
+    },
+    {
+      "function_id": "alg_021_slh_keygen",
+      "name": "slh_keygen()",
+      "label": "Algorithm 21",
+      "page_start": 37,
+      "page_end": 37,
+      "file": "functions/alg_021_slh_keygen.json"
+    },
+    {
+      "function_id": "alg_022_slh_sign",
+      "name": "slh_sign(M, ctx, SK)",
+      "label": "Algorithm 22",
+      "page_start": 39,
+      "page_end": 39,
+      "file": "functions/alg_022_slh_sign.json"
+    },
+    {
+      "function_id": "alg_023_hash_slh_sign",
+      "name": "hash_slh_sign(M, ctx, PH, SK)",
+      "label": "Algorithm 23",
+      "page_start": 40,
+      "page_end": 40,
+      "file": "functions/alg_023_hash_slh_sign.json"
+    },
+    {
+      "function_id": "alg_024_slh_verify",
+      "name": "slh_verify(M, SIG, ctx, PK)",
+      "label": "Algorithm 24",
+      "page_start": 41,
+      "page_end": 41,
+      "file": "functions/alg_024_slh_verify.json"
+    },
+    {
+      "function_id": "alg_025_hash_slh_verify",
+      "name": "hash_slh_verify(M, SIG, ctx, PH, PK)",
+      "label": "Algorithm 25",
+      "page_start": 42,
+      "page_end": 42,
+      "file": "functions/alg_025_hash_slh_verify.json"
+    }
+  ]
+}

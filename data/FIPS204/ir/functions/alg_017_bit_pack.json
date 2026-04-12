@@ -1,0 +1,38 @@
+{
+  "function_id": "alg_017_bit_pack",
+  "name": "BitPack",
+  "label": "Algorithm 17",
+  "page_start": 30,
+  "page_end": 30,
+  "inputs": [
+    {
+      "name": "w",
+      "type": "poly",
+      "description": "polynomial"
+    },
+    {
+      "name": "a",
+      "type": "int",
+      "description": "lower magnitude bound"
+    },
+    {
+      "name": "b",
+      "type": "int",
+      "description": "upper bound"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "z",
+      "type": "byte_array",
+      "description": "encoded bytes"
+    }
+  ],
+  "body_raw": [
+    "𝑧 ← () ▷ set 𝑧 to the empty bit string",
+    "for 𝑖 from 0 to 255 do",
+    "𝑧 ← 𝑧||IntegerToBits(𝑏 − 𝑤𝑖, bitlen (𝑎 + 𝑏))",
+    "end for",
+    "return BitsToBytes(𝑧) SimpleBitUnpack and BitUnpack are used to decode the byte strings produced by the above functions. For some choices of 𝑎 and 𝑏, there exist malformed byte strings that will cause SimpleBitUnpack and BitUnpack to output polynomials whose coefficients are not in the ranges [0, 𝑏] and [−𝑎, 𝑏], respectively. This can be a concern when running SimpleBitUnpack and BitUnpack on inputs that may come from an untrusted source."
+  ]
+}

@@ -1,0 +1,15 @@
+Your previous fix did not resolve the issue. The code you returned was compiled and got a new error (repair attempt $retry_count).
+
+==== Compiler error ====
+$compile_error
+
+==== Full compiler output ====
+$compile_output
+
+==== Failing code (your previous output) ====
+```cryptol
+$cryptol_code
+```
+
+Think about what you tried last time and why it did not work. Then apply a materially different fix strategy.
+Output exactly one ```cryptol``` code block containing the full corrected module.

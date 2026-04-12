@@ -1,0 +1,54 @@
+{
+  "function_id": "alg_008_wots_pk_from_sig",
+  "name": "wots_pkFromSig(sig, M, PK.seed, ADRS)",
+  "label": "Algorithm 8",
+  "page_start": 21,
+  "page_end": 21,
+  "inputs": [
+    {
+      "name": "sig",
+      "type": "byte_array",
+      "description": "WOTS+ signature"
+    },
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "byte_array",
+      "description": "address of WOTS+ key"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "pksig",
+      "type": "byte_array",
+      "description": "derived WOTS+ public key"
+    }
+  ],
+  "body_raw": [
+    "csum ← 0",
+    "msg ← base_2b(M, lgw, len1)",
+    "for i from 0 to len1 - 1 do",
+    "  csum ← csum + w - 1 - msg[i]",
+    "end for",
+    "csum ← csum ≪ ((8 - ((len2 * lgw) mod 8)) mod 8)",
+    "msg ← msg ∥ base_2b(toByte(csum, ceil(len2*lgw/8)), lgw, len2)",
+    "for i from 0 to len - 1 do",
+    "  ADRS.setChainAddress(i)",
+    "  tmp[i] ← chain(sig[i], msg[i], w - 1 - msg[i], PK.seed, ADRS)",
+    "end for",
+    "wotspkADRS ← ADRS",
+    "wotspkADRS.setTypeAndClear(WOTS_PK)",
+    "wotspkADRS.setKeyPairAddress(ADRS.getKeyPairAddress())",
+    "pksig ← T_len(PK.seed, wotspkADRS, tmp)",
+    "return pksig"
+  ]
+}

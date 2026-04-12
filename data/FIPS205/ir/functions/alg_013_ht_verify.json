@@ -1,0 +1,65 @@
+{
+  "function_id": "alg_013_ht_verify",
+  "name": "ht_verify(M, SIG_HT, PK.seed, idxtree, idxleaf, PK.root)",
+  "label": "Algorithm 13",
+  "page_start": 28,
+  "page_end": 28,
+  "inputs": [
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "SIG_HT",
+      "type": "byte_array",
+      "description": "hypertree signature"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "idxtree",
+      "type": "int",
+      "description": "tree index"
+    },
+    {
+      "name": "idxleaf",
+      "type": "int",
+      "description": "leaf index"
+    },
+    {
+      "name": "PK_root",
+      "type": "byte_array",
+      "description": "hypertree public key root"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "bool",
+      "description": "verification result"
+    }
+  ],
+  "body_raw": [
+    "ADRS ← toByte(0, 32)",
+    "ADRS.setTreeAddress(idxtree)",
+    "SIGtmp ← SIG_HT.getXMSSSignature(0)",
+    "node ← xmss_pkFromSig(idxleaf, SIGtmp, M, PK.seed, ADRS)",
+    "for j from 1 to d - 1 do",
+    "  idxleaf ← idxtree mod 2^h′",
+    "  idxtree ← idxtree ≫ h′",
+    "  ADRS.setLayerAddress(j)",
+    "  ADRS.setTreeAddress(idxtree)",
+    "  SIGtmp ← SIG_HT.getXMSSSignature(j)",
+    "  node ← xmss_pkFromSig(idxleaf, SIGtmp, node, PK.seed, ADRS)",
+    "end for",
+    "if node = PK.root then",
+    "  return true",
+    "else",
+    "  return false",
+    "end if"
+  ]
+}

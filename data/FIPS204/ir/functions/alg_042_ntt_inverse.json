@@ -1,0 +1,48 @@
+{
+  "function_id": "alg_042_ntt_inverse",
+  "name": "NTT_inverse",
+  "label": "Algorithm 42",
+  "page_start": 44,
+  "page_end": 44,
+  "inputs": [
+    {
+      "name": "w_hat",
+      "type": "ntt_poly",
+      "description": "NTT representation"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "w",
+      "type": "poly",
+      "description": "inverse NTT polynomial"
+    }
+  ],
+  "body_raw": [
+    "for j from 0 to 255 do",
+    "w_j <- w_hat[j]",
+    "end for",
+    "m <- 256",
+    "len <- 1",
+    "while len < 256 do",
+    "start <- 0",
+    "while start < 256 do",
+    "m <- m - 1",
+    "z <- -zetas[m]",
+    "for j from start to start + len - 1 do",
+    "t <- w_j",
+    "w_j <- (t + w_(j+len)) mod q",
+    "w_(j+len) <- (t - w_(j+len)) mod q",
+    "w_(j+len) <- (z * w_(j+len)) mod q",
+    "end for",
+    "start <- start + 2 * len",
+    "end while",
+    "len <- 2 * len",
+    "end while",
+    "f <- 8347681",
+    "for j from 0 to 255 do",
+    "w_j <- (f * w_j) mod q",
+    "end for",
+    "return w"
+  ]
+}

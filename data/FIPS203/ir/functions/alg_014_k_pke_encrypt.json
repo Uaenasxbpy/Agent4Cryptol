@@ -1,0 +1,57 @@
+{
+  "function_id": "alg_014_k_pke_encrypt",
+  "name": "K-PKE.Encrypt",
+  "label": "Algorithm 14",
+  "page_start": 30,
+  "page_end": 30,
+  "inputs": [
+    {
+      "name": "ekPKE",
+      "type": "byte_array",
+      "description": "Encryption key of length 384k + 32 bytes"
+    },
+    {
+      "name": "m",
+      "type": "byte_array",
+      "description": "32-byte plaintext message"
+    },
+    {
+      "name": "r",
+      "type": "byte_array",
+      "description": "32-byte randomness"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "c",
+      "type": "byte_array",
+      "description": "Ciphertext of length 32*(d_u*k + d_v) bytes"
+    }
+  ],
+  "body_raw": [
+    "N ← 0",
+    "t_hat ← ByteDecode12(ekPKE[0 : 384k])",
+    "rho ← ekPKE[384k : 384k + 32]",
+    "for (i ← 0; i < k; i ++)",
+    "    for (j ← 0; j < k; j ++)",
+    "        A_hat[i,j] ← SampleNTT(rho || j || i)",
+    "    end for",
+    "end for",
+    "for (i ← 0; i < k; i ++)",
+    "    y[i] ← SamplePolyCBD_eta1(PRF_eta1(r, N))",
+    "    N ← N + 1",
+    "end for",
+    "for (i ← 0; i < k; i ++)",
+    "    e1[i] ← SamplePolyCBD_eta2(PRF_eta2(r, N))",
+    "    N ← N + 1",
+    "end for",
+    "e2 ← SamplePolyCBD_eta2(PRF_eta2(r, N))",
+    "y_hat ← NTT(y)",
+    "u ← NTT_inverse(A_hat_transpose ∘ y_hat) + e1",
+    "mu ← Decompress1(ByteDecode1(m))",
+    "v ← NTT_inverse(t_hat_transpose ∘ y_hat) + e2 + mu",
+    "c1 ← ByteEncode_d_u(Compress_d_u(u))",
+    "c2 ← ByteEncode_d_v(Compress_d_v(v))",
+    "return c ← (c1 || c2)"
+  ]
+}

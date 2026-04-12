@@ -1,0 +1,30 @@
+{
+  "function_id": "alg_043_bit_rev8",
+  "name": "BitRev8",
+  "label": "Algorithm 43",
+  "page_start": 44,
+  "page_end": 44,
+  "inputs": [
+    {
+      "name": "m",
+      "type": "int",
+      "description": "byte value"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "r",
+      "type": "int",
+      "description": "bit-reversed byte"
+    }
+  ],
+  "body_raw": [
+    "b <- IntegerToBits(m, 8)",
+    "b_rev <- (0, ..., 0)",
+    "for i from 0 to 7 do",
+    "b_rev[i] <- b[7 - i]",
+    "end for",
+    "r <- BitsToInteger(b_rev, 8)",
+    "return r"
+  ]
+}

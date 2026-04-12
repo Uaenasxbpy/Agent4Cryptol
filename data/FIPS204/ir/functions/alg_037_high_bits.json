@@ -1,0 +1,25 @@
+{
+  "function_id": "alg_037_high_bits",
+  "name": "HighBits",
+  "label": "Algorithm 37",
+  "page_start": 40,
+  "page_end": 40,
+  "inputs": [
+    {
+      "name": "r",
+      "type": "int",
+      "description": "input value"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "r1",
+      "type": "int",
+      "description": "high bits"
+    }
+  ],
+  "body_raw": [
+    "(𝑟1, 𝑟0) ← Decompose(𝑟)",
+    "return 𝑟1"
+  ]
+}

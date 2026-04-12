@@ -1,0 +1,33 @@
+{
+  "function_id": "alg_022_pk_encode",
+  "name": "pkEncode",
+  "label": "Algorithm 22",
+  "page_start": 33,
+  "page_end": 33,
+  "inputs": [
+    {
+      "name": "rho",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "t1",
+      "type": "vector",
+      "description": "compressed polynomial vector"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "pk",
+      "type": "byte_array",
+      "description": "public key"
+    }
+  ],
+  "body_raw": [
+    "𝑝𝑘 ← 𝜌",
+    "for 𝑖 from 0 to 𝑘 − 1 do",
+    "𝑝𝑘 ← 𝑝𝑘 || SimpleBitPack (𝐭1[𝑖], 2bitlen (𝑞−1)−𝑑 − 1)",
+    "end for",
+    "return 𝑝𝑘"
+  ]
+}

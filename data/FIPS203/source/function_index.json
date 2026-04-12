@@ -1,0 +1,172 @@
+{
+  "functions": [
+    {
+      "function_id": "alg_001_for_example",
+      "name": "ForExample",
+      "label": "Algorithm 1",
+      "page_start": 8,
+      "page_end": 8,
+      "file": "alg_001_for_example.json"
+    },
+    {
+      "function_id": "alg_002_shake128example",
+      "name": "SHAKE128example",
+      "label": "Algorithm 2",
+      "page_start": 19,
+      "page_end": 19,
+      "file": "alg_002_shake128example.json"
+    },
+    {
+      "function_id": "alg_003_bits_to_bytes",
+      "name": "BitsToBytes",
+      "label": "Algorithm 3",
+      "page_start": 20,
+      "page_end": 20,
+      "file": "alg_003_bits_to_bytes.json"
+    },
+    {
+      "function_id": "alg_004_bytes_to_bits",
+      "name": "BytesToBits",
+      "label": "Algorithm 4",
+      "page_start": 20,
+      "page_end": 20,
+      "file": "alg_004_bytes_to_bits.json"
+    },
+    {
+      "function_id": "alg_005_byte_encode_d",
+      "name": "ByteEncode_d",
+      "label": "Algorithm 5",
+      "page_start": 22,
+      "page_end": 22,
+      "file": "alg_005_byte_encode_d.json"
+    },
+    {
+      "function_id": "alg_006_byte_decode_d",
+      "name": "ByteDecode_d",
+      "label": "Algorithm 6",
+      "page_start": 22,
+      "page_end": 22,
+      "file": "alg_006_byte_decode_d.json"
+    },
+    {
+      "function_id": "alg_007_sample_ntt",
+      "name": "SampleNTT",
+      "label": "Algorithm 7",
+      "page_start": 23,
+      "page_end": 23,
+      "file": "alg_007_sample_ntt.json"
+    },
+    {
+      "function_id": "alg_008_sample_poly_cbd_eta",
+      "name": "SamplePolyCBD_eta",
+      "label": "Algorithm 8",
+      "page_start": 23,
+      "page_end": 23,
+      "file": "alg_008_sample_poly_cbd_eta.json"
+    },
+    {
+      "function_id": "alg_009_ntt",
+      "name": "NTT",
+      "label": "Algorithm 9",
+      "page_start": 26,
+      "page_end": 26,
+      "file": "alg_009_ntt.json"
+    },
+    {
+      "function_id": "alg_010_ntt_inverse",
+      "name": "NTT_inverse",
+      "label": "Algorithm 10",
+      "page_start": 26,
+      "page_end": 26,
+      "file": "alg_010_ntt_inverse.json"
+    },
+    {
+      "function_id": "alg_011_multiply_ntts",
+      "name": "MultiplyNTTs",
+      "label": "Algorithm 11",
+      "page_start": 27,
+      "page_end": 27,
+      "file": "alg_011_multiply_ntts.json"
+    },
+    {
+      "function_id": "alg_012_base_case_multiply",
+      "name": "BaseCaseMultiply",
+      "label": "Algorithm 12",
+      "page_start": 27,
+      "page_end": 27,
+      "file": "alg_012_base_case_multiply.json"
+    },
+    {
+      "function_id": "alg_013_k_pke_keygen",
+      "name": "K-PKE.KeyGen",
+      "label": "Algorithm 13",
+      "page_start": 29,
+      "page_end": 29,
+      "file": "alg_013_k_pke_keygen.json"
+    },
+    {
+      "function_id": "alg_014_k_pke_encrypt",
+      "name": "K-PKE.Encrypt",
+      "label": "Algorithm 14",
+      "page_start": 30,
+      "page_end": 30,
+      "file": "alg_014_k_pke_encrypt.json"
+    },
+    {
+      "function_id": "alg_015_k_pke_decrypt",
+      "name": "K-PKE.Decrypt",
+      "label": "Algorithm 15",
+      "page_start": 31,
+      "page_end": 31,
+      "file": "alg_015_k_pke_decrypt.json"
+    },
+    {
+      "function_id": "alg_016_ml_kem_keygen_internal",
+      "name": "ML-KEM.KeyGen_internal",
+      "label": "Algorithm 16",
+      "page_start": 32,
+      "page_end": 32,
+      "file": "alg_016_ml_kem_keygen_internal.json"
+    },
+    {
+      "function_id": "alg_017_ml_kem_encaps_internal",
+      "name": "ML-KEM.Encaps_internal",
+      "label": "Algorithm 17",
+      "page_start": 33,
+      "page_end": 33,
+      "file": "alg_017_ml_kem_encaps_internal.json"
+    },
+    {
+      "function_id": "alg_018_ml_kem_decaps_internal",
+      "name": "ML-KEM.Decaps_internal",
+      "label": "Algorithm 18",
+      "page_start": 34,
+      "page_end": 34,
+      "file": "alg_018_ml_kem_decaps_internal.json"
+    },
+    {
+      "function_id": "alg_019_ml_kem_keygen",
+      "name": "ML-KEM.KeyGen",
+      "label": "Algorithm 19",
+      "page_start": 35,
+      "page_end": 35,
+      "file": "alg_019_ml_kem_keygen.json"
+    },
+    {
+      "function_id": "alg_020_ml_kem_encaps",
+      "name": "ML-KEM.Encaps",
+      "label": "Algorithm 20",
+      "page_start": 37,
+      "page_end": 37,
+      "file": "alg_020_ml_kem_encaps.json"
+    },
+    {
+      "function_id": "alg_021_ml_kem_decaps",
+      "name": "ML-KEM.Decaps",
+      "label": "Algorithm 21",
+      "page_start": 38,
+      "page_end": 38,
+      "file": "alg_021_ml_kem_decaps.json"
+    }
+  ]
+}

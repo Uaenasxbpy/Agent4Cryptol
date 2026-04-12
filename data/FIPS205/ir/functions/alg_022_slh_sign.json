@@ -1,0 +1,43 @@
+{
+  "function_id": "alg_022_slh_sign",
+  "name": "slh_sign(M, ctx, SK)",
+  "label": "Algorithm 22",
+  "page_start": 39,
+  "page_end": 39,
+  "inputs": [
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "ctx",
+      "type": "byte_array",
+      "description": "context string"
+    },
+    {
+      "name": "SK",
+      "type": "tuple",
+      "description": "private key"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "SIG",
+      "type": "byte_array",
+      "description": "pure SLH-DSA signature"
+    }
+  ],
+  "body_raw": [
+    "if |ctx| > 255 then",
+    "  return ⊥",
+    "end if",
+    "addrnd ←$ B^n",
+    "if addrnd = NULL then",
+    "  return ⊥",
+    "end if",
+    "M′ ← toByte(0, 1) ∥ toByte(|ctx|, 1) ∥ ctx ∥ M",
+    "SIG ← slh_sign_internal(M′, SK, addrnd)",
+    "return SIG"
+  ]
+}

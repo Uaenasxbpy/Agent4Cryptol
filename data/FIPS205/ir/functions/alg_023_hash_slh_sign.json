@@ -1,0 +1,55 @@
+{
+  "function_id": "alg_023_hash_slh_sign",
+  "name": "hash_slh_sign(M, ctx, PH, SK)",
+  "label": "Algorithm 23",
+  "page_start": 40,
+  "page_end": 40,
+  "inputs": [
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "ctx",
+      "type": "byte_array",
+      "description": "context string"
+    },
+    {
+      "name": "PH",
+      "type": "string",
+      "description": "pre-hash function identifier"
+    },
+    {
+      "name": "SK",
+      "type": "tuple",
+      "description": "private key"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "SIG",
+      "type": "byte_array",
+      "description": "pre-hash SLH-DSA signature"
+    }
+  ],
+  "body_raw": [
+    "if |ctx| > 255 then",
+    "  return ⊥",
+    "end if",
+    "addrnd ←$ B^n",
+    "if addrnd = NULL then",
+    "  return ⊥",
+    "end if",
+    "switch PH do",
+    "  case SHA-256: OID ← toByte(0x0609608648016503040201, 11); PHM ← SHA-256(M)",
+    "  case SHA-512: OID ← toByte(0x0609608648016503040203, 11); PHM ← SHA-512(M)",
+    "  case SHAKE128: OID ← toByte(0x060960864801650304020B, 11); PHM ← SHAKE128(M, 256)",
+    "  case SHAKE256: OID ← toByte(0x060960864801650304020C, 11); PHM ← SHAKE256(M, 512)",
+    "  case … : …",
+    "end switch",
+    "M′ ← toByte(1, 1) ∥ toByte(|ctx|, 1) ∥ ctx ∥ OID ∥ PHM",
+    "SIG ← slh_sign_internal(M′, SK, addrnd)",
+    "return SIG"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "function_id": "alg_001_gen_len2",
+  "name": "gen_len2(n, lgw)",
+  "label": "Algorithm 1",
+  "page_start": 10,
+  "page_end": 10,
+  "inputs": [
+    {
+      "name": "n",
+      "type": "int",
+      "description": "security parameter in bytes"
+    },
+    {
+      "name": "lgw",
+      "type": "int",
+      "description": "bits per hash chain"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "len2",
+      "type": "int",
+      "description": "computed checksum chain count"
+    }
+  ],
+  "body_raw": [
+    "w ← 2^lgw",
+    "len1 ← floor((8*n + lgw - 1) / lgw)",
+    "max_checksum = len1 * (w - 1)",
+    "len2 ← 1",
+    "capacity ← w",
+    "while capacity ≤ max_checksum do",
+    "  len2 ← len2 + 1",
+    "  capacity ← capacity * w",
+    "end while",
+    "return len2"
+  ]
+}

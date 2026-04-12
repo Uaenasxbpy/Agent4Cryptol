@@ -1,0 +1,31 @@
+{
+  "function_id": "alg_035_power2_round",
+  "name": "Power2Round",
+  "label": "Algorithm 35",
+  "page_start": 40,
+  "page_end": 40,
+  "inputs": [
+    {
+      "name": "r",
+      "type": "int",
+      "description": "input value"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "r1",
+      "type": "int",
+      "description": "high bits"
+    },
+    {
+      "name": "r0",
+      "type": "int",
+      "description": "low bits"
+    }
+  ],
+  "body_raw": [
+    "r_plus <- r mod q",
+    "r0 <- r_plus mod±2^d",
+    "return ((r_plus - r0) / 2^d, r0)"
+  ]
+}

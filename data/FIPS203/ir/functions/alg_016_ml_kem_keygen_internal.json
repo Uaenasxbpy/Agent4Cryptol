@@ -1,0 +1,37 @@
+{
+  "function_id": "alg_016_ml_kem_keygen_internal",
+  "name": "ML-KEM.KeyGen_internal",
+  "label": "Algorithm 16",
+  "page_start": 32,
+  "page_end": 32,
+  "inputs": [
+    {
+      "name": "d",
+      "type": "byte_array",
+      "description": "32-byte random seed"
+    },
+    {
+      "name": "z",
+      "type": "byte_array",
+      "description": "32-byte random seed for implicit rejection"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "ek",
+      "type": "byte_array",
+      "description": "Encapsulation key of length 384k + 32 bytes"
+    },
+    {
+      "name": "dk",
+      "type": "byte_array",
+      "description": "Decapsulation key of length 768k + 96 bytes"
+    }
+  ],
+  "body_raw": [
+    "(ekPKE, dkPKE) ← K-PKE.KeyGen(d)",
+    "ek ← ekPKE",
+    "dk ← (dkPKE || ek || H(ek) || z)",
+    "return (ek, dk)"
+  ]
+}

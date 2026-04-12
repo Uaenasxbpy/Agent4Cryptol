@@ -1,0 +1,30 @@
+{
+  "function_id": "alg_032_expand_a",
+  "name": "ExpandA",
+  "label": "Algorithm 32",
+  "page_start": 38,
+  "page_end": 38,
+  "inputs": [
+    {
+      "name": "rho",
+      "type": "byte_array",
+      "description": "seed"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "A_hat",
+      "type": "matrix",
+      "description": "sampled NTT matrix"
+    }
+  ],
+  "body_raw": [
+    "for 𝑟 from 0 to 𝑘 − 1 do",
+    "for 𝑠 from 0 to ℓ − 1 do",
+    "𝜌′ ← 𝜌||IntegerToBytes(𝑠, 1)||IntegerToBytes(𝑟, 1) ̂",
+    "𝐀[𝑟, 𝑠] ← RejNTTPoly(𝜌′) ▷ seed 𝜌′ depends on 𝑠 and 𝑟",
+    "end for",
+    "end for",
+    "return 𝐀̂"
+  ]
+}

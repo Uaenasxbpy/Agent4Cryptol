@@ -1,0 +1,31 @@
+{
+  "function_id": "alg_039_make_hint",
+  "name": "MakeHint",
+  "label": "Algorithm 39",
+  "page_start": 41,
+  "page_end": 41,
+  "inputs": [
+    {
+      "name": "z",
+      "type": "int",
+      "description": "adjustment value"
+    },
+    {
+      "name": "r",
+      "type": "int",
+      "description": "input value"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "h",
+      "type": "bool",
+      "description": "hint bit"
+    }
+  ],
+  "body_raw": [
+    "𝑟1 ← HighBits(𝑟)",
+    "𝑣1 ← HighBits(𝑟 + 𝑧)",
+    "return [[𝑟1 ≠ 𝑣1]]"
+  ]
+}

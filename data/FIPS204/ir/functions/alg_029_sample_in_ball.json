@@ -1,0 +1,36 @@
+{
+  "function_id": "alg_029_sample_in_ball",
+  "name": "SampleInBall",
+  "label": "Algorithm 29",
+  "page_start": 36,
+  "page_end": 36,
+  "inputs": [
+    {
+      "name": "rho",
+      "type": "byte_array",
+      "description": "seed"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "c",
+      "type": "poly",
+      "description": "sampled polynomial"
+    }
+  ],
+  "body_raw": [
+    "𝑐 ←",
+    "ctx ← H.Init()",
+    "ctx ← H.Absorb(ctx, 𝜌)",
+    "(ctx, 𝑠) ← H.Squeeze(ctx, 8)",
+    "ℎ ← BytesToBits(𝑠) ▷ ℎ is a bit string of length",
+    "for 𝑖 from 256 − 𝜏 to 255 do",
+    "(ctx, 𝑗) ← H.Squeeze(ctx, 1)",
+    "while 𝑗 > 𝑖 do ▷ rejection sampling in {0, … , 𝑖}",
+    "(ctx, 𝑗) ← H.Squeeze(ctx, 1)",
+    "end while ▷ 𝑗 is a pseudorandom byte that is ≤ 𝑖",
+    "𝑐𝑖 ← 𝑐𝑗 𝑐𝑗 ← (−1)ℎ[𝑖+𝜏−256]",
+    "end for",
+    "return 𝑐 Algorithms 30–34 are the pseudorandom procedures RejNTTPoly, RejBoundedPoly, ExpandA, ExpandS, and ExpandMask. Each generates elements of 𝑅 or 𝑇𝑞 under different input and output conditions. RejNTTPoly and ExpandA make use of the more efficient XOF G, whereas the other three procedures use the XOF H. The procedure ExpandMask (Algorithm 34) generates a polynomial vector 𝐲 in 𝑅𝑘 that disguises the secret key in the ML-DSA.Sign_internal procedure (Algorithm 7). In addition to the seed 𝜌, ExpandMask also accepts an integer input 𝜇 that is incorporated into the pseudorandom procedure that generates 𝐬."
+  ]
+}

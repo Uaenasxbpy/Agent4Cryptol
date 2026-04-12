@@ -1,0 +1,38 @@
+{
+  "function_id": "alg_010_ntt_inverse",
+  "name": "NTT_inverse",
+  "label": "Algorithm 10",
+  "page_start": 26,
+  "page_end": 26,
+  "inputs": [
+    {
+      "name": "f_hat",
+      "type": "poly",
+      "description": "NTT representation as 256-element array modulo q"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "f",
+      "type": "poly",
+      "description": "Inverse NTT polynomial as 256-element array modulo q"
+    }
+  ],
+  "body_raw": [
+    "f ← f_hat",
+    "i ← 127",
+    "for (len ← 2; len ≤ 128; len ← 2 ⋅ len)",
+    "    for (start ← 0; start < 256; start ← start + 2 ⋅ len)",
+    "        zeta ← zeta^BitRev7(i) mod q",
+    "        i ← i - 1",
+    "        for (j ← start; j < start + len; j++)",
+    "            t ← f[j]",
+    "            f[j] ← t + f[j + len]",
+    "            f[j + len] ← zeta ⋅ (f[j + len] - t)",
+    "        end for",
+    "    end for",
+    "end for",
+    "f ← f ⋅ 3303 mod q",
+    "return f"
+  ]
+}

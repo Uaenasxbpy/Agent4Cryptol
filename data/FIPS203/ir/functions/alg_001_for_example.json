@@ -1,0 +1,19 @@
+{
+  "function_id": "alg_001_for_example",
+  "name": "ForExample",
+  "label": "Algorithm 1",
+  "page_start": 8,
+  "page_end": 8,
+  "inputs": [],
+  "outputs": [],
+  "body_raw": [
+    "for (i ← 0; i < 10; i ++)",
+    "    A[i] ← i",
+    "end for",
+    "j ← 0",
+    "for (k ← 256; k > 1; k ← k/2)",
+    "    B[j] ← k",
+    "    j ← j + 1",
+    "end for"
+  ]
+}

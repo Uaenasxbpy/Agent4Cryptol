@@ -1,0 +1,43 @@
+{
+  "function_id": "alg_002_ml_dsa_sign",
+  "name": "ML-DSA.Sign",
+  "label": "Algorithm 2",
+  "page_start": 18,
+  "page_end": 18,
+  "inputs": [
+    {
+      "name": "sk",
+      "type": "byte_array",
+      "description": "private key"
+    },
+    {
+      "name": "m",
+      "type": "bit_array",
+      "description": "message"
+    },
+    {
+      "name": "ctx",
+      "type": "byte_array",
+      "description": "context string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "sigma",
+      "type": "byte_array",
+      "description": "signature"
+    }
+  ],
+  "body_raw": [
+    "if |𝑐𝑡𝑥| > 255 then",
+    "return ⊥ ▷ return an error indication if the context string is too long",
+    "end if",
+    "𝑟𝑛𝑑 ← 𝔹32 ▷ for the optional deterministic variant, substitute 𝑟𝑛𝑑 ← {0}32",
+    "if 𝑟𝑛𝑑 = NULL then",
+    "return ⊥ ▷ return an error indication if random bit generation failed",
+    "end if",
+    "𝑀 ′ ← BytesToBits(IntegerToBytes(0, 1) ∥ IntegerToBytes(|𝑐𝑡𝑥|, 1) ∥ 𝑐𝑡𝑥) ∥ 𝑀",
+    "𝜎 ← ML-DSA.Sign_internal(𝑠𝑘, 𝑀 ′, 𝑟𝑛𝑑)",
+    "return 𝜎"
+  ]
+}

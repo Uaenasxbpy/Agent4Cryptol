@@ -1,0 +1,396 @@
+{
+  "functions": [
+    {
+      "function_id": "alg_001_ml_dsa_keygen",
+      "name": "ML-DSA.KeyGen",
+      "label": "Algorithm 1",
+      "page_start": 17,
+      "page_end": 17,
+      "file": "functions/alg_001_ml_dsa_keygen.json"
+    },
+    {
+      "function_id": "alg_002_ml_dsa_sign",
+      "name": "ML-DSA.Sign",
+      "label": "Algorithm 2",
+      "page_start": 18,
+      "page_end": 18,
+      "file": "functions/alg_002_ml_dsa_sign.json"
+    },
+    {
+      "function_id": "alg_003_ml_dsa_verify",
+      "name": "ML-DSA.Verify",
+      "label": "Algorithm 3",
+      "page_start": 18,
+      "page_end": 18,
+      "file": "functions/alg_003_ml_dsa_verify.json"
+    },
+    {
+      "function_id": "alg_004_hashml_dsa_sign",
+      "name": "HashML-DSA.Sign",
+      "label": "Algorithm 4",
+      "page_start": 20,
+      "page_end": 20,
+      "file": "functions/alg_004_hashml_dsa_sign.json"
+    },
+    {
+      "function_id": "alg_005_hashml_dsa_verify",
+      "name": "HashML-DSA.Verify",
+      "label": "Algorithm 5",
+      "page_start": 21,
+      "page_end": 21,
+      "file": "functions/alg_005_hashml_dsa_verify.json"
+    },
+    {
+      "function_id": "alg_006_ml_dsa_keygen_internal",
+      "name": "ML-DSA.KeyGen_internal",
+      "label": "Algorithm 6",
+      "page_start": 23,
+      "page_end": 23,
+      "file": "functions/alg_006_ml_dsa_keygen_internal.json"
+    },
+    {
+      "function_id": "alg_007_ml_dsa_sign_internal",
+      "name": "ML-DSA.Sign_internal",
+      "label": "Algorithm 7",
+      "page_start": 25,
+      "page_end": 25,
+      "file": "functions/alg_007_ml_dsa_sign_internal.json"
+    },
+    {
+      "function_id": "alg_008_ml_dsa_verify_internal",
+      "name": "ML-DSA.Verify_internal",
+      "label": "Algorithm 8",
+      "page_start": 27,
+      "page_end": 27,
+      "file": "functions/alg_008_ml_dsa_verify_internal.json"
+    },
+    {
+      "function_id": "alg_009_integer_to_bits",
+      "name": "IntegerToBits",
+      "label": "Algorithm 9",
+      "page_start": 28,
+      "page_end": 28,
+      "file": "functions/alg_009_integer_to_bits.json"
+    },
+    {
+      "function_id": "alg_010_bits_to_integer",
+      "name": "BitsToInteger",
+      "label": "Algorithm 10",
+      "page_start": 28,
+      "page_end": 28,
+      "file": "functions/alg_010_bits_to_integer.json"
+    },
+    {
+      "function_id": "alg_011_integer_to_bytes",
+      "name": "IntegerToBytes",
+      "label": "Algorithm 11",
+      "page_start": 28,
+      "page_end": 28,
+      "file": "functions/alg_011_integer_to_bytes.json"
+    },
+    {
+      "function_id": "alg_012_bits_to_bytes",
+      "name": "BitsToBytes",
+      "label": "Algorithm 12",
+      "page_start": 29,
+      "page_end": 29,
+      "file": "functions/alg_012_bits_to_bytes.json"
+    },
+    {
+      "function_id": "alg_013_bytes_to_bits",
+      "name": "BytesToBits",
+      "label": "Algorithm 13",
+      "page_start": 29,
+      "page_end": 29,
+      "file": "functions/alg_013_bytes_to_bits.json"
+    },
+    {
+      "function_id": "alg_014_coeff_from_three_bytes",
+      "name": "CoeffFromThreeBytes",
+      "label": "Algorithm 14",
+      "page_start": 29,
+      "page_end": 29,
+      "file": "functions/alg_014_coeff_from_three_bytes.json"
+    },
+    {
+      "function_id": "alg_015_coeff_from_half_byte",
+      "name": "CoeffFromHalfByte",
+      "label": "Algorithm 15",
+      "page_start": 30,
+      "page_end": 30,
+      "file": "functions/alg_015_coeff_from_half_byte.json"
+    },
+    {
+      "function_id": "alg_016_simple_bit_pack",
+      "name": "SimpleBitPack",
+      "label": "Algorithm 16",
+      "page_start": 30,
+      "page_end": 30,
+      "file": "functions/alg_016_simple_bit_pack.json"
+    },
+    {
+      "function_id": "alg_017_bit_pack",
+      "name": "BitPack",
+      "label": "Algorithm 17",
+      "page_start": 30,
+      "page_end": 30,
+      "file": "functions/alg_017_bit_pack.json"
+    },
+    {
+      "function_id": "alg_018_simple_bit_unpack",
+      "name": "SimpleBitUnpack",
+      "label": "Algorithm 18",
+      "page_start": 31,
+      "page_end": 31,
+      "file": "functions/alg_018_simple_bit_unpack.json"
+    },
+    {
+      "function_id": "alg_019_bit_unpack",
+      "name": "BitUnpack",
+      "label": "Algorithm 19",
+      "page_start": 31,
+      "page_end": 31,
+      "file": "functions/alg_019_bit_unpack.json"
+    },
+    {
+      "function_id": "alg_020_hint_bit_pack",
+      "name": "HintBitPack",
+      "label": "Algorithm 20",
+      "page_start": 32,
+      "page_end": 32,
+      "file": "functions/alg_020_hint_bit_pack.json"
+    },
+    {
+      "function_id": "alg_021_hint_bit_unpack",
+      "name": "HintBitUnpack",
+      "label": "Algorithm 21",
+      "page_start": 32,
+      "page_end": 32,
+      "file": "functions/alg_021_hint_bit_unpack.json"
+    },
+    {
+      "function_id": "alg_022_pk_encode",
+      "name": "pkEncode",
+      "label": "Algorithm 22",
+      "page_start": 33,
+      "page_end": 33,
+      "file": "functions/alg_022_pk_encode.json"
+    },
+    {
+      "function_id": "alg_023_pk_decode",
+      "name": "pkDecode",
+      "label": "Algorithm 23",
+      "page_start": 33,
+      "page_end": 33,
+      "file": "functions/alg_023_pk_decode.json"
+    },
+    {
+      "function_id": "alg_024_sk_encode",
+      "name": "skEncode",
+      "label": "Algorithm 24",
+      "page_start": 34,
+      "page_end": 34,
+      "file": "functions/alg_024_sk_encode.json"
+    },
+    {
+      "function_id": "alg_025_sk_decode",
+      "name": "skDecode",
+      "label": "Algorithm 25",
+      "page_start": 34,
+      "page_end": 34,
+      "file": "functions/alg_025_sk_decode.json"
+    },
+    {
+      "function_id": "alg_026_sig_encode",
+      "name": "sigEncode",
+      "label": "Algorithm 26",
+      "page_start": 35,
+      "page_end": 35,
+      "file": "functions/alg_026_sig_encode.json"
+    },
+    {
+      "function_id": "alg_027_sig_decode",
+      "name": "sigDecode",
+      "label": "Algorithm 27",
+      "page_start": 35,
+      "page_end": 35,
+      "file": "functions/alg_027_sig_decode.json"
+    },
+    {
+      "function_id": "alg_028_w1_encode",
+      "name": "w1Encode",
+      "label": "Algorithm 28",
+      "page_start": 35,
+      "page_end": 35,
+      "file": "functions/alg_028_w1_encode.json"
+    },
+    {
+      "function_id": "alg_029_sample_in_ball",
+      "name": "SampleInBall",
+      "label": "Algorithm 29",
+      "page_start": 36,
+      "page_end": 36,
+      "file": "functions/alg_029_sample_in_ball.json"
+    },
+    {
+      "function_id": "alg_030_rej_ntt_poly",
+      "name": "RejNTTPoly",
+      "label": "Algorithm 30",
+      "page_start": 37,
+      "page_end": 37,
+      "file": "functions/alg_030_rej_ntt_poly.json"
+    },
+    {
+      "function_id": "alg_031_rej_bounded_poly",
+      "name": "RejBoundedPoly",
+      "label": "Algorithm 31",
+      "page_start": 37,
+      "page_end": 37,
+      "file": "functions/alg_031_rej_bounded_poly.json"
+    },
+    {
+      "function_id": "alg_032_expand_a",
+      "name": "ExpandA",
+      "label": "Algorithm 32",
+      "page_start": 38,
+      "page_end": 38,
+      "file": "functions/alg_032_expand_a.json"
+    },
+    {
+      "function_id": "alg_033_expand_s",
+      "name": "ExpandS",
+      "label": "Algorithm 33",
+      "page_start": 38,
+      "page_end": 38,
+      "file": "functions/alg_033_expand_s.json"
+    },
+    {
+      "function_id": "alg_034_expand_mask",
+      "name": "ExpandMask",
+      "label": "Algorithm 34",
+      "page_start": 38,
+      "page_end": 38,
+      "file": "functions/alg_034_expand_mask.json"
+    },
+    {
+      "function_id": "alg_035_power2round",
+      "name": "Power2Round",
+      "label": "Algorithm 35",
+      "page_start": 40,
+      "page_end": 40,
+      "file": "functions/alg_035_power2round.json"
+    },
+    {
+      "function_id": "alg_036_decompose",
+      "name": "Decompose",
+      "label": "Algorithm 36",
+      "page_start": 40,
+      "page_end": 40,
+      "file": "functions/alg_036_decompose.json"
+    },
+    {
+      "function_id": "alg_037_high_bits",
+      "name": "HighBits",
+      "label": "Algorithm 37",
+      "page_start": 40,
+      "page_end": 40,
+      "file": "functions/alg_037_high_bits.json"
+    },
+    {
+      "function_id": "alg_038_low_bits",
+      "name": "LowBits",
+      "label": "Algorithm 38",
+      "page_start": 41,
+      "page_end": 41,
+      "file": "functions/alg_038_low_bits.json"
+    },
+    {
+      "function_id": "alg_039_make_hint",
+      "name": "MakeHint",
+      "label": "Algorithm 39",
+      "page_start": 41,
+      "page_end": 41,
+      "file": "functions/alg_039_make_hint.json"
+    },
+    {
+      "function_id": "alg_040_use_hint",
+      "name": "UseHint",
+      "label": "Algorithm 40",
+      "page_start": 41,
+      "page_end": 41,
+      "file": "functions/alg_040_use_hint.json"
+    },
+    {
+      "function_id": "alg_041_ntt",
+      "name": "NTT",
+      "label": "Algorithm 41",
+      "page_start": 43,
+      "page_end": 43,
+      "file": "functions/alg_041_ntt.json"
+    },
+    {
+      "function_id": "alg_042_ntt_inverse",
+      "name": "NTT_inverse",
+      "label": "Algorithm 42",
+      "page_start": 44,
+      "page_end": 44,
+      "file": "functions/alg_042_ntt_inverse.json"
+    },
+    {
+      "function_id": "alg_043_bit_rev8",
+      "name": "BitRev8",
+      "label": "Algorithm 43",
+      "page_start": 44,
+      "page_end": 44,
+      "file": "functions/alg_043_bit_rev8.json"
+    },
+    {
+      "function_id": "alg_044_add_ntt",
+      "name": "AddNTT",
+      "label": "Algorithm 44",
+      "page_start": 45,
+      "page_end": 45,
+      "file": "functions/alg_044_add_ntt.json"
+    },
+    {
+      "function_id": "alg_045_multiply_ntt",
+      "name": "MultiplyNTT",
+      "label": "Algorithm 45",
+      "page_start": 45,
+      "page_end": 45,
+      "file": "functions/alg_045_multiply_ntt.json"
+    },
+    {
+      "function_id": "alg_046_add_vector_ntt",
+      "name": "AddVectorNTT",
+      "label": "Algorithm 46",
+      "page_start": 45,
+      "page_end": 45,
+      "file": "functions/alg_046_add_vector_ntt.json"
+    },
+    {
+      "function_id": "alg_047_scalar_vector_ntt",
+      "name": "ScalarVectorNTT",
+      "label": "Algorithm 47",
+      "page_start": 46,
+      "page_end": 46,
+      "file": "functions/alg_047_scalar_vector_ntt.json"
+    },
+    {
+      "function_id": "alg_048_matrix_vector_ntt",
+      "name": "MatrixVectorNTT",
+      "label": "Algorithm 48",
+      "page_start": 46,
+      "page_end": 46,
+      "file": "functions/alg_048_matrix_vector_ntt.json"
+    },
+    {
+      "function_id": "alg_049_montgomery_reduce",
+      "name": "MontgomeryReduce",
+      "label": "Algorithm 49",
+      "page_start": 50,
+      "page_end": 50,
+      "file": "functions/alg_049_montgomery_reduce.json"
+    }
+  ]
+}

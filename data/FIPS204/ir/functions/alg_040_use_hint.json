@@ -1,0 +1,33 @@
+{
+  "function_id": "alg_040_use_hint",
+  "name": "UseHint",
+  "label": "Algorithm 40",
+  "page_start": 41,
+  "page_end": 41,
+  "inputs": [
+    {
+      "name": "h",
+      "type": "bool",
+      "description": "hint bit"
+    },
+    {
+      "name": "r",
+      "type": "int",
+      "description": "input value"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "r1",
+      "type": "int",
+      "description": "adjusted high bits"
+    }
+  ],
+  "body_raw": [
+    "𝑚 ← (𝑞 − 1)/(2𝛾2)",
+    "(𝑟1, 𝑟0) ← Decompose(𝑟)",
+    "if ℎ = 1 and 𝑟0 > 0 return (𝑟1 + 1) mod 𝑚",
+    "if ℎ = 1 and 𝑟0 ≤ 0 return (𝑟1 − 1) mod 𝑚",
+    "return 𝑟1"
+  ]
+}

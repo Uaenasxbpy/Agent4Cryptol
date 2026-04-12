@@ -1,0 +1,33 @@
+{
+  "function_id": "alg_002_to_int",
+  "name": "toInt(X, n)",
+  "label": "Algorithm 2",
+  "page_start": 15,
+  "page_end": 15,
+  "inputs": [
+    {
+      "name": "X",
+      "type": "byte_array",
+      "description": "n-byte input string"
+    },
+    {
+      "name": "n",
+      "type": "int",
+      "description": "input length in bytes"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "total",
+      "type": "int",
+      "description": "integer value of X"
+    }
+  ],
+  "body_raw": [
+    "total ← 0",
+    "for i from 0 to n - 1 do",
+    "  total ← 256 * total + X[i]",
+    "end for",
+    "return total"
+  ]
+}

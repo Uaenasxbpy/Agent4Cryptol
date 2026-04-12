@@ -1,0 +1,39 @@
+{
+  "function_id": "alg_019_bit_unpack",
+  "name": "BitUnpack",
+  "label": "Algorithm 19",
+  "page_start": 31,
+  "page_end": 31,
+  "inputs": [
+    {
+      "name": "v",
+      "type": "byte_array",
+      "description": "encoded bytes"
+    },
+    {
+      "name": "a",
+      "type": "int",
+      "description": "lower magnitude bound"
+    },
+    {
+      "name": "b",
+      "type": "int",
+      "description": "upper bound"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "w",
+      "type": "poly",
+      "description": "decoded polynomial"
+    }
+  ],
+  "body_raw": [
+    "𝑐 ← bitlen (𝑎 + 𝑏)",
+    "𝑧 ← BytesToBits(𝑣)",
+    "for 𝑖 from 0 to 255 do",
+    "𝑤𝑖 ← 𝑏 − BitsToInteger((𝑧[𝑖𝑐], 𝑧[𝑖𝑐 + 1], … 𝑧[𝑖𝑐 + 𝑐 − 1]), 𝑐)",
+    "end for",
+    "return 𝑤 Algorithms 20 and 21 carry out byte-string-to-polynomial conversions for polynomials with sparse binary coefficients. In particular, the signing and verification algorithms (Sections 6.2 and 6.3) make use of a “hint,” which is a vector of polynomials 𝐡 ∈ 𝑅2 𝑘 such that the total number of coefficients in 𝐡[0], 𝐡[1], … , 𝐡[𝑘−1] that are equal to 1 is no more than 𝜔. This constraint enables encoding and decoding procedures that are more efficient (although more complex) than BitPack and BitUnpack. HintBitPack (𝐡) outputs a byte string 𝑦 of length 𝜔 + 𝑘. The last 𝑘 bytes of 𝑦 contain information about how many nonzero coefficients are present in each of the polynomials 𝐡[0], 𝐡[1], … , 𝐡[𝑘 − 1], and the first 𝜔 bytes of 𝑦 contain information about exactly where those nonzero terms occur . HintBitUnpack reverses the procedure performed by HintBitPack and recovers the vector 𝐡."
+  ]
+}

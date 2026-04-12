@@ -1,0 +1,41 @@
+{
+  "function_id": "alg_014_coeff_from_three_bytes",
+  "name": "CoeffFromThreeBytes",
+  "label": "Algorithm 14",
+  "page_start": 29,
+  "page_end": 29,
+  "inputs": [
+    {
+      "name": "b0",
+      "type": "int",
+      "description": "first byte"
+    },
+    {
+      "name": "b1",
+      "type": "int",
+      "description": "second byte"
+    },
+    {
+      "name": "b2",
+      "type": "int",
+      "description": "third byte"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "z",
+      "type": "int",
+      "description": "coefficient or failure"
+    }
+  ],
+  "body_raw": [
+    "b2_prime <- b2",
+    "if b2_prime > 127 then",
+    "b2_prime <- b2_prime - 128",
+    "end if",
+    "z <- 2^16 * b2_prime + 2^8 * b1 + b0",
+    "if z < q then return z",
+    "else return failure",
+    "end if"
+  ]
+}

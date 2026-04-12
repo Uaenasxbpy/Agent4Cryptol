@@ -1,0 +1,27 @@
+{
+  "function_id": "alg_001_ml_dsa_keygen",
+  "name": "ML-DSA.KeyGen",
+  "label": "Algorithm 1",
+  "page_start": 17,
+  "page_end": 17,
+  "inputs": [],
+  "outputs": [
+    {
+      "name": "pk",
+      "type": "byte_array",
+      "description": "public key"
+    },
+    {
+      "name": "sk",
+      "type": "byte_array",
+      "description": "private key"
+    }
+  ],
+  "body_raw": [
+    "xi <- B^32",
+    "if xi = NULL then",
+    "return failure",
+    "end if",
+    "return ML-DSA.KeyGen_internal(xi)"
+  ]
+}

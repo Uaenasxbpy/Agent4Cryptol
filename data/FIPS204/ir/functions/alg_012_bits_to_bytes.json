@@ -1,0 +1,28 @@
+{
+  "function_id": "alg_012_bits_to_bytes",
+  "name": "BitsToBytes",
+  "label": "Algorithm 12",
+  "page_start": 29,
+  "page_end": 29,
+  "inputs": [
+    {
+      "name": "y",
+      "type": "bit_array",
+      "description": "bit string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "z",
+      "type": "byte_array",
+      "description": "byte string"
+    }
+  ],
+  "body_raw": [
+    "𝑧 ∈ 𝔹⌈𝛼/8⌉ ← 0⌈𝛼/8⌉",
+    "for 𝑖 from 0 to 𝛼 − 1 do",
+    "𝑧 [⌊𝑖/8⌋] ← 𝑧 [⌊𝑖/8⌋] + 𝑦[𝑖] ⋅ 2𝑖 mod",
+    "end for",
+    "return 𝑧"
+  ]
+}

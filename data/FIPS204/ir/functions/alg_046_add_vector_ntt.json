@@ -1,0 +1,32 @@
+{
+  "function_id": "alg_046_add_vector_ntt",
+  "name": "AddVectorNTT",
+  "label": "Algorithm 46",
+  "page_start": 45,
+  "page_end": 45,
+  "inputs": [
+    {
+      "name": "v_hat",
+      "type": "vector",
+      "description": "first NTT vector"
+    },
+    {
+      "name": "w_hat",
+      "type": "vector",
+      "description": "second NTT vector"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "u_hat",
+      "type": "vector",
+      "description": "sum vector"
+    }
+  ],
+  "body_raw": [
+    "for i from 0 to ell - 1 do",
+    "u_hat[i] <- AddNTT(v_hat[i], w_hat[i])",
+    "end for",
+    "return u_hat"
+  ]
+}

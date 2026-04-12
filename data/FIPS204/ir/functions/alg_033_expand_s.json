@@ -1,0 +1,35 @@
+{
+  "function_id": "alg_033_expand_s",
+  "name": "ExpandS",
+  "label": "Algorithm 33",
+  "page_start": 38,
+  "page_end": 38,
+  "inputs": [
+    {
+      "name": "rho",
+      "type": "byte_array",
+      "description": "seed"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "s1",
+      "type": "vector",
+      "description": "sampled vector s1"
+    },
+    {
+      "name": "s2",
+      "type": "vector",
+      "description": "sampled vector s2"
+    }
+  ],
+  "body_raw": [
+    "for 𝑟 from 0 to ℓ − 1 do",
+    "𝐬𝟏[𝑟] ← RejBoundedPoly(𝜌||IntegerToBytes(𝑟, 2)) ▷ seed depends on 𝑟",
+    "end for",
+    "for 𝑟 from 0 to 𝑘 − 1 do",
+    "𝐬𝟐[𝑟] ← RejBoundedPoly(𝜌||IntegerToBytes(𝑟 + ℓ, 2)) ▷ seed depends on 𝑟 + ℓ",
+    "end for",
+    "return (𝐬𝟏, 𝐬𝟐)"
+  ]
+}

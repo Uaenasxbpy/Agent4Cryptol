@@ -1,0 +1,39 @@
+{
+  "function_id": "alg_006_ml_dsa_keygen_internal",
+  "name": "ML-DSA.KeyGen_internal",
+  "label": "Algorithm 6",
+  "page_start": 23,
+  "page_end": 23,
+  "inputs": [
+    {
+      "name": "xi",
+      "type": "byte_array",
+      "description": "seed"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "pk",
+      "type": "byte_array",
+      "description": "public key"
+    },
+    {
+      "name": "sk",
+      "type": "byte_array",
+      "description": "private key"
+    }
+  ],
+  "body_raw": [
+    "(𝜌, 𝜌′, 𝐾) ∈ 𝔹 32 × 𝔹64 × 𝔹32 ← H(𝜉||IntegerToBytes(𝑘, 1)||IntegerToBytes(ℓ, 1), 128)",
+    "▷ expand seed ̂ ̂",
+    "𝐀 ← ExpandA(𝜌) ▷ 𝐀 is generated and stored in NTT representation as 𝐀",
+    "(𝐬1, 𝐬2) ← ExpandS(𝜌′)",
+    "𝐭 ← NTT−1(𝐀 ∘̂ NTT(𝐬1)) + 𝐬2 ▷ compute 𝐭 = 𝐀𝐬1 + 𝐬2",
+    "(𝐭1, 𝐭0) ← Power2Round(𝐭) ▷ compress 𝐭",
+    "▷ PowerTwoRound is applied componentwise (see explanatory text in Section 7.4)",
+    "𝑝𝑘 ← pkEncode(𝜌, 𝐭1)",
+    "𝑡𝑟 ← H(𝑝𝑘, 64)",
+    "𝑠𝑘 ← skEncode(𝜌, 𝐾, 𝑡𝑟, 𝐬1, 𝐬2, 𝐭0) ▷ 𝐾 and 𝑡𝑟 are for use in signing",
+    "return (𝑝𝑘, 𝑠𝑘)"
+  ]
+}

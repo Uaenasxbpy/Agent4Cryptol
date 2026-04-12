@@ -1,0 +1,28 @@
+{
+  "function_id": "alg_028_w1_encode",
+  "name": "w1Encode",
+  "label": "Algorithm 28",
+  "page_start": 35,
+  "page_end": 35,
+  "inputs": [
+    {
+      "name": "w1",
+      "type": "vector",
+      "description": "polynomial vector"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "w1_bytes",
+      "type": "byte_array",
+      "description": "encoded byte string"
+    }
+  ],
+  "body_raw": [
+    "𝐰̃1 ← ()",
+    "for 𝑖 from 0 to 𝑘 − 1 do",
+    "𝐰̃1 ← 𝐰̃1 || SimpleBitPack (𝐰1[𝑖], (𝑞 − 1)/(2𝛾2) − 1)",
+    "end for",
+    "return 𝐰̃ 1"
+  ]
+}

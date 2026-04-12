@@ -1,0 +1,34 @@
+{
+  "parameter_resolution_rules": [
+    {
+      "priority": 1,
+      "rule": "Use explicit function inputs first."
+    },
+    {
+      "priority": 2,
+      "rule": "If a symbol is not an explicit input, resolve it from global_constants when available."
+    },
+    {
+      "priority": 3,
+      "rule": "If a symbol is parameter-set dependent, resolve it from parameter_sets using the active parameter set."
+    },
+    {
+      "priority": 4,
+      "rule": "If a local symbol such as eta or d appears in an algorithm name or body but is not explicitly defined, map it to the corresponding documented parameter family from surrounding prose."
+    },
+    {
+      "priority": 5,
+      "rule": "If a concrete value still cannot be uniquely determined, do not guess; generate parameterized code."
+    }
+  ],
+  "examples": [
+    {
+      "function_like_symbol": "SamplePolyCBD_eta",
+      "resolution": "eta must be resolved from the active parameter set and caller context; eta may correspond to eta1 or eta2."
+    },
+    {
+      "function_like_symbol": "ByteEncode_d",
+      "resolution": "d may be a local algorithm parameter or a parameter-set value such as du or dv depending on caller context."
+    }
+  ]
+}

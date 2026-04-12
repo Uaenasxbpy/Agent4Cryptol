@@ -1,0 +1,640 @@
+{
+  "parameter_sets": [
+    {
+      "set_name": "SLH-DSA-SHA2-128s",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHA2",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 16,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 63,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 7,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 9,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 12,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 14,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 30,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHAKE-128s",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHAKE",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 16,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 63,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 7,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 9,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 12,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 14,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 30,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHA2-128f",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHA2",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 16,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 66,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 22,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 3,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 6,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 33,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 34,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHAKE-128f",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHAKE",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 16,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 66,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 22,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 3,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 6,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 33,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 34,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHA2-192s",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHA2",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 24,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 63,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 7,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 9,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 14,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 17,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 39,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHAKE-192s",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHAKE",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 24,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 63,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 7,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 9,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 14,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 17,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 39,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHA2-192f",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHA2",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 24,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 66,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 22,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 3,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 8,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 33,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 42,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHAKE-192f",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHAKE",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 24,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 66,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 22,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 3,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 8,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 33,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 42,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHA2-256s",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHA2",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 32,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 64,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 8,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 8,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 14,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 22,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 47,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHAKE-256s",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHAKE",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 32,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 64,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 8,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 8,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 14,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 22,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 47,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHA2-256f",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHA2",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 32,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 68,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 17,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 4,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 9,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 35,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 49,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    },
+    {
+      "set_name": "SLH-DSA-SHAKE-256f",
+      "parameters": [
+        {
+          "name": "hash_family",
+          "value": "SHAKE",
+          "type": "string",
+          "description": "hash function family"
+        },
+        {
+          "name": "n",
+          "value": 32,
+          "type": "int",
+          "description": "security parameter in bytes"
+        },
+        {
+          "name": "h",
+          "value": 68,
+          "type": "int",
+          "description": "total hypertree height"
+        },
+        {
+          "name": "d",
+          "value": 17,
+          "type": "int",
+          "description": "number of XMSS layers"
+        },
+        {
+          "name": "h_prime",
+          "value": 4,
+          "type": "int",
+          "description": "height of each XMSS tree"
+        },
+        {
+          "name": "a",
+          "value": 9,
+          "type": "int",
+          "description": "height of each FORS tree"
+        },
+        {
+          "name": "k",
+          "value": 35,
+          "type": "int",
+          "description": "number of FORS trees"
+        },
+        {
+          "name": "m",
+          "value": 49,
+          "type": "int",
+          "description": "message digest length in bytes"
+        }
+      ]
+    }
+  ]
+}

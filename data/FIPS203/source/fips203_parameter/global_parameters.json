@@ -1,0 +1,45 @@
+{
+  "document_name": "FIPS 203",
+  "algorithm_family": "ML-KEM",
+  "global_constants": [
+    {
+      "name": "n",
+      "value": 256,
+      "type": "int",
+      "description": "global polynomial degree"
+    },
+    {
+      "name": "q",
+      "value": 3329,
+      "type": "int",
+      "description": "global modulus"
+    }
+  ],
+  "parameter_variables": [
+    {
+      "name": "k",
+      "type": "int",
+      "description": "module dimension selected by parameter set"
+    },
+    {
+      "name": "eta1",
+      "type": "int",
+      "description": "CBD parameter for sampling s and e in K-PKE.KeyGen and y in K-PKE.Encrypt"
+    },
+    {
+      "name": "eta2",
+      "type": "int",
+      "description": "CBD parameter for sampling e1 and e2 in K-PKE.Encrypt"
+    },
+    {
+      "name": "du",
+      "type": "int",
+      "description": "compression and encoding parameter for ciphertext component u"
+    },
+    {
+      "name": "dv",
+      "type": "int",
+      "description": "compression and encoding parameter for ciphertext component v"
+    }
+  ]
+}

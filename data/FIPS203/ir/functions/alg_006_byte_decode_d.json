@@ -1,0 +1,28 @@
+{
+  "function_id": "alg_006_byte_decode_d",
+  "name": "ByteDecode_d",
+  "label": "Algorithm 6",
+  "page_start": 22,
+  "page_end": 22,
+  "inputs": [
+    {
+      "name": "B",
+      "type": "byte_array",
+      "description": "Byte array of length 32d"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "F",
+      "type": "int_array",
+      "description": "Array of 256 integers modulo m where m=2^d if d<12, m=q if d=12"
+    }
+  ],
+  "body_raw": [
+    "b ← BytesToBits(B)",
+    "for (i ← 0; i < 256; i ++)",
+    "    F[i] ← sum_{j=0}^{d-1} b[i ⋅ d + j] ⋅ 2^j mod m",
+    "end for",
+    "return F"
+  ]
+}

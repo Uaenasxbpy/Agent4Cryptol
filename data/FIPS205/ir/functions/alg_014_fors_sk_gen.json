@@ -1,0 +1,43 @@
+{
+  "function_id": "alg_014_fors_sk_gen",
+  "name": "fors_skGen(SK.seed, PK.seed, ADRS, idx)",
+  "label": "Algorithm 14",
+  "page_start": 29,
+  "page_end": 29,
+  "inputs": [
+    {
+      "name": "SK_seed",
+      "type": "byte_array",
+      "description": "secret seed"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "byte_array",
+      "description": "FORS address"
+    },
+    {
+      "name": "idx",
+      "type": "int",
+      "description": "secret key index"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "sk_value",
+      "type": "byte_array",
+      "description": "FORS private-key value"
+    }
+  ],
+  "body_raw": [
+    "skADRS ← ADRS",
+    "skADRS.setTypeAndClear(FORS_PRF)",
+    "skADRS.setKeyPairAddress(ADRS.getKeyPairAddress())",
+    "skADRS.setTreeIndex(idx)",
+    "return PRF(PK.seed, SK.seed, skADRS)"
+  ]
+}

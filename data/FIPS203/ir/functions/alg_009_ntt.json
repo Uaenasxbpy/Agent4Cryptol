@@ -1,0 +1,37 @@
+{
+  "function_id": "alg_009_ntt",
+  "name": "NTT",
+  "label": "Algorithm 9",
+  "page_start": 26,
+  "page_end": 26,
+  "inputs": [
+    {
+      "name": "f",
+      "type": "poly",
+      "description": "Input polynomial as 256-element array modulo q"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "f_hat",
+      "type": "poly",
+      "description": "NTT representation of f as 256-element array modulo q"
+    }
+  ],
+  "body_raw": [
+    "f_hat ← f",
+    "i ← 1",
+    "for (len ← 128; len ≥ 2; len ← len/2)",
+    "    for (start ← 0; start < 256; start ← start + 2 ⋅ len)",
+    "        zeta ← zeta^BitRev7(i) mod q",
+    "        i ← i + 1",
+    "        for (j ← start; j < start + len; j++)",
+    "            t ← zeta ⋅ f_hat[j + len]",
+    "            f_hat[j + len] ← f_hat[j] - t",
+    "            f_hat[j] ← f_hat[j] + t",
+    "        end for",
+    "    end for",
+    "end for",
+    "return f_hat"
+  ]
+}

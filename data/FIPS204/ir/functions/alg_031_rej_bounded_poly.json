@@ -1,0 +1,40 @@
+{
+  "function_id": "alg_031_rej_bounded_poly",
+  "name": "RejBoundedPoly",
+  "label": "Algorithm 31",
+  "page_start": 37,
+  "page_end": 37,
+  "inputs": [
+    {
+      "name": "rho",
+      "type": "byte_array",
+      "description": "seed"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "a",
+      "type": "poly",
+      "description": "sampled polynomial"
+    }
+  ],
+  "body_raw": [
+    "𝑗 ←",
+    "ctx ← H.Init()",
+    "ctx ← H.Absorb(ctx, 𝜌)",
+    "while 𝑗 < 256 do",
+    "𝑧 ← H.Squeeze(ctx, 1)",
+    "𝑧0 ← CoeffFromHalfByte(𝑧 mod 16)",
+    "𝑧1 ← CoeffFromHalfByte(⌊𝑧/16⌋)",
+    "if 𝑧0 ≠ ⊥ then",
+    "𝑎𝑗 ← 𝑧0",
+    "𝑗 ← 𝑗 +",
+    "end if",
+    "if 𝑧1 ≠ ⊥ and 𝑗 < 256 then",
+    "𝑎𝑗 ← 𝑧1",
+    "𝑗 ← 𝑗 +",
+    "end if",
+    "end while",
+    "return 𝑎"
+  ]
+}

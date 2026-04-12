@@ -1,0 +1,39 @@
+{
+  "function_id": "alg_027_sig_decode",
+  "name": "sigDecode",
+  "label": "Algorithm 27",
+  "page_start": 35,
+  "page_end": 35,
+  "inputs": [
+    {
+      "name": "sigma",
+      "type": "byte_array",
+      "description": "signature"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "c_tilde",
+      "type": "byte_array",
+      "description": "commitment hash"
+    },
+    {
+      "name": "z",
+      "type": "vector",
+      "description": "response vector"
+    },
+    {
+      "name": "h",
+      "type": "vector",
+      "description": "hint vector or failure"
+    }
+  ],
+  "body_raw": [
+    "(c_tilde, x0, ..., x_(ell-1), y) <- sigma",
+    "for i from 0 to ell - 1 do",
+    "z[i] <- BitUnpack(x_i, gamma1 - 1, gamma1)",
+    "end for",
+    "h <- HintBitUnpack(y)",
+    "return (c_tilde, z, h)"
+  ]
+}

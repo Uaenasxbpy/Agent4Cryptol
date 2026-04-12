@@ -1,0 +1,43 @@
+{
+  "function_id": "alg_003_ml_dsa_verify",
+  "name": "ML-DSA.Verify",
+  "label": "Algorithm 3",
+  "page_start": 18,
+  "page_end": 18,
+  "inputs": [
+    {
+      "name": "pk",
+      "type": "byte_array",
+      "description": "public key"
+    },
+    {
+      "name": "m",
+      "type": "bit_array",
+      "description": "message"
+    },
+    {
+      "name": "sigma",
+      "type": "byte_array",
+      "description": "signature"
+    },
+    {
+      "name": "ctx",
+      "type": "byte_array",
+      "description": "context string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "is_valid",
+      "type": "bool",
+      "description": "verification result"
+    }
+  ],
+  "body_raw": [
+    "if |𝑐𝑡𝑥| > 255 then",
+    "return ⊥ ▷ return an error indication if the context string is too long",
+    "end if",
+    "𝑀 ′ ← BytesToBits(IntegerToBytes(0, 1) ∥ IntegerToBytes(|𝑐𝑡𝑥|, 1) ∥ 𝑐𝑡𝑥) ∥ 𝑀",
+    "return ML-DSA.Verify_internal(𝑝𝑘, 𝑀 ′, 𝜎)"
+  ]
+}

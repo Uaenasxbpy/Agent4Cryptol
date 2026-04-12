@@ -1,0 +1,41 @@
+﻿# Agent4Cryptol 配置模板
+# 程序优先读取 config.yaml；如果不存在，会回退读取 config.example.yaml。
+
+paths:
+  rag_dir: RAG
+  prompt_dir: prompt
+  logger_dir: logger
+  cryptol_output_dir: Cryptol
+
+llm:
+  model: qwen3.5-plus
+  base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  api_key_env: DASHSCOPE_API_KEY
+  timeout: 120
+
+cryptol:
+  cmd: cryptol
+  compile_timeout: 30
+
+workflow:
+  max_retries: 3
+  retry_delay: 2
+
+rag:
+  top_k_rules: 8
+  top_k_patterns: 5
+  top_k_examples: 5
+  enable_cache: true
+
+parameters:
+  active_sets:
+    FIPS203: ML-KEM-512
+    # FIPS204: ML-DSA-44
+    # FIPS205: SLH-DSA-SHA2-128s
+
+logging:
+  level: INFO
+  format: "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+  max_bytes: 2097152
+  backup_count: 3
+  enable_json: false

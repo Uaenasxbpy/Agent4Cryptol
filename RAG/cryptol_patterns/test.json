@@ -1,0 +1,41 @@
+{
+    "pattern_id": "pattern_crypto_005",
+    "topic": "crypto_structure_patterns",
+    "subtopic": "stream_cipher_like_state",
+    "title": "Represent machine/state evolution as a sequence of `(state, output)` pairs",
+    "kind": "crypto_pattern",
+    "priority": "medium",
+    "keywords": [
+        "state evolution",
+        "(state, output) pairs",
+        "rcs",
+        "machine"
+    ],
+    "intent": "Model a stateful encryptor as a recurrence that threads state and emits one output per input symbol.",
+    "pattern_summary": "Seed a sequence with the initial state and a placeholder output, then compute one `(next_state, output)` pair per input symbol, finally projecting the outputs.",
+    "pattern_template": "pairs = [(initState, seedOut)] #\n        [ step state input\n        | input <- inputs\n        | (state, _) <- pairs\n        ]\noutputs = tail [ out | (_, out) <- pairs ]",
+    "rationale": "This is an idiomatic way to model finite-state machines without mutable variables.",
+    "positive_example": "rcs = [(m.rotors, '*')] #\n      [ enigmaLoop (m.plugboard, r, m.reflector, c)\n      | c <- pt\n      | (r, _) <- rcs\n      ]\n\nenigma (m, pt) = tail [ c | (_, c) <- rcs ]",
+    "variation_notes": [
+        "The threaded state may be a record rather than a tuple.",
+        "Often combines with a separate round pipeline function for one symbol/block."
+    ],
+    "anti_pattern": "Hand-managing state updates outside a recurrence when the process is one-step-per-input and purely functional.",
+    "constraints": [
+        "The seed output is usually a placeholder and should be removed with `tail` or equivalent projection.",
+        "The step function must consume exactly one prior state and one new input."
+    ],
+    "applicable_when": [
+        "stateful stream ciphers or machines",
+        "rotor/mode update logic",
+        "symbol-by-symbol encryption modeling"
+    ],
+    "retrieval_hints": [
+        "[(state, seed)] # ...",
+        "state output pairs",
+        "enigma recurrence"
+    ],
+    "source_type": "official_book",
+    "source_file": "ProgrammingCryptol.pdf",
+    "confidence": "high"
+}

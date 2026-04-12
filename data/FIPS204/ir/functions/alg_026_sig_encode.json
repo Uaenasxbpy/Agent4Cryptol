@@ -1,0 +1,39 @@
+{
+  "function_id": "alg_026_sig_encode",
+  "name": "sigEncode",
+  "label": "Algorithm 26",
+  "page_start": 35,
+  "page_end": 35,
+  "inputs": [
+    {
+      "name": "c_tilde",
+      "type": "byte_array",
+      "description": "commitment hash"
+    },
+    {
+      "name": "z",
+      "type": "vector",
+      "description": "response vector"
+    },
+    {
+      "name": "h",
+      "type": "vector",
+      "description": "hint vector"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "sigma",
+      "type": "byte_array",
+      "description": "signature"
+    }
+  ],
+  "body_raw": [
+    "𝜎 ← 𝑐̃",
+    "for 𝑖 from 0 to ℓ − 1 do",
+    "𝜎 ← 𝜎 || BitPack (𝐳[𝑖], 𝛾1 − 1, 𝛾1)",
+    "end for",
+    "𝜎 ← 𝜎 || HintBitPack (𝐡)",
+    "return 𝜎"
+  ]
+}

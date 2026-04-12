@@ -1,0 +1,33 @@
+{
+  "function_id": "alg_016_simple_bit_pack",
+  "name": "SimpleBitPack",
+  "label": "Algorithm 16",
+  "page_start": 30,
+  "page_end": 30,
+  "inputs": [
+    {
+      "name": "w",
+      "type": "poly",
+      "description": "polynomial"
+    },
+    {
+      "name": "b",
+      "type": "int",
+      "description": "upper bound"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "z",
+      "type": "byte_array",
+      "description": "encoded bytes"
+    }
+  ],
+  "body_raw": [
+    "𝑧 ← () ▷ set 𝑧 to the empty bit string",
+    "for 𝑖 from 0 to 255 do",
+    "𝑧 ← 𝑧||IntegerToBits(𝑤𝑖, bitlen 𝑏)",
+    "end for",
+    "return BitsToBytes(𝑧)"
+  ]
+}

@@ -1,0 +1,37 @@
+The Cryptol code below failed to compile (repair attempt $retry_count).
+
+==== Current compiler error ====
+$compile_error
+
+==== Full compiler output ====
+$compile_output
+
+==== Current failing code summary ====
+$current_code_summary
+
+==== Current code ====
+```cryptol
+$cryptol_code
+```
+
+==== Previous repair attempts ====
+$repair_history
+
+==== Original function spec (for reference only) ====
+$algorithm_json
+
+==== Parameter reference (authoritative when relevant) ====
+$parameter_context
+
+==== Retrieved RAG snippets (syntax guidance) ====
+$rag_context
+
+Instructions:
+1. Fix the current compiler error using the current code, not an earlier version.
+2. Use the current failing code summary to focus on the exact failing location.
+3. Read the previous repair attempts and avoid repeating any edit pattern that already failed.
+4. If the same location has already failed after punctuation-only or formatting-only edits, make a materially different repair.
+5. Do not output any analysis, classification, headings, or explanations.
+6. Do not restructure, rename, or rewrite unrelated code.
+7. Output exactly one ```cryptol``` code block containing the full corrected module.
+8. If you cannot improve the code confidently, return the original module inside the ```cryptol``` block instead of returning prose or an empty response.

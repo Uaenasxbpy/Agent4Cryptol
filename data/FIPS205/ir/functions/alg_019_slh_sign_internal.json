@@ -1,0 +1,52 @@
+{
+  "function_id": "alg_019_slh_sign_internal",
+  "name": "slh_sign_internal(M, SK, addrnd)",
+  "label": "Algorithm 19",
+  "page_start": 35,
+  "page_end": 35,
+  "inputs": [
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "SK",
+      "type": "tuple",
+      "description": "private key tuple"
+    },
+    {
+      "name": "addrnd",
+      "type": "byte_array",
+      "description": "optional additional randomness"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "SIG",
+      "type": "byte_array",
+      "description": "SLH-DSA signature"
+    }
+  ],
+  "body_raw": [
+    "ADRS ← toByte(0, 32)",
+    "opt_rand ← addrnd",
+    "R ← PRFmsg(SK.prf, opt_rand, M)",
+    "SIG ← R",
+    "digest ← Hmsg(R, PK.seed, PK.root, M)",
+    "md ← digest[0 : ceil(k*a/8)]",
+    "tmp_idxtree ← digest[ceil(k*a/8) : ceil(k*a/8) + ceil((h-h/d)/8)]",
+    "tmp_idxleaf ← digest[ceil(k*a/8) + ceil((h-h/d)/8) : ceil(k*a/8) + ceil((h-h/d)/8) + ceil(h/(8*d))]",
+    "idxtree ← toInt(tmp_idxtree, ceil((h-h/d)/8)) mod 2^(h-h/d)",
+    "idxleaf ← toInt(tmp_idxleaf, ceil(h/(8*d))) mod 2^(h/d)",
+    "ADRS.setTreeAddress(idxtree)",
+    "ADRS.setTypeAndClear(FORS_TREE)",
+    "ADRS.setKeyPairAddress(idxleaf)",
+    "SIG_FORS ← fors_sign(md, SK.seed, PK.seed, ADRS)",
+    "SIG ← SIG ∥ SIG_FORS",
+    "PK_FORS ← fors_pkFromSig(SIG_FORS, md, PK.seed, ADRS)",
+    "SIG_HT ← ht_sign(PK_FORS, SK.seed, PK.seed, idxtree, idxleaf)",
+    "SIG ← SIG ∥ SIG_HT",
+    "return SIG"
+  ]
+}

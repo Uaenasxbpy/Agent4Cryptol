@@ -1,0 +1,52 @@
+{
+  "function_id": "alg_010_xmss_sign",
+  "name": "xmss_sign(M, SK.seed, idx, PK.seed, ADRS)",
+  "label": "Algorithm 10",
+  "page_start": 24,
+  "page_end": 24,
+  "inputs": [
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "SK_seed",
+      "type": "byte_array",
+      "description": "secret seed"
+    },
+    {
+      "name": "idx",
+      "type": "int",
+      "description": "leaf index"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "byte_array",
+      "description": "address of XMSS tree"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "SIG_XMSS",
+      "type": "byte_array",
+      "description": "XMSS signature"
+    }
+  ],
+  "body_raw": [
+    "for j from 0 to h′ - 1 do",
+    "  k ← floor(idx / 2^j) ⊕ 1",
+    "  AUTH[j] ← xmss_node(SK.seed, k, j, PK.seed, ADRS)",
+    "end for",
+    "ADRS.setTypeAndClear(WOTS_HASH)",
+    "ADRS.setKeyPairAddress(idx)",
+    "sig ← wots_sign(M, SK.seed, PK.seed, ADRS)",
+    "SIG_XMSS ← sig ∥ AUTH",
+    "return SIG_XMSS"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "function_id": "alg_005_chain",
+  "name": "chain(X, i, s, PK.seed, ADRS)",
+  "label": "Algorithm 5",
+  "page_start": 18,
+  "page_end": 18,
+  "inputs": [
+    {
+      "name": "X",
+      "type": "byte_array",
+      "description": "input string"
+    },
+    {
+      "name": "i",
+      "type": "int",
+      "description": "start index"
+    },
+    {
+      "name": "s",
+      "type": "int",
+      "description": "number of chaining steps"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "byte_array",
+      "description": "address value"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "tmp",
+      "type": "byte_array",
+      "description": "value after iterating F s times"
+    }
+  ],
+  "body_raw": [
+    "tmp ← X",
+    "for j from i to i + s - 1 do",
+    "  ADRS.setHashAddress(j)",
+    "  tmp ← F(PK.seed, ADRS, tmp)",
+    "end for",
+    "return tmp"
+  ]
+}

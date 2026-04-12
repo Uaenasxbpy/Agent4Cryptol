@@ -1,0 +1,36 @@
+{
+  "function_id": "alg_036_decompose",
+  "name": "Decompose",
+  "label": "Algorithm 36",
+  "page_start": 40,
+  "page_end": 40,
+  "inputs": [
+    {
+      "name": "r",
+      "type": "int",
+      "description": "input value"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "r1",
+      "type": "int",
+      "description": "high bits"
+    },
+    {
+      "name": "r0",
+      "type": "int",
+      "description": "low bits"
+    }
+  ],
+  "body_raw": [
+    "𝑟+ ← 𝑟 mod 𝑞",
+    "𝑟0 ← 𝑟+ mod±(2𝛾2)",
+    "if 𝑟+ − 𝑟0 = 𝑞 − 1 then",
+    "𝑟1 ←",
+    "𝑟0 ← 𝑟0 −",
+    "else 𝑟1 ← (𝑟+ − 𝑟0)/(2𝛾2)",
+    "end if",
+    "return (𝑟1, 𝑟0)"
+  ]
+}

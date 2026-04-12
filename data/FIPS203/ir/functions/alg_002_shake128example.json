@@ -1,0 +1,47 @@
+{
+  "function_id": "alg_002_shake128example",
+  "name": "SHAKE128example",
+  "label": "Algorithm 2",
+  "page_start": 19,
+  "page_end": 19,
+  "inputs": [
+    {
+      "name": "str1",
+      "type": "byte_array",
+      "description": "First input byte array to absorb"
+    },
+    {
+      "name": "str_m",
+      "type": "byte_array",
+      "description": "m-th input byte array to absorb"
+    },
+    {
+      "name": "b1",
+      "type": "int",
+      "description": "Length in bytes of first output segment"
+    },
+    {
+      "name": "b_l",
+      "type": "int",
+      "description": "Length in bytes of l-th output segment"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "output",
+      "type": "byte_array",
+      "description": "Concatenated output of length sum(b_j) bytes"
+    }
+  ],
+  "body_raw": [
+    "ctx ← SHAKE128.Init()",
+    "for (i ← 1; i ≤ m; i ++)",
+    "    ctx ← SHAKE128.Absorb(ctx, str_i)",
+    "end for",
+    "for (j ← 1; j ≤ ℓ; j ++)",
+    "    (ctx, out_j) ← SHAKE128.Squeeze(ctx, 8 ⋅ b_j)",
+    "end for",
+    "output ← out1 || … || out_l",
+    "return output"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "function_id": "alg_004_base_2b",
+  "name": "base_2b(X, b, out_len)",
+  "label": "Algorithm 4",
+  "page_start": 16,
+  "page_end": 16,
+  "inputs": [
+    {
+      "name": "X",
+      "type": "byte_array",
+      "description": "input byte string"
+    },
+    {
+      "name": "b",
+      "type": "int",
+      "description": "bits per output digit"
+    },
+    {
+      "name": "out_len",
+      "type": "int",
+      "description": "number of output digits"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "baseb",
+      "type": "int_array",
+      "description": "array of base 2^b integers"
+    }
+  ],
+  "body_raw": [
+    "in ← 0",
+    "bits ← 0",
+    "total ← 0",
+    "for out from 0 to out_len - 1 do",
+    "  while bits < b do",
+    "    total ← (total ≪ 8) + X[in]",
+    "    in ← in + 1",
+    "    bits ← bits + 8",
+    "  end while",
+    "  bits ← bits - b",
+    "  baseb[out] ← (total ≫ bits) mod 2^b",
+    "end for",
+    "return baseb"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "function_id": "alg_015_coeff_from_half_byte",
+  "name": "CoeffFromHalfByte",
+  "label": "Algorithm 15",
+  "page_start": 30,
+  "page_end": 30,
+  "inputs": [
+    {
+      "name": "b",
+      "type": "int",
+      "description": "half byte value"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "z",
+      "type": "int",
+      "description": "coefficient or failure"
+    }
+  ],
+  "body_raw": [
+    "if eta = 2 and b < 15 then return 2 - (b mod 5)",
+    "else",
+    "if eta = 4 and b < 9 then return 4 - b",
+    "else return failure",
+    "end if",
+    "end if"
+  ]
+}

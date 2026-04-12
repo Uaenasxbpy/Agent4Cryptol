@@ -1,0 +1,40 @@
+{
+  "function_id": "alg_007_sample_ntt",
+  "name": "SampleNTT",
+  "label": "Algorithm 7",
+  "page_start": 23,
+  "page_end": 23,
+  "inputs": [
+    {
+      "name": "B",
+      "type": "byte_array",
+      "description": "34-byte input containing 32-byte seed plus two index bytes"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "a_hat",
+      "type": "int_array",
+      "description": "256-element array representing NTT of a polynomial"
+    }
+  ],
+  "body_raw": [
+    "ctx ← XOF.Init()",
+    "ctx ← XOF.Absorb(ctx, B)",
+    "j ← 0",
+    "while j < 256 do",
+    "    (ctx, C) ← XOF.Squeeze(ctx, 3)",
+    "    d1 ← C[0] + 256 ⋅ (C[1] mod 16)",
+    "    d2 ← ⌊C[1]/16⌋ + 16 ⋅ C[2]",
+    "    if d1 < q then",
+    "        a_hat[j] ← d1",
+    "        j ← j + 1",
+    "    end if",
+    "    if d2 < q and j < 256 then",
+    "        a_hat[j] ← d2",
+    "        j ← j + 1",
+    "    end if",
+    "end while",
+    "return a_hat"
+  ]
+}

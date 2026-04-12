@@ -1,0 +1,55 @@
+{
+  "function_id": "alg_007_wots_sign",
+  "name": "wots_sign(M, SK.seed, PK.seed, ADRS)",
+  "label": "Algorithm 7",
+  "page_start": 20,
+  "page_end": 20,
+  "inputs": [
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message to sign"
+    },
+    {
+      "name": "SK_seed",
+      "type": "byte_array",
+      "description": "secret seed"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "byte_array",
+      "description": "address of WOTS+ key"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "sig",
+      "type": "byte_array",
+      "description": "WOTS+ signature"
+    }
+  ],
+  "body_raw": [
+    "csum ← 0",
+    "msg ← base_2b(M, lgw, len1)",
+    "for i from 0 to len1 - 1 do",
+    "  csum ← csum + w - 1 - msg[i]",
+    "end for",
+    "csum ← csum ≪ ((8 - ((len2 * lgw) mod 8)) mod 8)",
+    "msg ← msg ∥ base_2b(toByte(csum, ceil(len2*lgw/8)), lgw, len2)",
+    "skADRS ← ADRS",
+    "skADRS.setTypeAndClear(WOTS_PRF)",
+    "skADRS.setKeyPairAddress(ADRS.getKeyPairAddress())",
+    "for i from 0 to len - 1 do",
+    "  skADRS.setChainAddress(i)",
+    "  sk ← PRF(PK.seed, SK.seed, skADRS)",
+    "  ADRS.setChainAddress(i)",
+    "  sig[i] ← chain(sk, 0, msg[i], PK.seed, ADRS)",
+    "end for",
+    "return sig"
+  ]
+}

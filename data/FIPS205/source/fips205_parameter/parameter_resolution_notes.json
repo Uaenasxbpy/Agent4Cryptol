@@ -1,0 +1,42 @@
+{
+  "parameter_resolution_rules": [
+    {
+      "priority": 1,
+      "rule": "Use explicit function inputs first."
+    },
+    {
+      "priority": 2,
+      "rule": "Resolve from global_constants if available."
+    },
+    {
+      "priority": 3,
+      "rule": "Resolve from parameter_sets using the active parameter set."
+    },
+    {
+      "priority": 4,
+      "rule": "If a function uses an implicit structural parameter such as n, h, d, h_prime, a, k, m, or lgw, resolve it from the active SLH-DSA parameter set."
+    },
+    {
+      "priority": 5,
+      "rule": "If the hash family affects function instantiation, use hash_family from the active parameter set to choose the SHA2 or SHAKE specification path."
+    },
+    {
+      "priority": 6,
+      "rule": "If a concrete value still cannot be uniquely determined, keep the symbol parameterized and do not guess."
+    }
+  ],
+  "examples": [
+    {
+      "function_like_symbol": "gen_len2(n, lgw)",
+      "resolution": "n and lgw are parameter set values; for approved SLH-DSA sets, lgw is always 4 and len2 is 3."
+    },
+    {
+      "function_like_symbol": "xmss_sign",
+      "resolution": "h_prime and n are resolved from the active parameter set even when not listed as explicit inputs."
+    },
+    {
+      "function_like_symbol": "slh_sign_internal",
+      "resolution": "m, h, d, h_prime, a, k, n, and hash_family are resolved from the active parameter set and hash instantiation rules."
+    }
+  ]
+}

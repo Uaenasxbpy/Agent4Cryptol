@@ -1,0 +1,27 @@
+{
+  "function_id": "alg_049_montgomery_reduce",
+  "name": "MontgomeryReduce",
+  "label": "Algorithm 49",
+  "page_start": 50,
+  "page_end": 50,
+  "inputs": [
+    {
+      "name": "a",
+      "type": "int",
+      "description": "input integer"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "r",
+      "type": "int",
+      "description": "reduced integer"
+    }
+  ],
+  "body_raw": [
+    "QINV <- 58728449",
+    "t <- ((a mod 2^32) * QINV) mod 2^32",
+    "r <- (a - t * q) / 2^32",
+    "return r"
+  ]
+}

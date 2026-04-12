@@ -1,0 +1,34 @@
+{
+  "function_id": "alg_003_to_byte",
+  "name": "toByte(x, n)",
+  "label": "Algorithm 3",
+  "page_start": 15,
+  "page_end": 15,
+  "inputs": [
+    {
+      "name": "x",
+      "type": "int",
+      "description": "input integer"
+    },
+    {
+      "name": "n",
+      "type": "int",
+      "description": "output length in bytes"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "S",
+      "type": "byte_array",
+      "description": "big-endian byte string of length n"
+    }
+  ],
+  "body_raw": [
+    "total ← x",
+    "for i from 0 to n - 1 do",
+    "  S[n - 1 - i] ← total mod 256",
+    "  total ← total ≫ 8",
+    "end for",
+    "return S"
+  ]
+}

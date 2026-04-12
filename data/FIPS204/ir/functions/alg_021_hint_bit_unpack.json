@@ -1,0 +1,43 @@
+{
+  "function_id": "alg_021_hint_bit_unpack",
+  "name": "HintBitUnpack",
+  "label": "Algorithm 21",
+  "page_start": 32,
+  "page_end": 32,
+  "inputs": [
+    {
+      "name": "y",
+      "type": "byte_array",
+      "description": "encoded bytes"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "h",
+      "type": "vector",
+      "description": "decoded hint vector or failure"
+    }
+  ],
+  "body_raw": [
+    "h <- 0^k",
+    "Index <- 0",
+    "for i from 0 to k - 1 do",
+    "if y[omega + i] < Index or y[omega + i] > omega then return failure",
+    "end if",
+    "First <- Index",
+    "while Index < y[omega + i] do",
+    "if Index > First then",
+    "if y[Index - 1] >= y[Index] then return failure",
+    "end if",
+    "end if",
+    "h[i]_(y[Index]) <- 1",
+    "Index <- Index + 1",
+    "end while",
+    "end for",
+    "for i from Index to omega - 1 do",
+    "if y[i] != 0 then return failure",
+    "end if",
+    "end for",
+    "return h"
+  ]
+}

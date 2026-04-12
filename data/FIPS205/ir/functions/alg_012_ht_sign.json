@@ -1,0 +1,60 @@
+{
+  "function_id": "alg_012_ht_sign",
+  "name": "ht_sign(M, SK.seed, PK.seed, idxtree, idxleaf)",
+  "label": "Algorithm 12",
+  "page_start": 27,
+  "page_end": 27,
+  "inputs": [
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "SK_seed",
+      "type": "byte_array",
+      "description": "private seed"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "idxtree",
+      "type": "int",
+      "description": "tree index"
+    },
+    {
+      "name": "idxleaf",
+      "type": "int",
+      "description": "leaf index"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "SIG_HT",
+      "type": "byte_array",
+      "description": "hypertree signature"
+    }
+  ],
+  "body_raw": [
+    "ADRS ← toByte(0, 32)",
+    "ADRS.setTreeAddress(idxtree)",
+    "SIGtmp ← xmss_sign(M, SK.seed, idxleaf, PK.seed, ADRS)",
+    "SIG_HT ← SIGtmp",
+    "root ← xmss_pkFromSig(idxleaf, SIGtmp, M, PK.seed, ADRS)",
+    "for j from 1 to d - 1 do",
+    "  idxleaf ← idxtree mod 2^h′",
+    "  idxtree ← idxtree ≫ h′",
+    "  ADRS.setLayerAddress(j)",
+    "  ADRS.setTreeAddress(idxtree)",
+    "  SIGtmp ← xmss_sign(root, SK.seed, idxleaf, PK.seed, ADRS)",
+    "  SIG_HT ← SIG_HT ∥ SIGtmp",
+    "  if j < d - 1 then",
+    "    root ← xmss_pkFromSig(idxleaf, SIGtmp, root, PK.seed, ADRS)",
+    "  end if",
+    "end for",
+    "return SIG_HT"
+  ]
+}

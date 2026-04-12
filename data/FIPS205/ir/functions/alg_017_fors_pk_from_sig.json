@@ -1,0 +1,63 @@
+{
+  "function_id": "alg_017_fors_pk_from_sig",
+  "name": "fors_pkFromSig(SIG_FORS, md, PK.seed, ADRS)",
+  "label": "Algorithm 17",
+  "page_start": 32,
+  "page_end": 32,
+  "inputs": [
+    {
+      "name": "SIG_FORS",
+      "type": "byte_array",
+      "description": "FORS signature"
+    },
+    {
+      "name": "md",
+      "type": "byte_array",
+      "description": "message digest"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "byte_array",
+      "description": "FORS address"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "pk",
+      "type": "byte_array",
+      "description": "derived FORS public key"
+    }
+  ],
+  "body_raw": [
+    "indices ← base_2b(md, a, k)",
+    "for i from 0 to k - 1 do",
+    "  sk ← SIG_FORS.getSK(i)",
+    "  ADRS.setTreeHeight(0)",
+    "  ADRS.setTreeIndex(i * 2^a + indices[i])",
+    "  node[0] ← F(PK.seed, ADRS, sk)",
+    "  auth ← SIG_FORS.getAUTH(i)",
+    "  for j from 0 to a - 1 do",
+    "    ADRS.setTreeHeight(j + 1)",
+    "    if floor(indices[i] / 2^j) is even then",
+    "      ADRS.setTreeIndex(ADRS.getTreeIndex() / 2)",
+    "      node[1] ← H(PK.seed, ADRS, node[0] ∥ auth[j])",
+    "    else",
+    "      ADRS.setTreeIndex((ADRS.getTreeIndex() - 1) / 2)",
+    "      node[1] ← H(PK.seed, ADRS, auth[j] ∥ node[0])",
+    "    end if",
+    "    node[0] ← node[1]",
+    "  end for",
+    "  root[i] ← node[0]",
+    "end for",
+    "forspkADRS ← ADRS",
+    "forspkADRS.setTypeAndClear(FORS_ROOTS)",
+    "forspkADRS.setKeyPairAddress(ADRS.getKeyPairAddress())",
+    "pk ← T_k(PK.seed, forspkADRS, root)",
+    "return pk"
+  ]
+}

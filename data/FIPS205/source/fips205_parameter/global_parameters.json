@@ -1,0 +1,54 @@
+{
+  "document_name": "FIPS 205",
+  "algorithm_family": "SLH-DSA",
+  "global_constants": [
+    {
+      "name": "lgw",
+      "value": 4,
+      "type": "int",
+      "description": "bits per WOTS plus hash chain for all approved parameter sets"
+    }
+  ],
+  "parameter_variables": [
+    {
+      "name": "n",
+      "type": "int",
+      "description": "security parameter in bytes"
+    },
+    {
+      "name": "h",
+      "type": "int",
+      "description": "total hypertree height"
+    },
+    {
+      "name": "d",
+      "type": "int",
+      "description": "number of XMSS layers in the hypertree"
+    },
+    {
+      "name": "h_prime",
+      "type": "int",
+      "description": "height of each XMSS tree"
+    },
+    {
+      "name": "a",
+      "type": "int",
+      "description": "height of each FORS tree"
+    },
+    {
+      "name": "k",
+      "type": "int",
+      "description": "number of FORS trees"
+    },
+    {
+      "name": "m",
+      "type": "int",
+      "description": "message digest length in bytes"
+    },
+    {
+      "name": "hash_family",
+      "type": "string",
+      "description": "hash instantiation family for the parameter set"
+    }
+  ]
+}

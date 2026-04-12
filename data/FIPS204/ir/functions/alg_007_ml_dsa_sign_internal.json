@@ -1,0 +1,67 @@
+{
+  "function_id": "alg_007_ml_dsa_sign_internal",
+  "name": "ML-DSA.Sign_internal",
+  "label": "Algorithm 7",
+  "page_start": 25,
+  "page_end": 25,
+  "inputs": [
+    {
+      "name": "sk",
+      "type": "byte_array",
+      "description": "private key"
+    },
+    {
+      "name": "m_prime",
+      "type": "bit_array",
+      "description": "formatted message"
+    },
+    {
+      "name": "rnd",
+      "type": "byte_array",
+      "description": "per message randomness"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "sigma",
+      "type": "byte_array",
+      "description": "signature"
+    }
+  ],
+  "body_raw": [
+    "(𝜌, 𝐾, 𝑡𝑟, 𝐬1, 𝐬2, 𝐭0) ← skDecode(𝑠𝑘)",
+    "𝐬1̂ ← NTT(𝐬1)",
+    "𝐬2̂ ← NTT(𝐬2)",
+    "𝐭0̂ ← NTT(𝐭0) ̂ ̂",
+    "𝐀 ← ExpandA(𝜌) ▷ 𝐀 is generated and stored in NTT representation as 𝐀",
+    "𝜇 ← H(BytesToBits(𝑡𝑟)||𝑀 ′, 64) ▷ message representative that may optionally be computed in a different cryptographic module",
+    "𝜌″ ← H(𝐾||𝑟𝑛𝑑||𝜇, 64) ▷ compute private random seed",
+    "𝜅 ← 0 ▷ initialize counter 𝜅",
+    "(𝐳, 𝐡) ← ⊥",
+    "while (𝐳, 𝐡) = ⊥ do ▷ rejection sampling loop",
+    "𝐲 ∈ 𝑅 𝑞 ℓ ← ExpandMask(𝜌″, 𝜅)",
+    "𝐰 ← NTT−1(𝐀 ∘̂ NTT(𝐲))",
+    "𝐰1 ← HighBits(𝐰) ▷ signer’s commitment",
+    "▷ HighBits is applied componentwise (see explanatory text in Section 7.4)",
+    "̃ ▷ commitment hash𝑐 ← H(𝜇||w1Encode(𝐰1), 𝜆/4)",
+    "𝑐 ∈ 𝑅 𝑞 ← SampleInBall(𝑐)̃ ▷ verifier’s challenge",
+    "̂𝑐 ← NTT(𝑐)",
+    "⟨⟨𝑐𝐬1⟩⟩ ← NTT−1(𝑐 ∘ ̂ 𝐬1̂ )",
+    "⟨⟨𝑐𝐬2⟩⟩ ← NTT−1(𝑐 ∘ ̂ 𝐬2̂ )",
+    "𝐳 ← 𝐲 + ⟨⟨𝑐𝐬1⟩⟩ ▷ signer’s response",
+    "𝐫0 ← LowBits(𝐰 − ⟨⟨𝑐𝐬2⟩⟩)",
+    "▷ LowBits is applied componentwise (see explanatory text in Section 7.4)",
+    "if ||𝐳||∞ ≥ 𝛾1 − 𝛽 or ||𝐫0||∞ ≥ 𝛾2 − 𝛽 then (z, h) ← ⊥ ▷ validity checks",
+    "else",
+    "⟨⟨𝑐𝐭0⟩⟩ ← NTT−1(𝑐 ∘ ̂ 𝐭0̂ )",
+    "𝐡 ← MakeHint(−⟨⟨𝑐𝐭0⟩⟩, 𝐰 − ⟨⟨𝑐𝐬2⟩⟩ + ⟨⟨𝑐𝐭0⟩⟩) ▷ Signer’s hint",
+    "▷ MakeHint is applied componentwise (see explanatory text in Section 7.4)",
+    "if ||⟨⟨𝑐𝐭0⟩⟩||∞ ≥ 𝛾2 or the number of 1’s in 𝐡 is greater than 𝜔, then (z, h) ← ⊥",
+    "end if",
+    "end if",
+    "𝜅 ← 𝜅 + ℓ ▷ increment counter",
+    "end while",
+    "𝜎 ← sigEncode(𝑐, 𝐳̃ mod±𝑞, 𝐡)",
+    "return 𝜎"
+  ]
+}

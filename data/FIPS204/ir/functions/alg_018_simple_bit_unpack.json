@@ -1,0 +1,34 @@
+{
+  "function_id": "alg_018_simple_bit_unpack",
+  "name": "SimpleBitUnpack",
+  "label": "Algorithm 18",
+  "page_start": 31,
+  "page_end": 31,
+  "inputs": [
+    {
+      "name": "v",
+      "type": "byte_array",
+      "description": "encoded bytes"
+    },
+    {
+      "name": "b",
+      "type": "int",
+      "description": "upper bound"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "w",
+      "type": "poly",
+      "description": "decoded polynomial"
+    }
+  ],
+  "body_raw": [
+    "𝑐 ← bitlen 𝑏",
+    "𝑧 ← BytesToBits(𝑣)",
+    "for 𝑖 from 0 to 255 do",
+    "𝑤𝑖 ← BitsToInteger((𝑧[𝑖𝑐], 𝑧[𝑖𝑐 + 1], … 𝑧[𝑖𝑐 + 𝑐 − 1]), 𝑐)",
+    "end for",
+    "return 𝑤"
+  ]
+}

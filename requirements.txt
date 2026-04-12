@@ -1,0 +1,19 @@
+﻿# =================================================
+# Agent4Cryptol 项目依赖
+# =================================================
+# 此文件包含项目运行所需的全部依赖
+
+# 核心工作流依赖
+langgraph
+langchain
+langchain-community
+langchain-openai
+
+# LLM backend compatibility
+# dashscope
+
+# Configuration management
+pydantic
+pyyaml
+
+# 注：不再需要 FastAPI/uvicorn（已移除独立API服务器）

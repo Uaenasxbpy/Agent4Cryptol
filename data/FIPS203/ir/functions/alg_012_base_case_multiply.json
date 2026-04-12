@@ -1,0 +1,51 @@
+{
+  "function_id": "alg_012_base_case_multiply",
+  "name": "BaseCaseMultiply",
+  "label": "Algorithm 12",
+  "page_start": 27,
+  "page_end": 27,
+  "inputs": [
+    {
+      "name": "a0",
+      "type": "int",
+      "description": "Constant term of first degree-1 polynomial modulo q"
+    },
+    {
+      "name": "a1",
+      "type": "int",
+      "description": "Linear term of first degree-1 polynomial modulo q"
+    },
+    {
+      "name": "b0",
+      "type": "int",
+      "description": "Constant term of second degree-1 polynomial modulo q"
+    },
+    {
+      "name": "b1",
+      "type": "int",
+      "description": "Linear term of second degree-1 polynomial modulo q"
+    },
+    {
+      "name": "gamma",
+      "type": "int",
+      "description": "Quadratic modulus X^2 - gamma modulo q"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "c0",
+      "type": "int",
+      "description": "Constant term of product modulo q"
+    },
+    {
+      "name": "c1",
+      "type": "int",
+      "description": "Linear term of product modulo q"
+    }
+  ],
+  "body_raw": [
+    "c0 ← a0 ⋅ b0 + a1 ⋅ b1 ⋅ gamma mod q",
+    "c1 ← a0 ⋅ b1 + a1 ⋅ b0 mod q",
+    "return (c0, c1)"
+  ]
+}

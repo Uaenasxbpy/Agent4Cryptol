@@ -1,0 +1,33 @@
+{
+  "function_id": "alg_023_pk_decode",
+  "name": "pkDecode",
+  "label": "Algorithm 23",
+  "page_start": 33,
+  "page_end": 33,
+  "inputs": [
+    {
+      "name": "pk",
+      "type": "byte_array",
+      "description": "public key"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "rho",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "t1",
+      "type": "vector",
+      "description": "compressed polynomial vector"
+    }
+  ],
+  "body_raw": [
+    "(rho, z0, ..., z_(k-1)) <- pk",
+    "for i from 0 to k - 1 do",
+    "t1[i] <- SimpleBitUnpack(z_i, 2^(bitlen(q - 1) - d) - 1)",
+    "end for",
+    "return (rho, t1)"
+  ]
+}

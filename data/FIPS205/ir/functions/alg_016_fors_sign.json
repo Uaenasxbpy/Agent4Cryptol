@@ -1,0 +1,49 @@
+{
+  "function_id": "alg_016_fors_sign",
+  "name": "fors_sign(md, SK.seed, PK.seed, ADRS)",
+  "label": "Algorithm 16",
+  "page_start": 31,
+  "page_end": 31,
+  "inputs": [
+    {
+      "name": "md",
+      "type": "byte_array",
+      "description": "message digest"
+    },
+    {
+      "name": "SK_seed",
+      "type": "byte_array",
+      "description": "secret seed"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "byte_array",
+      "description": "FORS address"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "SIG_FORS",
+      "type": "byte_array",
+      "description": "FORS signature"
+    }
+  ],
+  "body_raw": [
+    "SIG_FORS = NULL",
+    "indices ← base_2b(md, a, k)",
+    "for i from 0 to k - 1 do",
+    "  SIG_FORS ← SIG_FORS ∥ fors_skGen(SK.seed, PK.seed, ADRS, i * 2^a + indices[i])",
+    "  for j from 0 to a - 1 do",
+    "    s ← floor(indices[i] / 2^j) ⊕ 1",
+    "    AUTH[j] ← fors_node(SK.seed, i * 2^(a-j) + s, j, PK.seed, ADRS)",
+    "  end for",
+    "  SIG_FORS ← SIG_FORS ∥ AUTH",
+    "end for",
+    "return SIG_FORS"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "function_id": "alg_024_sk_encode",
+  "name": "skEncode",
+  "label": "Algorithm 24",
+  "page_start": 34,
+  "page_end": 34,
+  "inputs": [
+    {
+      "name": "rho",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "k",
+      "type": "byte_array",
+      "description": "signing seed"
+    },
+    {
+      "name": "tr",
+      "type": "byte_array",
+      "description": "public key hash"
+    },
+    {
+      "name": "s1",
+      "type": "vector",
+      "description": "secret vector s1"
+    },
+    {
+      "name": "s2",
+      "type": "vector",
+      "description": "secret vector s2"
+    },
+    {
+      "name": "t0",
+      "type": "vector",
+      "description": "low bits vector"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "sk",
+      "type": "byte_array",
+      "description": "private key"
+    }
+  ],
+  "body_raw": [
+    "𝑠𝑘 ← 𝜌||𝐾||𝑡𝑟",
+    "for 𝑖 from 0 to ℓ − 1 do",
+    "𝑠𝑘 ← 𝑠𝑘 || BitPack (𝐬1[𝑖], 𝜂, 𝜂)",
+    "end for",
+    "for 𝑖 from 0 to 𝑘 − 1 do",
+    "𝑠𝑘 ← 𝑠𝑘 || BitPack (𝐬2[𝑖], 𝜂, 𝜂)",
+    "end for",
+    "for 𝑖 from 0 to 𝑘 − 1 do",
+    "𝑠𝑘 ← 𝑠𝑘 || BitPack (𝐭0[𝑖], 2𝑑−1 − 1, 2𝑑−1)",
+    "end for",
+    "return 𝑠𝑘"
+  ]
+}

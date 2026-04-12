@@ -1,0 +1,35 @@
+{
+  "function_id": "alg_034_expand_mask",
+  "name": "ExpandMask",
+  "label": "Algorithm 34",
+  "page_start": 38,
+  "page_end": 38,
+  "inputs": [
+    {
+      "name": "rho",
+      "type": "byte_array",
+      "description": "seed"
+    },
+    {
+      "name": "mu",
+      "type": "int",
+      "description": "counter input"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "y",
+      "type": "vector",
+      "description": "sampled mask vector"
+    }
+  ],
+  "body_raw": [
+    "𝑐 ← 1 + bitlen (𝛾1 − 1) ▷ 𝛾1 is always a power of",
+    "for 𝑟 from 0 to ℓ − 1 do",
+    "𝜌′ ← 𝜌||IntegerToBytes(𝜇 + 𝑟, 2)",
+    "𝑣 ← H(𝜌′, 32𝑐) ▷ seed depends on 𝜇 + 𝑟",
+    "𝐲[𝑟] ← BitUnpack(𝑣, 𝛾1 − 1, 𝛾1)",
+    "end for",
+    "return 𝐲"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "function_id": "alg_011_multiply_ntts",
+  "name": "MultiplyNTTs",
+  "label": "Algorithm 11",
+  "page_start": 27,
+  "page_end": 27,
+  "inputs": [
+    {
+      "name": "f_hat",
+      "type": "poly",
+      "description": "First NTT representation as 256-element array modulo q"
+    },
+    {
+      "name": "g_hat",
+      "type": "poly",
+      "description": "Second NTT representation as 256-element array modulo q"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "h_hat",
+      "type": "poly",
+      "description": "Product of f_hat and g_hat in T_q as 256-element array modulo q"
+    }
+  ],
+  "body_raw": [
+    "for (i ← 0; i < 128; i ++)",
+    "    (h_hat[2i], h_hat[2i + 1]) ← BaseCaseMultiply(f_hat[2i], f_hat[2i + 1], g_hat[2i], g_hat[2i + 1], zeta^(2*BitRev7(i)+1))",
+    "end for",
+    "return h_hat"
+  ]
+}

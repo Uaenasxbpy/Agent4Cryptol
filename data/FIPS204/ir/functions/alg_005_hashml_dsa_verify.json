@@ -1,0 +1,61 @@
+{
+  "function_id": "alg_005_hashml_dsa_verify",
+  "name": "HashML-DSA.Verify",
+  "label": "Algorithm 5",
+  "page_start": 21,
+  "page_end": 21,
+  "inputs": [
+    {
+      "name": "pk",
+      "type": "byte_array",
+      "description": "public key"
+    },
+    {
+      "name": "m",
+      "type": "bit_array",
+      "description": "message"
+    },
+    {
+      "name": "sigma",
+      "type": "byte_array",
+      "description": "signature"
+    },
+    {
+      "name": "ctx",
+      "type": "byte_array",
+      "description": "context string"
+    },
+    {
+      "name": "ph",
+      "type": "hash_function",
+      "description": "pre-hash function"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "is_valid",
+      "type": "bool",
+      "description": "verification result"
+    }
+  ],
+  "body_raw": [
+    "if |ctx| > 255 then",
+    "return false",
+    "end if",
+    "switch PH do",
+    "case SHA-256:",
+    "OID <- 0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x01",
+    "PHM <- SHA256(M)",
+    "case SHA-512:",
+    "OID <- 0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x03",
+    "PHM <- SHA512(M)",
+    "case SHAKE128:",
+    "OID <- 0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x0B",
+    "PHM <- SHAKE128(M, 256)",
+    "case ...",
+    "...",
+    "end switch",
+    "M_prime <- BytesToBits(IntegerToBytes(1, 1) || IntegerToBytes(|ctx|, 1) || ctx || OID || PHM)",
+    "return ML-DSA.Verify_internal(pk, M_prime, sigma)"
+  ]
+}

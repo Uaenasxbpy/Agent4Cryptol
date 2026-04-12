@@ -1,0 +1,33 @@
+{
+  "function_id": "alg_010_bits_to_integer",
+  "name": "BitsToInteger",
+  "label": "Algorithm 10",
+  "page_start": 28,
+  "page_end": 28,
+  "inputs": [
+    {
+      "name": "y",
+      "type": "bit_array",
+      "description": "bit string"
+    },
+    {
+      "name": "alpha",
+      "type": "int",
+      "description": "bit length"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "x",
+      "type": "int",
+      "description": "integer value"
+    }
+  ],
+  "body_raw": [
+    "𝑥 ←",
+    "for 𝑖 from 1 to 𝛼 do",
+    "𝑥 ← 2𝑥 + 𝑦[𝛼 − 𝑖]",
+    "end for",
+    "return 𝑥"
+  ]
+}

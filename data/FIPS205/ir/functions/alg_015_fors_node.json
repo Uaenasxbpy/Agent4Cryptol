@@ -1,0 +1,56 @@
+{
+  "function_id": "alg_015_fors_node",
+  "name": "fors_node(SK.seed, i, z, PK.seed, ADRS)",
+  "label": "Algorithm 15",
+  "page_start": 30,
+  "page_end": 30,
+  "inputs": [
+    {
+      "name": "SK_seed",
+      "type": "byte_array",
+      "description": "secret seed"
+    },
+    {
+      "name": "i",
+      "type": "int",
+      "description": "target node index"
+    },
+    {
+      "name": "z",
+      "type": "int",
+      "description": "target node height"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "byte_array",
+      "description": "FORS address"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "node",
+      "type": "byte_array",
+      "description": "root of target FORS subtree"
+    }
+  ],
+  "body_raw": [
+    "if z = 0 then",
+    "  sk ← fors_skGen(SK.seed, PK.seed, ADRS, i)",
+    "  ADRS.setTreeHeight(0)",
+    "  ADRS.setTreeIndex(i)",
+    "  node ← F(PK.seed, ADRS, sk)",
+    "else",
+    "  lnode ← fors_node(SK.seed, 2*i, z - 1, PK.seed, ADRS)",
+    "  rnode ← fors_node(SK.seed, 2*i + 1, z - 1, PK.seed, ADRS)",
+    "  ADRS.setTreeHeight(z)",
+    "  ADRS.setTreeIndex(i)",
+    "  node ← H(PK.seed, ADRS, lnode ∥ rnode)",
+    "end if",
+    "return node"
+  ]
+}

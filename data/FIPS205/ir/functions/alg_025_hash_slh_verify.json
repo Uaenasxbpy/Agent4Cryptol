@@ -1,0 +1,55 @@
+{
+  "function_id": "alg_025_hash_slh_verify",
+  "name": "hash_slh_verify(M, SIG, ctx, PH, PK)",
+  "label": "Algorithm 25",
+  "page_start": 42,
+  "page_end": 42,
+  "inputs": [
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "SIG",
+      "type": "byte_array",
+      "description": "signature"
+    },
+    {
+      "name": "ctx",
+      "type": "byte_array",
+      "description": "context string"
+    },
+    {
+      "name": "PH",
+      "type": "string",
+      "description": "pre-hash function identifier"
+    },
+    {
+      "name": "PK",
+      "type": "tuple",
+      "description": "public key"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "bool",
+      "description": "verification result"
+    }
+  ],
+  "body_raw": [
+    "if |ctx| > 255 then",
+    "  return false",
+    "end if",
+    "switch PH do",
+    "  case SHA-256: OID ← toByte(0x0609608648016503040201, 11); PHM ← SHA-256(M)",
+    "  case SHA-512: OID ← toByte(0x0609608648016503040203, 11); PHM ← SHA-512(M)",
+    "  case SHAKE128: OID ← toByte(0x060960864801650304020B, 11); PHM ← SHAKE128(M, 256)",
+    "  case SHAKE256: OID ← toByte(0x060960864801650304020C, 11); PHM ← SHAKE256(M, 512)",
+    "  case … : …",
+    "end switch",
+    "M′ ← toByte(1, 1) ∥ toByte(|ctx|, 1) ∥ ctx ∥ OID ∥ PHM",
+    "return slh_verify_internal(M′, SIG, PK)"
+  ]
+}

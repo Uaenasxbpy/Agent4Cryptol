@@ -1,0 +1,24 @@
+{
+  "parameter_resolution_rules": [
+    {
+      "priority": 1,
+      "rule": "Use explicit function inputs first."
+    },
+    {
+      "priority": 2,
+      "rule": "Resolve from global_constants if available."
+    },
+    {
+      "priority": 3,
+      "rule": "Resolve from parameter_sets using active parameter set."
+    },
+    {
+      "priority": 4,
+      "rule": "Map implicit symbols like eta or gamma from context."
+    },
+    {
+      "priority": 5,
+      "rule": "If unresolved, keep symbolic and do not guess."
+    }
+  ]
+}

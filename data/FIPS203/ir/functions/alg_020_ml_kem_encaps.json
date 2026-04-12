@@ -1,0 +1,34 @@
+{
+  "function_id": "alg_020_ml_kem_encaps",
+  "name": "ML-KEM.Encaps",
+  "label": "Algorithm 20",
+  "page_start": 37,
+  "page_end": 37,
+  "inputs": [
+    {
+      "name": "ek",
+      "type": "byte_array",
+      "description": "Checked encapsulation key of length 384k + 32 bytes"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "K",
+      "type": "byte_array",
+      "description": "32-byte shared secret key, or ⊥ on RBG failure"
+    },
+    {
+      "name": "c",
+      "type": "byte_array",
+      "description": "Ciphertext of length 32*(d_u*k + d_v) bytes, or ⊥ on RBG failure"
+    }
+  ],
+  "body_raw": [
+    "m ← random B^32",
+    "if m == NULL then",
+    "    return ⊥",
+    "end if",
+    "(K, c) ← ML-KEM.Encaps_internal(ek, m)",
+    "return (K, c)"
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "parameter_sets": [
+    {
+      "set_name": "ML-KEM-512",
+      "parameters": [
+        {
+          "name": "k",
+          "value": 2,
+          "type": "int",
+          "description": "module dimension"
+        },
+        {
+          "name": "eta1",
+          "value": 3,
+          "type": "int",
+          "description": "CBD parameter for s e and y"
+        },
+        {
+          "name": "eta2",
+          "value": 2,
+          "type": "int",
+          "description": "CBD parameter for e1 and e2"
+        },
+        {
+          "name": "du",
+          "value": 10,
+          "type": "int",
+          "description": "compression parameter for u"
+        },
+        {
+          "name": "dv",
+          "value": 4,
+          "type": "int",
+          "description": "compression parameter for v"
+        },
+        {
+          "name": "required_rbg_strength",
+          "value": 128,
+          "type": "int",
+          "description": "required RBG security strength in bits"
+        }
+      ]
+    },
+    {
+      "set_name": "ML-KEM-768",
+      "parameters": [
+        {
+          "name": "k",
+          "value": 3,
+          "type": "int",
+          "description": "module dimension"
+        },
+        {
+          "name": "eta1",
+          "value": 2,
+          "type": "int",
+          "description": "CBD parameter for s e and y"
+        },
+        {
+          "name": "eta2",
+          "value": 2,
+          "type": "int",
+          "description": "CBD parameter for e1 and e2"
+        },
+        {
+          "name": "du",
+          "value": 10,
+          "type": "int",
+          "description": "compression parameter for u"
+        },
+        {
+          "name": "dv",
+          "value": 4,
+          "type": "int",
+          "description": "compression parameter for v"
+        },
+        {
+          "name": "required_rbg_strength",
+          "value": 192,
+          "type": "int",
+          "description": "required RBG security strength in bits"
+        }
+      ]
+    },
+    {
+      "set_name": "ML-KEM-1024",
+      "parameters": [
+        {
+          "name": "k",
+          "value": 4,
+          "type": "int",
+          "description": "module dimension"
+        },
+        {
+          "name": "eta1",
+          "value": 2,
+          "type": "int",
+          "description": "CBD parameter for s e and y"
+        },
+        {
+          "name": "eta2",
+          "value": 2,
+          "type": "int",
+          "description": "CBD parameter for e1 and e2"
+        },
+        {
+          "name": "du",
+          "value": 11,
+          "type": "int",
+          "description": "compression parameter for u"
+        },
+        {
+          "name": "dv",
+          "value": 5,
+          "type": "int",
+          "description": "compression parameter for v"
+        },
+        {
+          "name": "required_rbg_strength",
+          "value": 256,
+          "type": "int",
+          "description": "required RBG security strength in bits"
+        }
+      ]
+    }
+  ]
+}

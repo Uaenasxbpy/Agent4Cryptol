@@ -1,0 +1,43 @@
+{
+  "function_id": "alg_024_slh_verify",
+  "name": "slh_verify(M, SIG, ctx, PK)",
+  "label": "Algorithm 24",
+  "page_start": 41,
+  "page_end": 41,
+  "inputs": [
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "SIG",
+      "type": "byte_array",
+      "description": "signature"
+    },
+    {
+      "name": "ctx",
+      "type": "byte_array",
+      "description": "context string"
+    },
+    {
+      "name": "PK",
+      "type": "tuple",
+      "description": "public key"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "bool",
+      "description": "verification result"
+    }
+  ],
+  "body_raw": [
+    "if |ctx| > 255 then",
+    "  return false",
+    "end if",
+    "M′ ← toByte(0, 1) ∥ toByte(|ctx|, 1) ∥ ctx ∥ M",
+    "return slh_verify_internal(M′, SIG, PK)"
+  ]
+}

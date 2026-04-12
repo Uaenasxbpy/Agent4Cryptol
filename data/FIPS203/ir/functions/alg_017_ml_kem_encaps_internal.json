@@ -1,0 +1,36 @@
+{
+  "function_id": "alg_017_ml_kem_encaps_internal",
+  "name": "ML-KEM.Encaps_internal",
+  "label": "Algorithm 17",
+  "page_start": 33,
+  "page_end": 33,
+  "inputs": [
+    {
+      "name": "ek",
+      "type": "byte_array",
+      "description": "Encapsulation key of length 384k + 32 bytes"
+    },
+    {
+      "name": "m",
+      "type": "byte_array",
+      "description": "32-byte random input"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "K",
+      "type": "byte_array",
+      "description": "32-byte shared secret key"
+    },
+    {
+      "name": "c",
+      "type": "byte_array",
+      "description": "Ciphertext of length 32*(d_u*k + d_v) bytes"
+    }
+  ],
+  "body_raw": [
+    "(K, r) ← G(m || H(ek))",
+    "c ← K-PKE.Encrypt(ek, m, r)",
+    "return (K, c)"
+  ]
+}

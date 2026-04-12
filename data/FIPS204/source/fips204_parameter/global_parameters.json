@@ -1,0 +1,60 @@
+{
+  "document_name": "FIPS 204",
+  "algorithm_family": "ML-DSA",
+  "global_constants": [
+    {
+      "name": "n",
+      "value": 256,
+      "type": "int",
+      "description": "polynomial degree"
+    },
+    {
+      "name": "q",
+      "value": 8380417,
+      "type": "int",
+      "description": "modulus"
+    }
+  ],
+  "parameter_variables": [
+    {
+      "name": "k",
+      "type": "int",
+      "description": "matrix row dimension"
+    },
+    {
+      "name": "ell",
+      "type": "int",
+      "description": "matrix column dimension"
+    },
+    {
+      "name": "eta",
+      "type": "int",
+      "description": "secret distribution parameter"
+    },
+    {
+      "name": "gamma1",
+      "type": "int",
+      "description": "mask bound parameter"
+    },
+    {
+      "name": "gamma2",
+      "type": "int",
+      "description": "rounding bound parameter"
+    },
+    {
+      "name": "tau",
+      "type": "int",
+      "description": "challenge weight"
+    },
+    {
+      "name": "beta",
+      "type": "int",
+      "description": "norm bound for rejection"
+    },
+    {
+      "name": "omega",
+      "type": "int",
+      "description": "hint weight bound"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "function_id": "alg_020_slh_verify_internal",
+  "name": "slh_verify_internal(M, SIG, PK)",
+  "label": "Algorithm 20",
+  "page_start": 36,
+  "page_end": 36,
+  "inputs": [
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "SIG",
+      "type": "byte_array",
+      "description": "signature"
+    },
+    {
+      "name": "PK",
+      "type": "tuple",
+      "description": "public key tuple"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "bool",
+      "description": "verification result"
+    }
+  ],
+  "body_raw": [
+    "if |SIG| ≠ (1 + k(1 + a) + h + d * len) * n then",
+    "  return false",
+    "end if",
+    "ADRS ← toByte(0, 32)",
+    "R ← SIG.getR()",
+    "SIG_FORS ← SIG.getSIG_FORS()",
+    "SIG_HT ← SIG.getSIG_HT()",
+    "digest ← Hmsg(R, PK.seed, PK.root, M)",
+    "md ← digest[0 : ceil(k*a/8)]",
+    "tmp_idxtree ← digest[ceil(k*a/8) : ceil(k*a/8) + ceil((h-h/d)/8)]",
+    "tmp_idxleaf ← digest[ceil(k*a/8) + ceil((h-h/d)/8) : ceil(k*a/8) + ceil((h-h/d)/8) + ceil(h/(8*d))]",
+    "idxtree ← toInt(tmp_idxtree, ceil((h-h/d)/8)) mod 2^(h-h/d)",
+    "idxleaf ← toInt(tmp_idxleaf, ceil(h/(8*d))) mod 2^(h/d)",
+    "ADRS.setTreeAddress(idxtree)",
+    "ADRS.setTypeAndClear(FORS_TREE)",
+    "ADRS.setKeyPairAddress(idxleaf)",
+    "PK_FORS ← fors_pkFromSig(SIG_FORS, md, PK.seed, ADRS)",
+    "return ht_verify(PK_FORS, SIG_HT, PK.seed, idxtree, idxleaf, PK.root)"
+  ]
+}

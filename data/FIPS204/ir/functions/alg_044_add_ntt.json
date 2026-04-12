@@ -1,0 +1,32 @@
+{
+  "function_id": "alg_044_add_ntt",
+  "name": "AddNTT",
+  "label": "Algorithm 44",
+  "page_start": 45,
+  "page_end": 45,
+  "inputs": [
+    {
+      "name": "a_hat",
+      "type": "ntt_poly",
+      "description": "first NTT element"
+    },
+    {
+      "name": "b_hat",
+      "type": "ntt_poly",
+      "description": "second NTT element"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "c_hat",
+      "type": "ntt_poly",
+      "description": "sum in NTT domain"
+    }
+  ],
+  "body_raw": [
+    "for i from 0 to 255 do",
+    "c_hat[i] <- a_hat[i] + b_hat[i]",
+    "end for",
+    "return c_hat"
+  ]
+}

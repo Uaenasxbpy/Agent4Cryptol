@@ -1,0 +1,43 @@
+{
+  "function_id": "alg_041_ntt",
+  "name": "NTT",
+  "label": "Algorithm 41",
+  "page_start": 43,
+  "page_end": 43,
+  "inputs": [
+    {
+      "name": "w",
+      "type": "poly",
+      "description": "input polynomial"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "w_hat",
+      "type": "ntt_poly",
+      "description": "NTT representation"
+    }
+  ],
+  "body_raw": [
+    "for j from 0 to 255 do",
+    "w_hat[j] <- w_j",
+    "end for",
+    "m <- 0",
+    "len <- 128",
+    "while len >= 1 do",
+    "start <- 0",
+    "while start < 256 do",
+    "m <- m + 1",
+    "z <- zetas[m]",
+    "for j from start to start + len - 1 do",
+    "t <- (z * w_hat[j + len]) mod q",
+    "w_hat[j + len] <- (w_hat[j] - t) mod q",
+    "w_hat[j] <- (w_hat[j] + t) mod q",
+    "end for",
+    "start <- start + 2 * len",
+    "end while",
+    "len <- floor(len / 2)",
+    "end while",
+    "return w_hat"
+  ]
+}

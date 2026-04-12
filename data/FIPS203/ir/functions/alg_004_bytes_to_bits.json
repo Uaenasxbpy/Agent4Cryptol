@@ -1,0 +1,31 @@
+{
+  "function_id": "alg_004_bytes_to_bytes",
+  "name": "BytesToBits",
+  "label": "Algorithm 4",
+  "page_start": 20,
+  "page_end": 20,
+  "inputs": [
+    {
+      "name": "B",
+      "type": "byte_array",
+      "description": "Input byte array"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "b",
+      "type": "bit_array",
+      "description": "Converted bit array of length 8 * |B|"
+    }
+  ],
+  "body_raw": [
+    "C ← B",
+    "for (i ← 0; i < ℓ; i ++)",
+    "    for (j ← 0; j < 8; j ++)",
+    "        b[8i + j] ← C[i] mod 2",
+    "        C[i] ← ⌊C[i]/2⌋",
+    "    end for",
+    "end for",
+    "return b"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "function_id": "alg_015_k_pke_decrypt",
+  "name": "K-PKE.Decrypt",
+  "label": "Algorithm 15",
+  "page_start": 31,
+  "page_end": 31,
+  "inputs": [
+    {
+      "name": "dkPKE",
+      "type": "byte_array",
+      "description": "Decryption key of length 384k bytes"
+    },
+    {
+      "name": "c",
+      "type": "byte_array",
+      "description": "Ciphertext of length 32*(d_u*k + d_v) bytes"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "m",
+      "type": "byte_array",
+      "description": "32-byte decrypted plaintext message"
+    }
+  ],
+  "body_raw": [
+    "c1 ← c[0 : 32*d_u*k]",
+    "c2 ← c[32*d_u*k : 32*(d_u*k + d_v)]",
+    "u_prime ← Decompress_d_u(ByteDecode_d_u(c1))",
+    "v_prime ← Decompress_d_v(ByteDecode_d_v(c2))",
+    "s_hat ← ByteDecode12(dkPKE)",
+    "w ← v_prime - NTT_inverse(s_hat_transpose ∘ NTT(u_prime))",
+    "m ← ByteEncode1(Compress1(w))",
+    "return m"
+  ]
+}

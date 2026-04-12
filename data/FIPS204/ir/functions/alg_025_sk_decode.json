@@ -1,0 +1,59 @@
+{
+  "function_id": "alg_025_sk_decode",
+  "name": "skDecode",
+  "label": "Algorithm 25",
+  "page_start": 34,
+  "page_end": 34,
+  "inputs": [
+    {
+      "name": "sk",
+      "type": "byte_array",
+      "description": "private key"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "rho",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "k",
+      "type": "byte_array",
+      "description": "signing seed"
+    },
+    {
+      "name": "tr",
+      "type": "byte_array",
+      "description": "public key hash"
+    },
+    {
+      "name": "s1",
+      "type": "vector",
+      "description": "secret vector s1"
+    },
+    {
+      "name": "s2",
+      "type": "vector",
+      "description": "secret vector s2"
+    },
+    {
+      "name": "t0",
+      "type": "vector",
+      "description": "low bits vector"
+    }
+  ],
+  "body_raw": [
+    "(𝜌, 𝐾, 𝑡𝑟, 𝑦0, … , 𝑦ℓ−1, 𝑧0, … , 𝑧𝑘−1, 𝑤0, … , 𝑤𝑘−1) ∈ 𝔹32 × 𝔹32 × 𝔹64 × (𝔹32⋅bitlen (2𝜂)) ℓ × (𝔹32⋅bitlen (2𝜂)) 𝑘 × (𝔹32𝑑) 𝑘 ← 𝑠𝑘",
+    "for 𝑖 from 0 to ℓ − 1 do",
+    "𝐬1[𝑖] ← BitUnpack(𝑦𝑖, 𝜂, 𝜂) ▷ this may lie outside [−𝜂, 𝜂] if input is malformed",
+    "end for",
+    "for 𝑖 from 0 to 𝑘 − 1 do",
+    "𝐬2[𝑖] ← BitUnpack(𝑧𝑖, 𝜂, 𝜂) ▷ this may lie outside [−𝜂, 𝜂] if input is malformed",
+    "end for",
+    "for 𝑖 from 0 to 𝑘 − 1 do",
+    "𝐭0[𝑖] ← BitUnpack(𝑤𝑖, 2𝑑−1 − 1, 2𝑑−1) ▷ this is always in the correct range",
+    "end for",
+    "return (𝜌, 𝐾, 𝑡𝑟, 𝐬1, 𝐬2, 𝐭0) Next, sigEncode and sigDecode translate ML-DSA signatures into byte strings and vice versa. When verifying a signature, sigDecode might take input that comes from an untrusted source. Thus, care is required when using BitUnpack. As used here, BitUnpack always returns values in the correct range."
+  ]
+}

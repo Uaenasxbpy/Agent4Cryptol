@@ -1,0 +1,62 @@
+{
+  "function_id": "alg_011_xmss_pk_from_sig",
+  "name": "xmss_pkFromSig(idx, SIG_XMSS, M, PK.seed, ADRS)",
+  "label": "Algorithm 11",
+  "page_start": 25,
+  "page_end": 25,
+  "inputs": [
+    {
+      "name": "idx",
+      "type": "int",
+      "description": "leaf index"
+    },
+    {
+      "name": "SIG_XMSS",
+      "type": "byte_array",
+      "description": "XMSS signature"
+    },
+    {
+      "name": "M",
+      "type": "byte_array",
+      "description": "message"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "byte_array",
+      "description": "address of XMSS tree"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "node_0",
+      "type": "byte_array",
+      "description": "derived XMSS public key"
+    }
+  ],
+  "body_raw": [
+    "ADRS.setTypeAndClear(WOTS_HASH)",
+    "ADRS.setKeyPairAddress(idx)",
+    "sig ← SIG_XMSS.getWOTSSig()",
+    "AUTH ← SIG_XMSS.getXMSSAUTH()",
+    "node[0] ← wots_pkFromSig(sig, M, PK.seed, ADRS)",
+    "ADRS.setTypeAndClear(TREE)",
+    "ADRS.setTreeIndex(idx)",
+    "for k from 0 to h′ - 1 do",
+    "  ADRS.setTreeHeight(k + 1)",
+    "  if floor(idx / 2^k) is even then",
+    "    ADRS.setTreeIndex(ADRS.getTreeIndex() / 2)",
+    "    node[1] ← H(PK.seed, ADRS, node[0] ∥ AUTH[k])",
+    "  else",
+    "    ADRS.setTreeIndex((ADRS.getTreeIndex() - 1) / 2)",
+    "    node[1] ← H(PK.seed, ADRS, AUTH[k] ∥ node[0])",
+    "  end if",
+    "  node[0] ← node[1]",
+    "end for",
+    "return node[0]"
+  ]
+}

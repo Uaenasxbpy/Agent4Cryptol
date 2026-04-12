@@ -1,0 +1,56 @@
+{
+  "function_id": "alg_009_xmss_node",
+  "name": "xmss_node(SK.seed, i, z, PK.seed, ADRS)",
+  "label": "Algorithm 9",
+  "page_start": 23,
+  "page_end": 23,
+  "inputs": [
+    {
+      "name": "SK_seed",
+      "type": "byte_array",
+      "description": "secret seed"
+    },
+    {
+      "name": "i",
+      "type": "int",
+      "description": "target node index"
+    },
+    {
+      "name": "z",
+      "type": "int",
+      "description": "target node height"
+    },
+    {
+      "name": "PK_seed",
+      "type": "byte_array",
+      "description": "public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "byte_array",
+      "description": "address of XMSS tree"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "node",
+      "type": "byte_array",
+      "description": "root of target Merkle subtree"
+    }
+  ],
+  "body_raw": [
+    "if z = 0 then",
+    "  ADRS.setTypeAndClear(WOTS_HASH)",
+    "  ADRS.setKeyPairAddress(i)",
+    "  node ← wots_pkGen(SK.seed, PK.seed, ADRS)",
+    "else",
+    "  lnode ← xmss_node(SK.seed, 2*i, z - 1, PK.seed, ADRS)",
+    "  rnode ← xmss_node(SK.seed, 2*i + 1, z - 1, PK.seed, ADRS)",
+    "  ADRS.setTypeAndClear(TREE)",
+    "  ADRS.setTreeHeight(z)",
+    "  ADRS.setTreeIndex(i)",
+    "  node ← H(PK.seed, ADRS, lnode ∥ rnode)",
+    "end if",
+    "return node"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "function_id": "alg_008_sample_poly_cbd_eta",
+  "name": "SamplePolyCBD_eta",
+  "label": "Algorithm 8",
+  "page_start": 23,
+  "page_end": 23,
+  "inputs": [
+    {
+      "name": "B",
+      "type": "byte_array",
+      "description": "Input byte array of length 64*eta"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "f",
+      "type": "int_array",
+      "description": "256-element array of coefficients modulo q sampled from CBD distribution"
+    }
+  ],
+  "body_raw": [
+    "b ← BytesToBits(B)",
+    "for (i ← 0; i < 256; i ++)",
+    "    x ← sum_{j=0}^{eta-1} b[2*i*eta + j]",
+    "    y ← sum_{j=0}^{eta-1} b[2*i*eta + eta + j]",
+    "    f[i] ← x - y mod q",
+    "end for",
+    "return f"
+  ]
+}

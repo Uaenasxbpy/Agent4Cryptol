@@ -1,0 +1,46 @@
+{
+  "function_id": "alg_008_ml_dsa_verify_internal",
+  "name": "ML-DSA.Verify_internal",
+  "label": "Algorithm 8",
+  "page_start": 27,
+  "page_end": 27,
+  "inputs": [
+    {
+      "name": "pk",
+      "type": "byte_array",
+      "description": "public key"
+    },
+    {
+      "name": "m_prime",
+      "type": "bit_array",
+      "description": "formatted message"
+    },
+    {
+      "name": "sigma",
+      "type": "byte_array",
+      "description": "signature"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "is_valid",
+      "type": "bool",
+      "description": "verification result"
+    }
+  ],
+  "body_raw": [
+    "(𝜌, 𝐭1) ← pkDecode(𝑝𝑘)",
+    "(𝑐, 𝐳, 𝐡) ← sigDecode(𝜎) 𝑐,̃ response 𝐳, and hint 𝐡̃ ▷ signer’s commitment hash",
+    "if 𝐡 = ⊥ then return false ▷ hint was not properly encoded",
+    "end if ̂ ̂",
+    "𝐀 ← ExpandA(𝜌) ▷ 𝐀 is generated and stored in NTT representation as 𝐀",
+    "𝑡𝑟 ← H(𝑝𝑘, 64)",
+    "𝜇 ← (H(BytesToBits(𝑡𝑟)||𝑀 ′, 64)) ▷ message representative that may optionally be computed in a different cryptographic module",
+    "𝑐 ∈ 𝑅 𝑞 ← SampleInBall(𝑐)̃ ▷ compute verifier’s challenge from 𝑐̃",
+    "𝐰′ ← NTT−1(𝐀 ∘̂ NTT(𝐳) − NTT(𝑐) ∘ NTT(𝐭1 ⋅ 2𝑑)) ▷ 𝐰′ = 𝐀𝐳 − 𝑐𝐭1 ⋅ 2𝑑 Approx Approx",
+    "𝐰1 ′ ← UseHint(𝐡, 𝐰′ ) ▷ reconstruction of signer’s commitment Approx",
+    "▷ UseHint is applied componentwise (see explanatory text in Section 7.4)",
+    "𝑐′̃ ← H(𝜇||w1Encode(𝐰′ 1), 𝜆/4) ▷ hash it; this should match 𝑐̃",
+    "return [[ ||𝐳||∞ < 𝛾1 − 𝛽]] and [[𝑐̃ = 𝑐′̃ ]]"
+  ]
+}

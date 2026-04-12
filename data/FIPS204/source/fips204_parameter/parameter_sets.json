@@ -1,0 +1,163 @@
+{
+  "parameter_sets": [
+    {
+      "set_name": "ML-DSA-44",
+      "parameters": [
+        {
+          "name": "k",
+          "value": 4,
+          "type": "int",
+          "description": "matrix row dimension"
+        },
+        {
+          "name": "ell",
+          "value": 4,
+          "type": "int",
+          "description": "matrix column dimension"
+        },
+        {
+          "name": "eta",
+          "value": 2,
+          "type": "int",
+          "description": "secret distribution parameter"
+        },
+        {
+          "name": "gamma1",
+          "value": 131072,
+          "type": "int",
+          "description": "mask bound parameter"
+        },
+        {
+          "name": "gamma2",
+          "value": 95232,
+          "type": "int",
+          "description": "rounding bound parameter"
+        },
+        {
+          "name": "tau",
+          "value": 39,
+          "type": "int",
+          "description": "challenge weight"
+        },
+        {
+          "name": "beta",
+          "value": 78,
+          "type": "int",
+          "description": "norm bound for rejection"
+        },
+        {
+          "name": "omega",
+          "value": 80,
+          "type": "int",
+          "description": "hint weight bound"
+        }
+      ]
+    },
+    {
+      "set_name": "ML-DSA-65",
+      "parameters": [
+        {
+          "name": "k",
+          "value": 6,
+          "type": "int",
+          "description": "matrix row dimension"
+        },
+        {
+          "name": "ell",
+          "value": 5,
+          "type": "int",
+          "description": "matrix column dimension"
+        },
+        {
+          "name": "eta",
+          "value": 4,
+          "type": "int",
+          "description": "secret distribution parameter"
+        },
+        {
+          "name": "gamma1",
+          "value": 524288,
+          "type": "int",
+          "description": "mask bound parameter"
+        },
+        {
+          "name": "gamma2",
+          "value": 261888,
+          "type": "int",
+          "description": "rounding bound parameter"
+        },
+        {
+          "name": "tau",
+          "value": 49,
+          "type": "int",
+          "description": "challenge weight"
+        },
+        {
+          "name": "beta",
+          "value": 196,
+          "type": "int",
+          "description": "norm bound for rejection"
+        },
+        {
+          "name": "omega",
+          "value": 55,
+          "type": "int",
+          "description": "hint weight bound"
+        }
+      ]
+    },
+    {
+      "set_name": "ML-DSA-87",
+      "parameters": [
+        {
+          "name": "k",
+          "value": 8,
+          "type": "int",
+          "description": "matrix row dimension"
+        },
+        {
+          "name": "ell",
+          "value": 7,
+          "type": "int",
+          "description": "matrix column dimension"
+        },
+        {
+          "name": "eta",
+          "value": 2,
+          "type": "int",
+          "description": "secret distribution parameter"
+        },
+        {
+          "name": "gamma1",
+          "value": 524288,
+          "type": "int",
+          "description": "mask bound parameter"
+        },
+        {
+          "name": "gamma2",
+          "value": 261888,
+          "type": "int",
+          "description": "rounding bound parameter"
+        },
+        {
+          "name": "tau",
+          "value": 60,
+          "type": "int",
+          "description": "challenge weight"
+        },
+        {
+          "name": "beta",
+          "value": 120,
+          "type": "int",
+          "description": "norm bound for rejection"
+        },
+        {
+          "name": "omega",
+          "value": 75,
+          "type": "int",
+          "description": "hint weight bound"
+        }
+      ]
+    }
+  ]
+}

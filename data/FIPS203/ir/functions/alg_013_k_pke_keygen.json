@@ -1,0 +1,49 @@
+{
+  "function_id": "alg_013_k_pke_keygen",
+  "name": "K-PKE.KeyGen",
+  "label": "Algorithm 13",
+  "page_start": 29,
+  "page_end": 29,
+  "inputs": [
+    {
+      "name": "d",
+      "type": "byte_array",
+      "description": "32-byte random seed"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "ekPKE",
+      "type": "byte_array",
+      "description": "Encryption key of length 384k + 32 bytes"
+    },
+    {
+      "name": "dkPKE",
+      "type": "byte_array",
+      "description": "Decryption key of length 384k bytes"
+    }
+  ],
+  "body_raw": [
+    "(rho, sigma) ← G(d || k)",
+    "N ← 0",
+    "for (i ← 0; i < k; i ++)",
+    "    for (j ← 0; j < k; j ++)",
+    "        A_hat[i,j] ← SampleNTT(rho || j || i)",
+    "    end for",
+    "end for",
+    "for (i ← 0; i < k; i ++)",
+    "        s[i] ← SamplePolyCBD_eta1(PRF_eta1(sigma, N))",
+    "        N ← N + 1",
+    "end for",
+    "for (i ← 0; i < k; i ++)",
+    "        e[i] ← SamplePolyCBD_eta1(PRF_eta1(sigma, N))",
+    "        N ← N + 1",
+    "end for",
+    "s_hat ← NTT(s)",
+    "e_hat ← NTT(e)",
+    "t_hat ← A_hat ∘ s_hat + e_hat",
+    "ekPKE ← ByteEncode12(t_hat) || rho",
+    "dkPKE ← ByteEncode12(s_hat)",
+    "return (ekPKE, dkPKE)"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "function_id": "alg_020_hint_bit_pack",
+  "name": "HintBitPack",
+  "label": "Algorithm 20",
+  "page_start": 32,
+  "page_end": 32,
+  "inputs": [
+    {
+      "name": "h",
+      "type": "vector",
+      "description": "hint polynomial vector"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "y",
+      "type": "byte_array",
+      "description": "encoded bytes"
+    }
+  ],
+  "body_raw": [
+    "y <- 0^(omega + k)",
+    "Index <- 0",
+    "for i from 0 to k - 1 do",
+    "for j from 0 to 255 do",
+    "if h[i]_j != 0 then",
+    "y[Index] <- j",
+    "Index <- Index + 1",
+    "end if",
+    "end for",
+    "y[omega + i] <- Index",
+    "end for",
+    "return y"
+  ]
+}

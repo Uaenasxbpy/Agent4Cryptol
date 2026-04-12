@@ -1,0 +1,28 @@
+{
+  "function_id": "alg_003_bits_to_bytes",
+  "name": "BitsToBytes",
+  "label": "Algorithm 3",
+  "page_start": 20,
+  "page_end": 20,
+  "inputs": [
+    {
+      "name": "b",
+      "type": "bit_array",
+      "description": "Bit array of length multiple of 8"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "B",
+      "type": "byte_array",
+      "description": "Converted byte array"
+    }
+  ],
+  "body_raw": [
+    "B ← (0, … , 0)",
+    "for (i ← 0; i < 8ℓ; i ++)",
+    "    B[⌊i/8⌋] ← B[⌊i/8⌋] + b[i] ⋅ 2^(i mod 8)",
+    "end for",
+    "return B"
+  ]
+}

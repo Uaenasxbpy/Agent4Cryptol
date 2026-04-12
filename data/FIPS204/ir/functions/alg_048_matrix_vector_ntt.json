@@ -1,0 +1,35 @@
+{
+  "function_id": "alg_048_matrix_vector_ntt",
+  "name": "MatrixVectorNTT",
+  "label": "Algorithm 48",
+  "page_start": 46,
+  "page_end": 46,
+  "inputs": [
+    {
+      "name": "M_hat",
+      "type": "matrix",
+      "description": "NTT matrix"
+    },
+    {
+      "name": "v_hat",
+      "type": "vector",
+      "description": "NTT vector"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "w_hat",
+      "type": "vector",
+      "description": "product vector"
+    }
+  ],
+  "body_raw": [
+    "w_hat <- 0^k",
+    "for i from 0 to k - 1 do",
+    "for j from 0 to ell - 1 do",
+    "w_hat[i] <- AddNTT(w_hat[i], MultiplyNTT(M_hat[i, j], v_hat[j]))",
+    "end for",
+    "end for",
+    "return w_hat"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "function_id": "alg_047_scalar_vector_ntt",
+  "name": "ScalarVectorNTT",
+  "label": "Algorithm 47",
+  "page_start": 46,
+  "page_end": 46,
+  "inputs": [
+    {
+      "name": "c_hat",
+      "type": "ntt_poly",
+      "description": "scalar NTT element"
+    },
+    {
+      "name": "v_hat",
+      "type": "vector",
+      "description": "NTT vector"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "w_hat",
+      "type": "vector",
+      "description": "scaled vector"
+    }
+  ],
+  "body_raw": [
+    "for i from 0 to ell - 1 do",
+    "w_hat[i] <- MultiplyNTT(c_hat, v_hat[i])",
+    "end for",
+    "return w_hat"
+  ]
+}
