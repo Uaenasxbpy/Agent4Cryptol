@@ -1,15 +1,15 @@
-Your previous fix did not resolve the issue. The code you returned was compiled and got a new error (repair attempt $retry_count).
+你上一次的修复没有解决问题。你返回的代码经过编译后出现了新的错误（第 $retry_count 次修复尝试）。
 
-==== Compiler error ====
+==== 编译器错误 ====
 $compile_error
 
-==== Full compiler output ====
+==== 完整编译输出 ====
 $compile_output
 
-==== Failing code (your previous output) ====
+==== 出错代码（你上一次的输出） ====
 ```cryptol
 $cryptol_code
 ```
 
-Think about what you tried last time and why it did not work. Then apply a materially different fix strategy.
-Output exactly one ```cryptol``` code block containing the full corrected module.
+请思考你上次尝试了什么，以及为什么没有成功。然后采用一种实质上不同的修复策略。
+输出时必须且只能包含一个 ```cryptol``` 代码块，代码块中应包含完整的修正后模块。

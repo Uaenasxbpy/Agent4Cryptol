@@ -1,37 +1,37 @@
-The Cryptol code below failed to compile (repair attempt $retry_count).
+下面这段 Cryptol 代码编译失败了（第 $retry_count 次修复尝试）。
 
-==== Current compiler error ====
+==== 当前编译器错误 ====
 $compile_error
 
-==== Full compiler output ====
+==== 完整编译输出 ====
 $compile_output
 
-==== Current failing code summary ====
+==== 当前失败代码摘要 ====
 $current_code_summary
 
-==== Current code ====
+==== 当前代码 ====
 ```cryptol
 $cryptol_code
 ```
 
-==== Previous repair attempts ====
+==== 之前的修复尝试 ====
 $repair_history
 
-==== Original function spec (for reference only) ====
+==== 原始函数规格（仅供参考） ====
 $algorithm_json
 
-==== Parameter reference (authoritative when relevant) ====
+==== 参数参考（相关时具有权威性） ====
 $parameter_context
 
-==== Retrieved RAG snippets (syntax guidance) ====
+==== 检索到的 RAG 片段（语法指导） ====
 $rag_context
 
-Instructions:
-1. Fix the current compiler error using the current code, not an earlier version.
-2. Use the current failing code summary to focus on the exact failing location.
-3. Read the previous repair attempts and avoid repeating any edit pattern that already failed.
-4. If the same location has already failed after punctuation-only or formatting-only edits, make a materially different repair.
-5. Do not output any analysis, classification, headings, or explanations.
-6. Do not restructure, rename, or rewrite unrelated code.
-7. Output exactly one ```cryptol``` code block containing the full corrected module.
-8. If you cannot improve the code confidently, return the original module inside the ```cryptol``` block instead of returning prose or an empty response.
+说明：
+1. 基于当前代码修复当前编译错误，不要基于更早的版本。
+2. 利用当前失败代码摘要来聚焦精确报错位置。
+3. 阅读之前的修复尝试，避免重复任何已经失败过的编辑模式。
+4. 如果同一位置在仅做标点或格式改动后仍然失败，请做实质上不同的修复。
+5. 不要输出任何分析、分类、标题或解释。
+6. 不要重构、重命名或重写无关代码。
+7. 输出必须且只能包含一个 ```cryptol``` 代码块，代码块中应包含完整的修正后模块。
+8. 如果你无法有把握地改进代码，就在 ```cryptol``` 代码块中返回原始模块，而不是返回说明文字或空响应。

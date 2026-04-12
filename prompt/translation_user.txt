@@ -1,29 +1,29 @@
-﻿Function metadata:
+函数元数据：
 - function_id: $function_id
 - label: $label
 - function_name: $function_name
 
-Algorithm JSON:
+算法 JSON：
 $algorithm_json
 
-Parameter reference:
+参数参考：
 $parameter_context
 
-Parameter-use rule:
-- If the parameter reference provides a concrete numeric value that is relevant to this function, prefer encoding with that concrete value instead of inventing a new symbolic parameter.
-- If the parameter reference states a configured active parameter set, treat that set as the authoritative source for parameter-set-dependent values in this translation.
-- Only keep a parameter symbolic when the parameter reference does not determine a unique concrete value for this function.
+参数使用规则：
+- 如果参数参考提供了与当前函数相关的具体数值，优先直接使用该具体值编码，而不是发明新的符号参数。
+- 如果参数参考声明了已配置的活动参数集，则在本次翻译中将该参数集视为参数集相关取值的权威来源。
+- 只有当参数参考无法为当前函数确定唯一具体值时，才保留参数为符号形式。
 
-Recent compiler feedback from this project:
-- `shiftR` is not in scope in generated Cryptol
-- `(&)` is not in scope in generated Cryptol
-- `fromIntegral` is not in scope in generated Cryptol
-- `(n : Integer, lgw : Integer) -> Integer` caused a parse error
-- Using a type parameter `n` as a runtime value caused `Expected a value named 'n' but found a type instead`. Fix: use backtick `` `n `` to demote type to value
-- Using `[Integer][8]` style sequence types is invalid because the length must be a numeric type expression, not the value type `Integer`
-- `[0 .. `n - 1]` caused `The boundaries of .. sequences should be valid numeric types`. Fix: use `take`{n} [0 ...]` or type-level bounds `[0 .. (n-1)]` (no backtick)
-- Mixing bitvector widths (e.g., `[7]` + `[9]`) caused `Type mismatch: Expected type 9, Inferred type 7`. Fix: use `zext` to widen the narrower value
-- `div` and `mod` (also `/` and `%`) are valid Cryptol operators and should be used freely for modular arithmetic
+该项目最近的编译器反馈：
+- 生成的 Cryptol 中 `shiftR` 不在作用域内
+- 生成的 Cryptol 中 `(&)` 不在作用域内
+- 生成的 Cryptol 中 `fromIntegral` 不在作用域内
+- `(n : Integer, lgw : Integer) -> Integer` 会导致解析错误
+- 把类型参数 `n` 当作运行时值会导致 `Expected a value named 'n' but found a type instead`。修复方式：使用反引号 `` `n `` 将类型降格为值
+- `[Integer][8]` 这种序列类型写法是非法的，因为长度必须是数值类型表达式，而不能是值类型 `Integer`
+- `[0 .. `n - 1]` 会导致 `The boundaries of .. sequences should be valid numeric types`。修复方式：使用 `take`{n} [0 ...]` 或类型级边界 `[0 .. (n-1)]`（不要用反引号）
+- 混用不同位宽的比特向量（例如 `[7]` + `[9]`）会导致 `Type mismatch: Expected type 9, Inferred type 7`。修复方式：使用 `zext` 扩展较窄的值
+- `div` 和 `mod`（以及 `/` 和 `%`）是合法的 Cryptol 运算符，应自由用于模运算
 
-Retrieved RAG snippets:
+检索到的 RAG 片段：
 $rag_context
