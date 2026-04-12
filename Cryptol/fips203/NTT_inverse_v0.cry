@@ -1,0 +1,54 @@
+module NTTInverse where
+
+// BitRev7: reverse 7 bits of input
+BitRev7 : [7] -> [7]
+BitRev7 x = reverse x
+
+// NTT_inverse: inverse number theoretic transform
+// Input: f_hat - 256-element array modulo q (3329)
+// Output: f - inverse NTT polynomial modulo q
+NTT_inverse : [256][12] -> [256][12]
+NTT_inverse f_hat = f_scaled
+  where
+    q = 3329
+    
+    // Apply 7 NTT layers (len = 2, 4, 8, 16, 32, 64, 128)
+    f_after_layers = layer_loop 0 127 f_hat
+    
+    // Final scaling by 3303 mod q
+    f_scaled = [(c * 3303) % q | c <- f_after_layers]
+    
+    // Process each layer
+    layer_loop : [7] -> [7] -> [256][12] -> [256][12]
+    layer_loop layer i f =
+      if layer == 7 then f
+      else
+        len = 2^(layer + 1)
+        zeta = zeta_pow (BitRev7 i)
+        f_layer = start_loop 0 len zeta f
+        layer_loop (layer + 1) (i - 1) f_layer
+    
+    // Process all start positions for one layer
+    start_loop : [8] -> [8] -> [12] -> [256][12] -> [256][12]
+    start_loop start len zeta f =
+      if start >= 256 then f
+      else
+        f_start = butterfly_loop start (start + len) len zeta f
+        start_loop (start + 2 * len) len zeta f_start
+    
+    // Process butterflies for one start position
+    butterfly_loop : [8] -> [8] -> [8] -> [12] -> [256][12] -> [256][12]
+    butterfly_loop j end len zeta f =
+      if j >= end then f
+      else
+        t = f @ j
+        u = f @ (j + len)
+        new_j = (t + u) % q
+        new_jlen = (zeta * (u - t)) % q
+        f' = [if k == j then new_j else if k == j + len then new_jlen else f @ k | k <- [0..255]]
+        butterfly_loop (j + 1) end len zeta f'
+    
+    // UNRESOLVED: zeta_pow computes zeta_base^k mod q
+    // zeta_base is the primitive 512th root of unity mod 3329
+    zeta_pow : [7] -> [12]
+    zeta_pow k = undefined

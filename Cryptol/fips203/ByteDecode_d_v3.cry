@@ -1,0 +1,11 @@
+module ByteDecodeD where
+
+ByteDecodeD : {d} (fin d, d >= 1) => [32 * d][8] -> [256] Integer
+ByteDecodeD B = F
+  where
+    F : [256] Integer
+    b = join B : [256 * d] Bit
+    F = [ sum [ zext (b @ (i * `d + j)) * 2^^zext j | j <- [0 .. (d-1)] ] % m | i <- [0 .. 255] ]
+    
+    m : Integer
+    m = if `d == 12 then 3329 else 2^`d

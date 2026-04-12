@@ -1,0 +1,5 @@
+module IntegerToBits where
+
+// ASSUMPTION: alpha is encoded as type parameter for fixed-length output
+IntegerToBits : {alpha} (fin alpha) => Integer -> [alpha]
+IntegerToBits x = [ if (x / 2^^i) % 2 == 0 then 0 else 1 | i <- take {alpha} [0...] ]

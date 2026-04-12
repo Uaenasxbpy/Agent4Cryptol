@@ -1,0 +1,10 @@
+module ForExample where
+
+ForExample : ([10][4], [8][9])
+ForExample = (A, B)
+  where
+    A : [10][4]
+    A = [0..9]
+    
+    B : [8][9]
+    B = [256 >> i | i <- [0..7]]

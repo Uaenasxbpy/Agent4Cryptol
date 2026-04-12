@@ -1,0 +1,13 @@
+module ByteEncode where
+
+ByteEncode : {d} (fin d) => [256][12] -> [32*d][8]
+ByteEncode F = split bits
+  where
+    bits : [256*d]
+    bits = [ getBit (F @ i) j | i <- [0..255] | j <- [0..(d-1)] ]
+    
+    getBit : [12] -> [d] -> [1]
+    getBit a j = [(a / pow2s @ j) % 2]
+    
+    pow2s : [d][12]
+    pow2s = [2^^k | k <- [0..(d-1)]]

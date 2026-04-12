@@ -1,0 +1,41 @@
+// COMPILATION FAILED after 3 repair attempt(s)
+// Last error:
+//   [error] at G:\EasyToolsByMyself\Agent4Cryptol\temp\ByteDecodeD.cry:8:17--8:21:
+//     Type mismatch:
+//       Expected type: Integer
+//       Inferred type: [0]
+//       Context: _ -> ERROR
+//       When checking function call
+//   [error] at G:\EasyToolsByMyself\Agent4Cryptol\temp\ByteDecodeD.cry:8:23--8:39:
+//     Type mismatch:
+//       Expected type: [0]
+//       Inferred type: Bit
+//       Context: [_] ERROR
+//       When checking type of function argument
+//   [error] at G:\EasyToolsByMyself\Agent4Cryptol\temp\ByteDecodeD.cry:8:46--8:50:
+//     Ambiguous numeric type: type argument 'n' of 'zext'
+//     Must be at least: max (width (d`892 - 1)) (max 8 (width d`892))
+//     where
+//     d`892 is signature variable 'd' at G:\EasyToolsByMyself\Agent4Cryptol\temp\ByteDecodeD.cry:3:16--3:17
+//   [error] at G:\EasyToolsByMyself\Agent4Cryptol\temp\ByteDecodeD.cry:8:46--8:50:
+//     Ambiguous numeric type: type argument 'm' of 'zext'
+//     Must be at least: max (width (d`892 - 1)) (max 8 (width d`892))
+//     where
+//     d`892 is signature variable 'd' at G:\EasyToolsByMyself\Agent4Cryptol\temp\ByteDecodeD.cry:3:16--3:17
+//   [error] at G:\EasyToolsByMyself\Agent4Cryptol\temp\ByteDecodeD.cry:11:5--11:40:
+//     • Type `Integer` does not support logical operations.
+//         arising from
+//         use of expression (^)
+//         at G:\EasyToolsByMyself\Agent4Cryptol\temp\ByteDecodeD.cry:11:36--11:40
+
+module ByteDecodeD where
+
+ByteDecodeD : {d} (fin d, d >= 1) => [32 * d][8] -> [256] Integer
+ByteDecodeD B = F
+  where
+    F : [256] Integer
+    b = join B : [256 * d] Bit
+    F = [ sum [ zext (b @ (i * `d + j)) * 2^^zext j | j <- [0 .. (d-1)] ] % m | i <- [0 .. 255] ]
+    
+    m : Integer
+    m = if `d == 12 then 3329 else 2^`d

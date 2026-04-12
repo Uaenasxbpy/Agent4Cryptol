@@ -1,0 +1,45 @@
+module SHAKE128Example where
+
+// UNRESOLVED: SHAKE128 state and primitives are assumed external
+// In a complete implementation, these would be defined or imported
+
+type SHAKE128State = [1600]
+
+// Assumed SHAKE128 primitive operations
+SHAKE128_Init : SHAKE128State
+SHAKE128_Absorb : {n} (fin n) => SHAKE128State -> [n][8] -> SHAKE128State
+SHAKE128_Squeeze : {n} (fin n) => SHAKE128State -> [n][8] -> (SHAKE128State, [n][8])
+
+// SHAKE128example function
+// Absorbs m input byte arrays, then squeezes l output segments
+SHAKE128Example : {m, l, totalOut} (fin m, fin l, fin totalOut) => 
+    [m]([n][8]) -> [l]Integer -> [totalOut][8]
+SHAKE128Example inputs bitLengths = output
+  where
+    // Absorb all input strings sequentially
+    ctxAfterAbsorb : SHAKE128State
+    ctxAfterAbsorb = foldl absorbStep SHAKE128_Init inputs
+    
+    absorbStep : SHAKE128State -> [n][8] -> SHAKE128State
+    absorbStep ctx str = SHAKE128_Absorb ctx str
+    
+    // Squeeze each output segment based on bit lengths
+    // ASSUMPTION: bitLengths specify byte counts, converted to bit counts internally
+    squeezed : [l](SHAKE128State, [k][8])
+    squeezed = [ SHAKE128_Squeeze ctx' (zero : [bits][8]) 
+               | ctx' <- squeezeContexts ]
+    
+    squeezeContexts : [l]SHAKE128State
+    squeezeContexts = buildSqueezeContexts ctxAfterAbsorb l
+    
+    buildSqueezeContexts : SHAKE128State -> Integer -> [l]SHAKE128State
+    buildSqueezeContexts initCtx count = 
+        [ initCtx | _ <- [0 .. count-1] ]
+    
+    // Extract just the output bytes from squeezed pairs
+    outputs : [l][k][8]
+    outputs = [ out | (_, out) <- squeezed ]
+    
+    // Concatenate all output segments
+    output : [totalOut][8]
+    output = join outputs

@@ -1,0 +1,4 @@
+module BitsToBytes where
+
+BitsToBytes : {n} (fin n, n % 8 == 0, n >= 8) => [n] -> [n/8][8]
+BitsToBytes b = [ sum [ zeroExtend (b @ (8*i + j)) << j | j <- [0..7] ] | i <- [0..(`(n/8) - 1)] ]

@@ -1,0 +1,10 @@
+module ByteDecodeD where
+
+ByteDecodeD : {d} (fin d, d >= 1) => [32 * d][8] -> [256] Integer
+ByteDecodeD B = F
+  where
+    F : [256] Integer
+    F = [ sum [ zeroExtend (bytesToBits B @ (i * d + j) : Bit) * 2^j | j <- [0 .. d-1] ] % m | i <- [0 .. 255] ]
+    
+    m : Integer
+    m = if d == 12 then 3329 else 2^d

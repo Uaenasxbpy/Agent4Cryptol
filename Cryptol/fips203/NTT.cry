@@ -1,0 +1,20 @@
+module NTT where
+
+// Kyber prime modulus
+q : [16]
+q = 3329
+
+// Bit reversal of 7-bit index
+bitRev7 : [7] -> [7]
+bitRev7 x = reverse x
+
+// NTT transformation
+// f: input polynomial (256 coefficients mod q)
+// zetas: precomputed zeta values indexed by BitRev7(i) for i in [1,127]
+NTT : [256][16] -> [128][16] -> [256][16]
+NTT f zetas = f_hat
+  where
+    // UNRESOLVED: Implement 7-level Cooley-Tukey NTT
+    // Level lengths: 128, 64, 32, 16, 8, 4, 2
+    // Butterfly: t = zeta * f[j+len] mod q; f[j+len] = f[j] - t; f[j] = f[j] + t
+    f_hat = f

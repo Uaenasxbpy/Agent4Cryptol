@@ -1,0 +1,19 @@
+module ByteDecode_d where
+
+// ASSUMPTION: d is a finite type parameter; m is determined as 2^d (since q for d=12 is undefined).
+// Input B has length 32*d bytes → [32*d][8]. BytesToBits(B) = flatten B, but `flatten` is not in scope.
+// Instead, use `join` to convert [n][8] to [n*8] — standard Cryptol idiom for byte-to-bit expansion.
+// Also, type parameters `d` and `m` must be demoted to values using backticks for arithmetic.
+// The output array F has 256 elements, each in `[m]` (i.e., type `m`, which must be fin); so we require `fin m`.
+// Constraint `2^^d == m` is enforced via type constraint, but `2^^d` requires `d` to be literal; add `Literal d Integer`.
+
+ByteDecode_d : {d, m} (fin d, fin m, Literal d Integer, 2^^d == m) => [32*d][8] -> [256]m
+ByteDecode_d B = F
+  where
+    b : [32*d*8]
+    b = join B  // replaces flatten: [n][8] -> [n*8]
+
+    F : [256]m
+    F = [ sum [ b@(i * `d + j) * (2^^j) | j <- [0 .. `d - 1] ] % m
+       | i <- [0 .. 255]
+       ]

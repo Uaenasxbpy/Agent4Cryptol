@@ -1,0 +1,13 @@
+module ForExample where
+
+// Algorithm 1: ForExample
+// Fills array A with [0..9] and array B with descending powers of two from 256 down to 2.
+
+ForExample : ([10][4], [8][9])
+ForExample = (A, B)
+  where
+    A : [10][4]
+    A = [ i | i <- [0 .. 9] ]
+
+    B : [8][9]
+    B = [ 256 / (2^^j) | j <- [0 .. 7] ]

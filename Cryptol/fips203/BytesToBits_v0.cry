@@ -1,0 +1,4 @@
+module BytesToBits where
+
+BytesToBits : {n} (fin n) => [n][8] -> [n*8]
+BytesToBits bytes = join [ [ byte @ j | j <- [0..7] ] | byte <- bytes ]
