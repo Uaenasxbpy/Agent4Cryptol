@@ -1,0 +1,34 @@
+2026-04-13 16:35:35,342 | INFO | workflow.runner | 工作流启动：json_file_path=F:\PgSpring\Agent4Cryptol\data\FIPS203\ir\functions\alg_006_byte_decode_d.json
+2026-04-13 16:35:35,356 | INFO | workflow.nodes | 读取函数 JSON：F:\PgSpring\Agent4Cryptol\data\FIPS203\ir\functions\alg_006_byte_decode_d.json
+2026-04-13 16:35:35,358 | INFO | workflow.nodes | 开始检索 RAG 上下文：function=ByteDecode_d
+2026-04-13 16:35:35,363 | INFO | workflow.nodes | RAG 检索完成：function=ByteDecode_d context_length=8673
+2026-04-13 16:35:35,364 | INFO | workflow.nodes | 开始首次翻译：function=ByteDecode_d
+2026-04-13 16:35:45,001 | INFO | httpx | HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 16:35:45,022 | INFO | workflow.function_utils | 已保存代码版本：path=F:\PgSpring\Agent4Cryptol\Cryptol\fips203\ByteDecode_d_v0.cry
+2026-04-13 16:35:45,022 | INFO | workflow.nodes | 首次翻译完成：function=ByteDecode_d code_length=659
+2026-04-13 16:35:45,023 | INFO | workflow.nodes | 开始编译：function=ByteDecode_d attempt=1
+2026-04-13 16:35:45,154 | INFO | workflow.cryptol_compiler | 编译完成：success=False
+2026-04-13 16:35:45,154 | WARNING | workflow.nodes | 编译失败：function=ByteDecode_d attempt=1 error=[error] at F:\PgSpring\Agent4Cryptol\temp\ByteDecode_d.cry:19:17--19:21:
+  Type mismatch:
+    Expected type: Integer
+    Inferred type: [0]
+    Context: _ -> ERROR
+    When checking function call
+[error] at F:\PgSpring\Agent4Cryptol\temp\ByteDecode_d.cry:19:23--19:42:
+  Type mismatch:
+    Expected t
+2026-04-13 16:35:45,156 | INFO | workflow.nodes | 开始修复：function=ByteDecode_d retry=1 消息历史=0条
+2026-04-13 16:35:45,156 | INFO | workflow.fix_agent | fix_agent 开始：function=ByteDecode_d retry=1 对话轮次=首轮
+2026-04-13 16:35:45,161 | INFO | workflow.fix_agent | fix_agent RAG 检索完成：function=ByteDecode_d context_length=8134
+2026-04-13 16:35:45,163 | INFO | workflow.prompts | 已生成第 1 次修复提示词
+2026-04-13 16:35:45,164 | INFO | workflow.prompts | 已写入修复提示词日志：F:\PgSpring\Agent4Cryptol\logger\fips203\ByteDecode_d\fix_prompts\20260413_163535.retry_01.fix_prompt.log
+2026-04-13 16:35:54,056 | INFO | httpx | HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 16:35:54,057 | INFO | workflow.fix_agent | fix_agent 完成：function=ByteDecode_d retry=1 code_length=671 消息总数=3
+2026-04-13 16:35:54,058 | INFO | workflow.function_utils | 已保存代码版本：path=F:\PgSpring\Agent4Cryptol\Cryptol\fips203\ByteDecode_d_v1.cry
+2026-04-13 16:35:54,058 | INFO | workflow.nodes | 修复完成：function=ByteDecode_d retry=1 code_length=671
+2026-04-13 16:35:54,059 | INFO | workflow.nodes | 开始编译：function=ByteDecode_d attempt=2
+2026-04-13 16:35:54,196 | INFO | workflow.cryptol_compiler | 编译完成：success=True
+2026-04-13 16:35:54,197 | INFO | workflow.nodes | 编译成功：function=ByteDecode_d attempt=2
+2026-04-13 16:35:54,198 | INFO | workflow.function_utils | 已保存代码版本：path=F:\PgSpring\Agent4Cryptol\Cryptol\fips203\ByteDecode_d.cry
+2026-04-13 16:35:54,198 | INFO | workflow.nodes | 已保存最终成功结果：F:\PgSpring\Agent4Cryptol\Cryptol\fips203\ByteDecode_d.cry
+2026-04-13 16:35:54,199 | INFO | workflow.runner | 工作流结束：编译成功 output=F:\PgSpring\Agent4Cryptol\Cryptol\fips203\ByteDecode_d.cry

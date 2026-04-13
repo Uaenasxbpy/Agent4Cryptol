@@ -1,55 +1,114 @@
 {
   "function_id": "alg_025_hash_slh_verify",
-  "name": "hash_slh_verify(M, SIG, ctx, PH, PK)",
+  "name": "hash_slh_verify",
   "label": "Algorithm 25",
-  "page_start": 42,
-  "page_end": 42,
+  "page_start": 52,
+  "page_end": 52,
   "inputs": [
     {
       "name": "M",
       "type": "byte_array",
-      "description": "message"
+      "description": "Message"
     },
     {
       "name": "SIG",
       "type": "byte_array",
-      "description": "signature"
+      "description": "Signature"
     },
     {
       "name": "ctx",
       "type": "byte_array",
-      "description": "context string"
+      "description": "Context string"
     },
     {
       "name": "PH",
-      "type": "string",
-      "description": "pre-hash function identifier"
+      "type": "hash_id",
+      "description": "Pre-hash function identifier"
     },
     {
       "name": "PK",
-      "type": "tuple",
-      "description": "public key"
+      "type": "byte_array",
+      "description": "Public key"
     }
   ],
   "outputs": [
     {
-      "name": "result",
+      "name": "ok",
       "type": "bool",
-      "description": "verification result"
+      "description": "Verification result"
     }
   ],
   "body_raw": [
-    "if |ctx| > 255 then",
-    "  return false",
-    "end if",
+    "if |ctx| > 255 then return false",
     "switch PH do",
-    "  case SHA-256: OID ← toByte(0x0609608648016503040201, 11); PHM ← SHA-256(M)",
-    "  case SHA-512: OID ← toByte(0x0609608648016503040203, 11); PHM ← SHA-512(M)",
-    "  case SHAKE128: OID ← toByte(0x060960864801650304020B, 11); PHM ← SHAKE128(M, 256)",
-    "  case SHAKE256: OID ← toByte(0x060960864801650304020C, 11); PHM ← SHAKE256(M, 512)",
-    "  case … : …",
+    "    case SHA-256: OID <- 0x0609608648016503040201; PHM <- SHA-256(M)",
+    "    case SHA-512: OID <- 0x0609608648016503040203; PHM <- SHA-512(M)",
+    "    case SHAKE128: OID <- 0x060960864801650304020B; PHM <- SHAKE128(M, 256)",
+    "    case SHAKE256: OID <- 0x060960864801650304020C; PHM <- SHAKE256(M, 512)",
+    "    case ...",
     "end switch",
-    "M′ ← toByte(1, 1) ∥ toByte(|ctx|, 1) ∥ ctx ∥ OID ∥ PHM",
-    "return slh_verify_internal(M′, SIG, PK)"
-  ]
+    "M_prime <- toByte(1, 1) || toByte(|ctx|, 1) || ctx || OID || PHM",
+    "return slh_verify_internal(M_prime, SIG, PK)"
+  ],
+  "layer": 5,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_003_to_byte",
+        "callee_name": "toByte",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_020_slh_verify_internal",
+        "callee_name": "slh_verify_internal",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "SHA-256",
+      "SHA-512",
+      "SHAKE128",
+      "SHAKE256"
+    ],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "n"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 16,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "本项目默认固定到 SLH-DSA-SHAKE-128s；预哈希验证接口保留 PH 分支。"
+  }
 }

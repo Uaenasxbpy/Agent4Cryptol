@@ -8,54 +8,136 @@
     {
       "name": "pk",
       "type": "byte_array",
-      "description": "public key"
+      "description": "Public key"
     },
     {
-      "name": "m",
-      "type": "bit_array",
-      "description": "message"
+      "name": "M",
+      "type": "bit_string",
+      "description": "Message bit string"
     },
     {
       "name": "sigma",
       "type": "byte_array",
-      "description": "signature"
+      "description": "Signature"
     },
     {
       "name": "ctx",
       "type": "byte_array",
-      "description": "context string"
+      "description": "Context string"
     },
     {
-      "name": "ph",
-      "type": "hash_function",
-      "description": "pre-hash function"
+      "name": "PH",
+      "type": "hash_id",
+      "description": "Pre-hash function identifier"
     }
   ],
   "outputs": [
     {
-      "name": "is_valid",
+      "name": "ok",
       "type": "bool",
-      "description": "verification result"
+      "description": "Verification result"
     }
   ],
   "body_raw": [
-    "if |ctx| > 255 then",
-    "return false",
-    "end if",
+    "if |ctx| > 255 then return false",
     "switch PH do",
-    "case SHA-256:",
-    "OID <- 0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x01",
-    "PHM <- SHA256(M)",
-    "case SHA-512:",
-    "OID <- 0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x03",
-    "PHM <- SHA512(M)",
-    "case SHAKE128:",
-    "OID <- 0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x0B",
-    "PHM <- SHAKE128(M, 256)",
-    "case ...",
-    "...",
+    "    case SHA-256: OID <- sha256_oid; PHM <- SHA256(M)",
+    "    case SHA-512: OID <- sha512_oid; PHM <- SHA512(M)",
+    "    case SHAKE128: OID <- shake128_oid; PHM <- SHAKE128(M, 256)",
+    "    case ...",
     "end switch",
-    "M_prime <- BytesToBits(IntegerToBytes(1, 1) || IntegerToBytes(|ctx|, 1) || ctx || OID || PHM)",
+    "M_prime <- BytesToBits(IntegerToBytes(1,1) || IntegerToBytes(|ctx|,1) || ctx || OID || PHM)",
     "return ML-DSA.Verify_internal(pk, M_prime, sigma)"
-  ]
+  ],
+  "layer": 4,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_008_ml_dsa_verify_internal",
+        "callee_name": "ML-DSA.Verify_internal",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_011_integer_to_bytes",
+        "callee_name": "IntegerToBytes",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_013_bytes_to_bits",
+        "callee_name": "BytesToBits",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "SHA256",
+      "SHA512",
+      "SHAKE128"
+    ],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "lambda",
+      "gamma1",
+      "omega",
+      "k",
+      "l",
+      "d"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "lambda",
+        "value": 128,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "gamma1",
+        "value": 131072,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "omega",
+        "value": 80,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "k",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "l",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "d",
+        "value": 13,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 ML-DSA-44；预哈希验证版本。"
+  }
 }

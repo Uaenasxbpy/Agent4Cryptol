@@ -1,0 +1,105 @@
+{
+  "function_id": "alg_014_fors_skgen",
+  "name": "fors_skGen",
+  "label": "Algorithm 14",
+  "page_start": 39,
+  "page_end": 39,
+  "inputs": [
+    {
+      "name": "SK.seed",
+      "type": "byte_array",
+      "description": "Secret seed"
+    },
+    {
+      "name": "PK.seed",
+      "type": "byte_array",
+      "description": "Public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "address",
+      "description": "FORS tree address"
+    },
+    {
+      "name": "idx",
+      "type": "int",
+      "description": "Secret-key index"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "sk",
+      "type": "byte_array",
+      "description": "FORS private-key value"
+    }
+  ],
+  "body_raw": [
+    "skADRS <- ADRS",
+    "skADRS.setTypeAndClear(FORS_PRF)",
+    "skADRS.setKeyPairAddress(ADRS.getKeyPairAddress())",
+    "skADRS.setTreeIndex(idx)",
+    "return PRF(PK.seed, SK.seed, skADRS)"
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "PRF"
+    ],
+    "support_functions": [
+      "ADRS.setTypeAndClear",
+      "ADRS.getKeyPairAddress",
+      "ADRS.setKeyPairAddress",
+      "ADRS.setTreeIndex"
+    ],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "n",
+      "a",
+      "k"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 16,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "a",
+        "value": 12,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "k",
+        "value": 14,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s；FORS 参数 a=12, k=14。"
+  }
+}

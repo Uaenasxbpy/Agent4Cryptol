@@ -28,5 +28,50 @@
     "    (h_hat[2i], h_hat[2i + 1]) ← BaseCaseMultiply(f_hat[2i], f_hat[2i + 1], g_hat[2i], g_hat[2i + 1], zeta^(2*BitRev7(i)+1))",
     "end for",
     "return h_hat"
-  ]
+  ],
+  "layer": 1,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_012_base_case_multiply",
+        "callee_name": "BaseCaseMultiply",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [
+      "BitRev7"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-KEM-512",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 256,
+      "q": 3329,
+      "k": 2,
+      "eta1": 3,
+      "eta2": 2,
+      "du": 10,
+      "dv": 4
+    },
+    "local_symbols_detected": [],
+    "resolved_symbols": [
+      {
+        "symbol": "q",
+        "value": 3329,
+        "source": "document_constant"
+      },
+      {
+        "symbol": "n",
+        "value": 256,
+        "source": "document_constant"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "可直接固定到 q=3329、n=256 的实现。"
+  }
 }

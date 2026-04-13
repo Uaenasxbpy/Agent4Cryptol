@@ -8,25 +8,55 @@
     {
       "name": "a_hat",
       "type": "ntt_poly",
-      "description": "first NTT element"
+      "description": "First element in T_q"
     },
     {
       "name": "b_hat",
       "type": "ntt_poly",
-      "description": "second NTT element"
+      "description": "Second element in T_q"
     }
   ],
   "outputs": [
     {
       "name": "c_hat",
       "type": "ntt_poly",
-      "description": "product in NTT domain"
+      "description": "Product in T_q"
     }
   ],
   "body_raw": [
     "for i from 0 to 255 do",
-    "c_hat[i] <- a_hat[i] * b_hat[i]",
+    "    c_hat[i] <- a_hat[i] * b_hat[i]",
     "end for",
     "return c_hat"
-  ]
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [],
+    "resolved_symbols": [],
+    "specializations": [],
+    "translation_note": "通用逐项乘法；与参数集弱相关。"
+  }
 }

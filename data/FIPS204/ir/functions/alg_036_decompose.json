@@ -7,30 +7,75 @@
   "inputs": [
     {
       "name": "r",
-      "type": "int",
-      "description": "input value"
+      "type": "int_mod_q",
+      "description": "Input coefficient modulo q"
     }
   ],
   "outputs": [
     {
       "name": "r1",
       "type": "int",
-      "description": "high bits"
+      "description": "High component"
     },
     {
       "name": "r0",
       "type": "int",
-      "description": "low bits"
+      "description": "Low component"
     }
   ],
   "body_raw": [
-    "𝑟+ ← 𝑟 mod 𝑞",
-    "𝑟0 ← 𝑟+ mod±(2𝛾2)",
-    "if 𝑟+ − 𝑟0 = 𝑞 − 1 then",
-    "𝑟1 ←",
-    "𝑟0 ← 𝑟0 −",
-    "else 𝑟1 ← (𝑟+ − 𝑟0)/(2𝛾2)",
+    "r_plus <- r mod q",
+    "r0 <- r_plus modpm (2*gamma2)",
+    "if r_plus - r0 == q - 1 then",
+    "    r1 <- 0",
+    "    r0 <- r0 - 1",
+    "else",
+    "    r1 <- (r_plus - r0)/(2*gamma2)",
     "end if",
-    "return (𝑟1, 𝑟0)"
-  ]
+    "return (r1, r0)"
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "q",
+      "gamma2"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "q",
+        "value": 8380417,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "gamma2",
+        "value": 95232,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定 ML-DSA-44。"
+  }
 }

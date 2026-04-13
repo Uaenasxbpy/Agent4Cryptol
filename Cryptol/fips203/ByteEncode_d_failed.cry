@@ -1,0 +1,35 @@
+// COMPILATION FAILED after 3 repair attempt(s)
+// Last error:
+//   [error] at F:\PgSpring\Agent4Cryptol\temp\ByteEncode_d.cry:26:38--26:43:
+//     Type mismatch:
+//       Expected type: [1]
+//       Inferred type: Bit
+//       Context: [_] ERROR
+//       When checking type of function argument
+
+module ByteEncode_d where
+
+// ASSUMPTION: d is resolved from caller context to either du=10 or dv=4 per FIPS203.
+// Since the function name includes "_d", and d is not an explicit input,
+// we parameterize over d as a type-level constant, consistent with output length 32*d.
+
+ByteEncode_d : {d} (fin d, d >= 1) => [256]Integer -> [32*d][8]
+ByteEncode_d F = BitsToBytes bits
+  where
+    // Extract d bits from each of the 256 integers
+    bits : [256*d]Bit
+    bits = [ extractBit (F@i) j | i <- [0 .. 255], j <- [0 .. (d-1)] ]
+
+    // Extract the j-th bit (LSB first) of integer a
+    extractBit : Integer -> Integer -> Bit
+    extractBit a j = if (a / (exp 2 j)) % 2 == 1 then True else False
+
+    // Integer exponentiation helper
+    exp : Integer -> Integer -> Integer
+    exp base expt =
+      if expt == 0 then 1
+      else base * exp base (expt - 1)
+
+    // Convert bit array of length 8*k to byte array of length k
+    BitsToBytes : {k} (fin k) => [8*k]Bit -> [k][8]
+    BitsToBytes bs = [ join (reverse chunk) | chunk <- groupBy`{8} bs ]

@@ -1,24 +1,79 @@
 {
   "function_id": "alg_021_slh_keygen",
-  "name": "slh_keygen()",
+  "name": "slh_keygen",
   "label": "Algorithm 21",
-  "page_start": 37,
-  "page_end": 37,
+  "page_start": 47,
+  "page_end": 47,
   "inputs": [],
   "outputs": [
     {
-      "name": "key_pair",
-      "type": "tuple",
-      "description": "SLH-DSA private and public key pair"
+      "name": "SK",
+      "type": "byte_array",
+      "description": "SLH-DSA private key"
+    },
+    {
+      "name": "PK",
+      "type": "byte_array",
+      "description": "SLH-DSA public key"
     }
   ],
   "body_raw": [
-    "SK.seed ←$ B^n",
-    "SK.prf ←$ B^n",
-    "PK.seed ←$ B^n",
-    "if SK.seed = NULL or SK.prf = NULL or PK.seed = NULL then",
-    "  return ⊥",
-    "end if",
+    "SK.seed <- random B^n",
+    "SK.prf <- random B^n",
+    "PK.seed <- random B^n",
+    "if SK.seed == NULL or SK.prf == NULL or PK.seed == NULL then return bottom",
     "return slh_keygen_internal(SK.seed, SK.prf, PK.seed)"
-  ]
+  ],
+  "layer": 5,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_018_slh_keygen_internal",
+        "callee_name": "slh_keygen_internal",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "RBG"
+    ],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "n"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 16,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s 时，外部 KeyGen 直接使用 n=16 字节随机量。"
+  }
 }

@@ -1,43 +1,97 @@
 {
   "function_id": "alg_024_slh_verify",
-  "name": "slh_verify(M, SIG, ctx, PK)",
+  "name": "slh_verify",
   "label": "Algorithm 24",
-  "page_start": 41,
-  "page_end": 41,
+  "page_start": 51,
+  "page_end": 51,
   "inputs": [
     {
       "name": "M",
       "type": "byte_array",
-      "description": "message"
+      "description": "Message"
     },
     {
       "name": "SIG",
       "type": "byte_array",
-      "description": "signature"
+      "description": "Signature"
     },
     {
       "name": "ctx",
       "type": "byte_array",
-      "description": "context string"
+      "description": "Context string"
     },
     {
       "name": "PK",
-      "type": "tuple",
-      "description": "public key"
+      "type": "byte_array",
+      "description": "Public key"
     }
   ],
   "outputs": [
     {
-      "name": "result",
+      "name": "ok",
       "type": "bool",
-      "description": "verification result"
+      "description": "Verification result"
     }
   ],
   "body_raw": [
-    "if |ctx| > 255 then",
-    "  return false",
-    "end if",
-    "M′ ← toByte(0, 1) ∥ toByte(|ctx|, 1) ∥ ctx ∥ M",
-    "return slh_verify_internal(M′, SIG, PK)"
-  ]
+    "if |ctx| > 255 then return false",
+    "M_prime <- toByte(0, 1) || toByte(|ctx|, 1) || ctx || M",
+    "return slh_verify_internal(M_prime, SIG, PK)"
+  ],
+  "layer": 5,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_003_to_byte",
+        "callee_name": "toByte",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_020_slh_verify_internal",
+        "callee_name": "slh_verify_internal",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "n"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 16,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s；纯验证外部接口。"
+  }
 }

@@ -7,35 +7,69 @@
   "inputs": [
     {
       "name": "b0",
-      "type": "int",
-      "description": "first byte"
+      "type": "byte",
+      "description": "Input byte"
     },
     {
       "name": "b1",
-      "type": "int",
-      "description": "second byte"
+      "type": "byte",
+      "description": "Input byte"
     },
     {
       "name": "b2",
-      "type": "int",
-      "description": "third byte"
+      "type": "byte",
+      "description": "Input byte"
     }
   ],
   "outputs": [
     {
       "name": "z",
-      "type": "int",
-      "description": "coefficient or failure"
+      "type": "int_or_bottom",
+      "description": "Coefficient modulo q or bottom"
     }
   ],
   "body_raw": [
     "b2_prime <- b2",
-    "if b2_prime > 127 then",
-    "b2_prime <- b2_prime - 128",
-    "end if",
+    "if b2_prime > 127 then b2_prime <- b2_prime - 128",
     "z <- 2^16 * b2_prime + 2^8 * b1 + b0",
-    "if z < q then return z",
-    "else return failure",
-    "end if"
-  ]
+    "if z < q then return z else return bottom"
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "q"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "q",
+        "value": 8380417,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目内固定 q=8380417。"
+  }
 }

@@ -24,5 +24,36 @@
     "    B[⌊i/8⌋] ← B[⌊i/8⌋] + b[i] ⋅ 2^(i mod 8)",
     "end for",
     "return B"
-  ]
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-KEM-512",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 256,
+      "q": 3329,
+      "k": 2,
+      "eta1": 3,
+      "eta2": 2,
+      "du": 10,
+      "dv": 4
+    },
+    "local_symbols_detected": [],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 256,
+        "source": "document_constant"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "该函数本身与参数集弱相关，可直接生成通用实现。"
+  }
 }

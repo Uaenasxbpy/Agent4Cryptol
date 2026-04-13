@@ -47,5 +47,36 @@
     "c0 ← a0 ⋅ b0 + a1 ⋅ b1 ⋅ gamma mod q",
     "c1 ← a0 ⋅ b1 + a1 ⋅ b0 mod q",
     "return (c0, c1)"
-  ]
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-KEM-512",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 256,
+      "q": 3329,
+      "k": 2,
+      "eta1": 3,
+      "eta2": 2,
+      "du": 10,
+      "dv": 4
+    },
+    "local_symbols_detected": [],
+    "resolved_symbols": [
+      {
+        "symbol": "q",
+        "value": 3329,
+        "source": "document_constant"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "仅依赖全局常量 q。"
+  }
 }

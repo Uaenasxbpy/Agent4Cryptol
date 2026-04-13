@@ -1,0 +1,56 @@
+{
+  "document": "FIPS203",
+  "file_role": "translation_order",
+  "description": "用于确定函数翻译与编译的先后顺序；按 layer 从小到大逐级生成代码。",
+  "layers": [
+    {
+      "layer": 0,
+      "description": "闭包函数 / 叶子函数：不依赖其他编号算法（可依赖 trusted_primitives 或 support_functions）。",
+      "functions": [
+        "alg_003_bits_to_bytes",
+        "alg_004_bytes_to_bits",
+        "alg_007_sample_ntt",
+        "alg_009_ntt",
+        "alg_010_ntt_inverse",
+        "alg_012_base_case_multiply"
+      ]
+    },
+    {
+      "layer": 1,
+      "description": "基础组合函数：只依赖 layer 0 或占位辅助依赖。",
+      "functions": [
+        "alg_005_byte_encode_d",
+        "alg_006_byte_decode_d",
+        "alg_008_sample_poly_cbd_eta",
+        "alg_011_multiply_ntts"
+      ]
+    },
+    {
+      "layer": 2,
+      "description": "K-PKE 组件算法。",
+      "functions": [
+        "alg_013_k_pke_keygen",
+        "alg_014_k_pke_encrypt",
+        "alg_015_k_pke_decrypt"
+      ]
+    },
+    {
+      "layer": 3,
+      "description": "ML-KEM internal 算法。",
+      "functions": [
+        "alg_016_ml_kem_keygen_internal",
+        "alg_017_ml_kem_encaps_internal",
+        "alg_018_ml_kem_decaps_internal"
+      ]
+    },
+    {
+      "layer": 4,
+      "description": "ML-KEM public API 算法。",
+      "functions": [
+        "alg_019_ml_kem_keygen",
+        "alg_020_ml_kem_encaps",
+        "alg_021_ml_kem_decaps"
+      ]
+    }
+  ]
+}

@@ -19,4 +19,4 @@ RETRY_DELAY = settings.RETRY_DELAY
 ACTIVE_PARAMETER_SETS = settings.ACTIVE_PARAMETER_SETS
 
 # === 默认输入 ===
-DEFAULT_JSON_FILE = ROOT_DIR / "data" / "FIPS203" / "ir" / "functions" / "alg_008_sample_poly_cbd_eta.json"
+DEFAULT_JSON_FILE = ROOT_DIR / "data" / "FIPS203" / "ir" / "functions" / "alg_012_base_case_multiply.json"

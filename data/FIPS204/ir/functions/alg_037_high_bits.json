@@ -7,19 +7,64 @@
   "inputs": [
     {
       "name": "r",
-      "type": "int",
-      "description": "input value"
+      "type": "int_mod_q",
+      "description": "Input coefficient modulo q"
     }
   ],
   "outputs": [
     {
       "name": "r1",
       "type": "int",
-      "description": "high bits"
+      "description": "High bits component"
     }
   ],
   "body_raw": [
-    "(𝑟1, 𝑟0) ← Decompose(𝑟)",
-    "return 𝑟1"
-  ]
+    "(r1, r0) <- Decompose(r)",
+    "return r1"
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_036_decompose",
+        "callee_name": "Decompose",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "gamma2"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "gamma2",
+        "value": 95232,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定 ML-DSA-44。"
+  }
 }

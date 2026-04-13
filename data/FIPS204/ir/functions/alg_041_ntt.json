@@ -8,36 +8,80 @@
     {
       "name": "w",
       "type": "poly",
-      "description": "input polynomial"
+      "description": "Polynomial in R_q"
     }
   ],
   "outputs": [
     {
       "name": "w_hat",
       "type": "ntt_poly",
-      "description": "NTT representation"
+      "description": "NTT representation in T_q"
     }
   ],
   "body_raw": [
-    "for j from 0 to 255 do",
-    "w_hat[j] <- w_j",
-    "end for",
+    "for j from 0 to 255 do w_hat[j] <- w_j",
     "m <- 0",
     "len <- 128",
     "while len >= 1 do",
-    "start <- 0",
-    "while start < 256 do",
-    "m <- m + 1",
-    "z <- zetas[m]",
-    "for j from start to start + len - 1 do",
-    "t <- (z * w_hat[j + len]) mod q",
-    "w_hat[j + len] <- (w_hat[j] - t) mod q",
-    "w_hat[j] <- (w_hat[j] + t) mod q",
-    "end for",
-    "start <- start + 2 * len",
-    "end while",
-    "len <- floor(len / 2)",
+    "    start <- 0",
+    "    while start < 256 do",
+    "        m <- m + 1",
+    "        z <- zetas[m]",
+    "        for j from start to start + len - 1 do",
+    "            t <- (z * w_hat[j + len]) mod q",
+    "            w_hat[j + len] <- (w_hat[j] - t) mod q",
+    "            w_hat[j] <- (w_hat[j] + t) mod q",
+    "        end for",
+    "        start <- start + 2 * len",
+    "    end while",
+    "    len <- floor(len / 2)",
     "end while",
     "return w_hat"
-  ]
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [
+      "zetas_table"
+    ],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "q",
+      "zeta"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "q",
+        "value": 8380417,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "zeta",
+        "value": 1753,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定 ML-DSA-44；使用 FIPS 204 附录 B 的 zetas。"
+  }
 }

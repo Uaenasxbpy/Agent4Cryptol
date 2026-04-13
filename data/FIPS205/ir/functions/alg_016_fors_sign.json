@@ -1,29 +1,29 @@
 {
   "function_id": "alg_016_fors_sign",
-  "name": "fors_sign(md, SK.seed, PK.seed, ADRS)",
+  "name": "fors_sign",
   "label": "Algorithm 16",
-  "page_start": 31,
-  "page_end": 31,
+  "page_start": 41,
+  "page_end": 41,
   "inputs": [
     {
       "name": "md",
       "type": "byte_array",
-      "description": "message digest"
+      "description": "Message digest"
     },
     {
-      "name": "SK_seed",
+      "name": "SK.seed",
       "type": "byte_array",
-      "description": "secret seed"
+      "description": "Secret seed"
     },
     {
-      "name": "PK_seed",
+      "name": "PK.seed",
       "type": "byte_array",
-      "description": "public seed"
+      "description": "Public seed"
     },
     {
       "name": "ADRS",
-      "type": "byte_array",
-      "description": "FORS address"
+      "type": "address",
+      "description": "FORS tree address"
     }
   ],
   "outputs": [
@@ -34,16 +34,90 @@
     }
   ],
   "body_raw": [
-    "SIG_FORS = NULL",
-    "indices ← base_2b(md, a, k)",
+    "SIG_FORS <- NULL",
+    "indices <- base_2b(md, a, k)",
     "for i from 0 to k - 1 do",
-    "  SIG_FORS ← SIG_FORS ∥ fors_skGen(SK.seed, PK.seed, ADRS, i * 2^a + indices[i])",
-    "  for j from 0 to a - 1 do",
-    "    s ← floor(indices[i] / 2^j) ⊕ 1",
-    "    AUTH[j] ← fors_node(SK.seed, i * 2^(a-j) + s, j, PK.seed, ADRS)",
-    "  end for",
-    "  SIG_FORS ← SIG_FORS ∥ AUTH",
+    "    SIG_FORS <- SIG_FORS || fors_skGen(SK.seed, PK.seed, ADRS, i * 2^a + indices[i])",
+    "    for j from 0 to a - 1 do",
+    "        s <- floor(indices[i] / 2^j) xor 1",
+    "        AUTH[j] <- fors_node(SK.seed, i * 2^(a - j) + s, j, PK.seed, ADRS)",
+    "    end for",
+    "    SIG_FORS <- SIG_FORS || AUTH",
     "end for",
     "return SIG_FORS"
-  ]
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_004_base_2b",
+        "callee_name": "base_2b",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_014_fors_skgen",
+        "callee_name": "fors_skGen",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_015_fors_node",
+        "callee_name": "fors_node",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "n",
+      "a",
+      "k"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 16,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "a",
+        "value": 12,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "k",
+        "value": 14,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s；FORS 消息分块直接固定为 a=12, k=14。"
+  }
 }

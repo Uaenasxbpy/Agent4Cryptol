@@ -8,32 +8,75 @@
     {
       "name": "v",
       "type": "byte_array",
-      "description": "encoded bytes"
+      "description": "Packed byte string"
     },
     {
       "name": "a",
       "type": "int",
-      "description": "lower magnitude bound"
+      "description": "Lower range parameter"
     },
     {
       "name": "b",
       "type": "int",
-      "description": "upper bound"
+      "description": "Upper range parameter"
     }
   ],
   "outputs": [
     {
       "name": "w",
       "type": "poly",
-      "description": "decoded polynomial"
+      "description": "Unpacked polynomial"
     }
   ],
   "body_raw": [
-    "𝑐 ← bitlen (𝑎 + 𝑏)",
-    "𝑧 ← BytesToBits(𝑣)",
-    "for 𝑖 from 0 to 255 do",
-    "𝑤𝑖 ← 𝑏 − BitsToInteger((𝑧[𝑖𝑐], 𝑧[𝑖𝑐 + 1], … 𝑧[𝑖𝑐 + 𝑐 − 1]), 𝑐)",
+    "c <- bitlen(a + b)",
+    "z <- BytesToBits(v)",
+    "for i from 0 to 255 do",
+    "    w_i <- b - BitsToInteger((z[i*c], ..., z[i*c + c - 1]), c)",
     "end for",
-    "return 𝑤 Algorithms 20 and 21 carry out byte-string-to-polynomial conversions for polynomials with sparse binary coefficients. In particular, the signing and verification algorithms (Sections 6.2 and 6.3) make use of a “hint,” which is a vector of polynomials 𝐡 ∈ 𝑅2 𝑘 such that the total number of coefficients in 𝐡[0], 𝐡[1], … , 𝐡[𝑘−1] that are equal to 1 is no more than 𝜔. This constraint enables encoding and decoding procedures that are more efficient (although more complex) than BitPack and BitUnpack. HintBitPack (𝐡) outputs a byte string 𝑦 of length 𝜔 + 𝑘. The last 𝑘 bytes of 𝑦 contain information about how many nonzero coefficients are present in each of the polynomials 𝐡[0], 𝐡[1], … , 𝐡[𝑘 − 1], and the first 𝜔 bytes of 𝑦 contain information about exactly where those nonzero terms occur . HintBitUnpack reverses the procedure performed by HintBitPack and recovers the vector 𝐡."
-  ]
+    "return w"
+  ],
+  "layer": 1,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_013_bytes_to_bits",
+        "callee_name": "BytesToBits",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_010_bits_to_integer",
+        "callee_name": "BitsToInteger",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [],
+    "resolved_symbols": [],
+    "specializations": [],
+    "translation_note": "通用解包函数；由调用者决定 a,b。"
+  }
 }

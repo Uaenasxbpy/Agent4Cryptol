@@ -1,38 +1,87 @@
 {
   "function_id": "alg_001_gen_len2",
-  "name": "gen_len2(n, lgw)",
+  "name": "gen_len2",
   "label": "Algorithm 1",
-  "page_start": 10,
-  "page_end": 10,
+  "page_start": 20,
+  "page_end": 20,
   "inputs": [
     {
       "name": "n",
       "type": "int",
-      "description": "security parameter in bytes"
+      "description": "Security parameter in bytes"
     },
     {
       "name": "lgw",
       "type": "int",
-      "description": "bits per hash chain"
+      "description": "Bits per hash chain"
     }
   ],
   "outputs": [
     {
       "name": "len2",
       "type": "int",
-      "description": "computed checksum chain count"
+      "description": "Checksum chain count"
     }
   ],
   "body_raw": [
-    "w ← 2^lgw",
-    "len1 ← floor((8*n + lgw - 1) / lgw)",
-    "max_checksum = len1 * (w - 1)",
-    "len2 ← 1",
-    "capacity ← w",
-    "while capacity ≤ max_checksum do",
-    "  len2 ← len2 + 1",
-    "  capacity ← capacity * w",
+    "w <- 2^lgw",
+    "len1 <- floor((8 * n + lgw - 1) / lgw)",
+    "max_checksum <- len1 * (w - 1)",
+    "len2 <- 1",
+    "capacity <- w",
+    "while capacity <= max_checksum do",
+    "    len2 <- len2 + 1",
+    "    capacity <- capacity * w",
     "end while",
     "return len2"
-  ]
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "n",
+      "lgw"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 16,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "lgw",
+        "value": 4,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s 时，len2 直接固定为 3；该函数仍保留为通用辅助函数。"
+  }
 }

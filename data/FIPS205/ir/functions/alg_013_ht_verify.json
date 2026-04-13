@@ -1,65 +1,133 @@
 {
   "function_id": "alg_013_ht_verify",
-  "name": "ht_verify(M, SIG_HT, PK.seed, idxtree, idxleaf, PK.root)",
+  "name": "ht_verify",
   "label": "Algorithm 13",
-  "page_start": 28,
-  "page_end": 28,
+  "page_start": 38,
+  "page_end": 38,
   "inputs": [
     {
       "name": "M",
       "type": "byte_array",
-      "description": "message"
+      "description": "Message/FORS public key to verify"
     },
     {
       "name": "SIG_HT",
       "type": "byte_array",
-      "description": "hypertree signature"
+      "description": "Hypertree signature"
     },
     {
-      "name": "PK_seed",
+      "name": "PK.seed",
       "type": "byte_array",
-      "description": "public seed"
+      "description": "Public seed"
     },
     {
-      "name": "idxtree",
+      "name": "idx_tree",
       "type": "int",
-      "description": "tree index"
+      "description": "Index of the XMSS tree at the lowest layer"
     },
     {
-      "name": "idxleaf",
+      "name": "idx_leaf",
       "type": "int",
-      "description": "leaf index"
+      "description": "Index of the WOTS+ key within the XMSS tree"
     },
     {
-      "name": "PK_root",
+      "name": "PK.root",
       "type": "byte_array",
-      "description": "hypertree public key root"
+      "description": "Hypertree public root"
     }
   ],
   "outputs": [
     {
-      "name": "result",
+      "name": "ok",
       "type": "bool",
-      "description": "verification result"
+      "description": "Verification result"
     }
   ],
   "body_raw": [
-    "ADRS ← toByte(0, 32)",
-    "ADRS.setTreeAddress(idxtree)",
-    "SIGtmp ← SIG_HT.getXMSSSignature(0)",
-    "node ← xmss_pkFromSig(idxleaf, SIGtmp, M, PK.seed, ADRS)",
+    "ADRS <- toByte(0, 32)",
+    "ADRS.setTreeAddress(idx_tree)",
+    "SIG_tmp <- SIG_HT.getXMSSSignature(0)",
+    "node <- xmss_pkFromSig(idx_leaf, SIG_tmp, M, PK.seed, ADRS)",
     "for j from 1 to d - 1 do",
-    "  idxleaf ← idxtree mod 2^h′",
-    "  idxtree ← idxtree ≫ h′",
-    "  ADRS.setLayerAddress(j)",
-    "  ADRS.setTreeAddress(idxtree)",
-    "  SIGtmp ← SIG_HT.getXMSSSignature(j)",
-    "  node ← xmss_pkFromSig(idxleaf, SIGtmp, node, PK.seed, ADRS)",
+    "    idx_leaf <- idx_tree mod 2^h_prime",
+    "    idx_tree <- idx_tree >> h_prime",
+    "    ADRS.setLayerAddress(j)",
+    "    ADRS.setTreeAddress(idx_tree)",
+    "    SIG_tmp <- SIG_HT.getXMSSSignature(j)",
+    "    node <- xmss_pkFromSig(idx_leaf, SIG_tmp, node, PK.seed, ADRS)",
     "end for",
-    "if node = PK.root then",
-    "  return true",
-    "else",
-    "  return false",
-    "end if"
-  ]
+    "if node = PK.root then return true else return false"
+  ],
+  "layer": 3,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_003_to_byte",
+        "callee_name": "toByte",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_011_xmss_pk_from_sig",
+        "callee_name": "xmss_pkFromSig",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [
+      "SIG_HT.getXMSSSignature",
+      "ADRS.setTreeAddress",
+      "ADRS.setLayerAddress"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "h",
+      "d",
+      "h_prime"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "h",
+        "value": 63,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "d",
+        "value": 7,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "h_prime",
+        "value": 9,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s。"
+  }
 }

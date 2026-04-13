@@ -7,29 +7,86 @@
   "inputs": [
     {
       "name": "M_hat",
-      "type": "matrix",
-      "description": "NTT matrix"
+      "type": "ntt_matrix",
+      "description": "k x l matrix over T_q"
     },
     {
       "name": "v_hat",
-      "type": "vector",
-      "description": "NTT vector"
+      "type": "ntt_vector",
+      "description": "Length-l vector over T_q"
     }
   ],
   "outputs": [
     {
       "name": "w_hat",
-      "type": "vector",
-      "description": "product vector"
+      "type": "ntt_vector",
+      "description": "Length-k product vector over T_q"
     }
   ],
   "body_raw": [
-    "w_hat <- 0^k",
+    "w_hat <- zero_vector(k)",
     "for i from 0 to k - 1 do",
-    "for j from 0 to ell - 1 do",
-    "w_hat[i] <- AddNTT(w_hat[i], MultiplyNTT(M_hat[i, j], v_hat[j]))",
-    "end for",
+    "    for j from 0 to l - 1 do",
+    "        w_hat[i] <- AddNTT(w_hat[i], MultiplyNTT(M_hat[i, j], v_hat[j]))",
+    "    end for",
     "end for",
     "return w_hat"
-  ]
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_044_add_ntt",
+        "callee_name": "AddNTT",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_045_multiply_ntt",
+        "callee_name": "MultiplyNTT",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "k",
+      "l"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "k",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "l",
+        "value": 4,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定 ML-DSA-44 时，矩阵维度为 4x4。"
+  }
 }

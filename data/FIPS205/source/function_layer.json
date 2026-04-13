@@ -1,0 +1,69 @@
+{
+  "document": "FIPS205",
+  "file_role": "translation_order",
+  "active_parameter_set": "SLH-DSA-SHAKE-128s",
+  "description": "用于确定 FIPS 205 单函数代码生成与编译的先后顺序；按 layer 从小到大逐级生成代码。",
+  "layers": [
+    {
+      "layer": 0,
+      "description": "基础转换与叶子辅助函数。",
+      "functions": [
+        "alg_001_gen_len2",
+        "alg_002_to_int",
+        "alg_003_to_byte",
+        "alg_004_base_2b"
+      ]
+    },
+    {
+      "layer": 1,
+      "description": "WOTS+ 最底层链函数。",
+      "functions": [
+        "alg_005_chain"
+      ]
+    },
+    {
+      "layer": 2,
+      "description": "WOTS+ / FORS 构件函数。",
+      "functions": [
+        "alg_006_wots_pkgen",
+        "alg_007_wots_sign",
+        "alg_008_wots_pk_from_sig",
+        "alg_014_fors_skgen",
+        "alg_015_fors_node",
+        "alg_016_fors_sign",
+        "alg_017_fors_pk_from_sig"
+      ]
+    },
+    {
+      "layer": 3,
+      "description": "XMSS 与 Hypertree 层。",
+      "functions": [
+        "alg_009_xmss_node",
+        "alg_010_xmss_sign",
+        "alg_011_xmss_pk_from_sig",
+        "alg_012_ht_sign",
+        "alg_013_ht_verify"
+      ]
+    },
+    {
+      "layer": 4,
+      "description": "SLH-DSA 内部核心算法。",
+      "functions": [
+        "alg_018_slh_keygen_internal",
+        "alg_019_slh_sign_internal",
+        "alg_020_slh_verify_internal"
+      ]
+    },
+    {
+      "layer": 5,
+      "description": "SLH-DSA 外部 API。",
+      "functions": [
+        "alg_021_slh_keygen",
+        "alg_022_slh_sign",
+        "alg_023_hash_slh_sign",
+        "alg_024_slh_verify",
+        "alg_025_hash_slh_verify"
+      ]
+    }
+  ]
+}

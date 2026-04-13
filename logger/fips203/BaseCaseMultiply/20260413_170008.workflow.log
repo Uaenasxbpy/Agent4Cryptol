@@ -1,0 +1,14 @@
+2026-04-13 17:00:08,730 | INFO | workflow.runner | 工作流启动：json_file_path=F:\PgSpring\Agent4Cryptol\data\FIPS203\ir\functions\alg_012_base_case_multiply.json
+2026-04-13 17:00:08,743 | INFO | workflow.nodes | 读取函数 JSON：F:\PgSpring\Agent4Cryptol\data\FIPS203\ir\functions\alg_012_base_case_multiply.json
+2026-04-13 17:00:08,745 | INFO | workflow.nodes | 开始检索 RAG 上下文：function=BaseCaseMultiply
+2026-04-13 17:00:08,749 | INFO | workflow.nodes | RAG 检索完成：function=BaseCaseMultiply context_length=7420
+2026-04-13 17:00:08,750 | INFO | workflow.nodes | 开始首次翻译：function=BaseCaseMultiply
+2026-04-13 17:00:15,832 | INFO | httpx | HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 17:00:15,852 | INFO | workflow.function_utils | 已保存代码版本：path=F:\PgSpring\Agent4Cryptol\Cryptol\fips203\BaseCaseMultiply_v0.cry
+2026-04-13 17:00:15,852 | INFO | workflow.nodes | 首次翻译完成：function=BaseCaseMultiply code_length=330
+2026-04-13 17:00:15,853 | INFO | workflow.nodes | 开始编译：function=BaseCaseMultiply attempt=1
+2026-04-13 17:00:16,003 | INFO | workflow.cryptol_compiler | 编译完成：success=True
+2026-04-13 17:00:16,003 | INFO | workflow.nodes | 编译成功：function=BaseCaseMultiply attempt=1
+2026-04-13 17:00:16,005 | INFO | workflow.function_utils | 已保存代码版本：path=F:\PgSpring\Agent4Cryptol\Cryptol\fips203\BaseCaseMultiply.cry
+2026-04-13 17:00:16,005 | INFO | workflow.nodes | 已保存最终成功结果：F:\PgSpring\Agent4Cryptol\Cryptol\fips203\BaseCaseMultiply.cry
+2026-04-13 17:00:16,006 | INFO | workflow.runner | 工作流结束：编译成功 output=F:\PgSpring\Agent4Cryptol\Cryptol\fips203\BaseCaseMultiply.cry

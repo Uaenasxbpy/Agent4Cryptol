@@ -8,32 +8,99 @@
     {
       "name": "c_tilde",
       "type": "byte_array",
-      "description": "commitment hash"
+      "description": "Commitment hash"
     },
     {
       "name": "z",
-      "type": "vector",
-      "description": "response vector"
+      "type": "poly_vector",
+      "description": "Response vector"
     },
     {
       "name": "h",
-      "type": "vector",
-      "description": "hint vector"
+      "type": "hint_vector",
+      "description": "Hint vector"
     }
   ],
   "outputs": [
     {
       "name": "sigma",
       "type": "byte_array",
-      "description": "signature"
+      "description": "Encoded signature"
     }
   ],
   "body_raw": [
-    "𝜎 ← 𝑐̃",
-    "for 𝑖 from 0 to ℓ − 1 do",
-    "𝜎 ← 𝜎 || BitPack (𝐳[𝑖], 𝛾1 − 1, 𝛾1)",
-    "end for",
-    "𝜎 ← 𝜎 || HintBitPack (𝐡)",
-    "return 𝜎"
-  ]
+    "sigma <- c_tilde",
+    "for i from 0 to l - 1 do sigma <- sigma || BitPack(z[i], gamma1 - 1, gamma1)",
+    "sigma <- sigma || HintBitPack(h)",
+    "return sigma"
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_017_bit_pack",
+        "callee_name": "BitPack",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_020_hint_bit_pack",
+        "callee_name": "HintBitPack",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "gamma1",
+      "omega",
+      "k",
+      "l"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "gamma1",
+        "value": 131072,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "omega",
+        "value": 80,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "k",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "l",
+        "value": 4,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定 ML-DSA-44。"
+  }
 }

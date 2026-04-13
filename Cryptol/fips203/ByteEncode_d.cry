@@ -1,7 +1,0 @@
-module ByteEncode where
-
-ByteEncode : {d} (fin d, d >= 1, d <= 12) => [256][12] -> [32*d][8]
-ByteEncode F = split bits
-  where
-    bits : [256*d]
-    bits = [ (F @ i) @ j | i <- [0..255], j <- [0..d-1] ]

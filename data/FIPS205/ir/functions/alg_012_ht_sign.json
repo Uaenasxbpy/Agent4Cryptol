@@ -1,60 +1,137 @@
 {
   "function_id": "alg_012_ht_sign",
-  "name": "ht_sign(M, SK.seed, PK.seed, idxtree, idxleaf)",
+  "name": "ht_sign",
   "label": "Algorithm 12",
-  "page_start": 27,
-  "page_end": 27,
+  "page_start": 37,
+  "page_end": 37,
   "inputs": [
     {
       "name": "M",
       "type": "byte_array",
-      "description": "message"
+      "description": "Message/FORS public key to be authenticated"
     },
     {
-      "name": "SK_seed",
+      "name": "SK.seed",
       "type": "byte_array",
-      "description": "private seed"
+      "description": "Secret seed"
     },
     {
-      "name": "PK_seed",
+      "name": "PK.seed",
       "type": "byte_array",
-      "description": "public seed"
+      "description": "Public seed"
     },
     {
-      "name": "idxtree",
+      "name": "idx_tree",
       "type": "int",
-      "description": "tree index"
+      "description": "Index of the XMSS tree at the lowest layer"
     },
     {
-      "name": "idxleaf",
+      "name": "idx_leaf",
       "type": "int",
-      "description": "leaf index"
+      "description": "Index of the WOTS+ key within the XMSS tree"
     }
   ],
   "outputs": [
     {
       "name": "SIG_HT",
       "type": "byte_array",
-      "description": "hypertree signature"
+      "description": "Hypertree signature"
     }
   ],
   "body_raw": [
-    "ADRS ← toByte(0, 32)",
-    "ADRS.setTreeAddress(idxtree)",
-    "SIGtmp ← xmss_sign(M, SK.seed, idxleaf, PK.seed, ADRS)",
-    "SIG_HT ← SIGtmp",
-    "root ← xmss_pkFromSig(idxleaf, SIGtmp, M, PK.seed, ADRS)",
+    "ADRS <- toByte(0, 32)",
+    "ADRS.setTreeAddress(idx_tree)",
+    "SIG_tmp <- xmss_sign(M, SK.seed, idx_leaf, PK.seed, ADRS)",
+    "SIG_HT <- SIG_tmp",
+    "root <- xmss_pkFromSig(idx_leaf, SIG_tmp, M, PK.seed, ADRS)",
     "for j from 1 to d - 1 do",
-    "  idxleaf ← idxtree mod 2^h′",
-    "  idxtree ← idxtree ≫ h′",
-    "  ADRS.setLayerAddress(j)",
-    "  ADRS.setTreeAddress(idxtree)",
-    "  SIGtmp ← xmss_sign(root, SK.seed, idxleaf, PK.seed, ADRS)",
-    "  SIG_HT ← SIG_HT ∥ SIGtmp",
-    "  if j < d - 1 then",
-    "    root ← xmss_pkFromSig(idxleaf, SIGtmp, root, PK.seed, ADRS)",
-    "  end if",
+    "    idx_leaf <- idx_tree mod 2^h_prime",
+    "    idx_tree <- idx_tree >> h_prime",
+    "    ADRS.setLayerAddress(j)",
+    "    ADRS.setTreeAddress(idx_tree)",
+    "    SIG_tmp <- xmss_sign(root, SK.seed, idx_leaf, PK.seed, ADRS)",
+    "    SIG_HT <- SIG_HT || SIG_tmp",
+    "    if j < d - 1 then",
+    "        root <- xmss_pkFromSig(idx_leaf, SIG_tmp, root, PK.seed, ADRS)",
+    "    end if",
     "end for",
     "return SIG_HT"
-  ]
+  ],
+  "layer": 3,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_003_to_byte",
+        "callee_name": "toByte",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_010_xmss_sign",
+        "callee_name": "xmss_sign",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_011_xmss_pk_from_sig",
+        "callee_name": "xmss_pkFromSig",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [
+      "ADRS.setTreeAddress",
+      "ADRS.setLayerAddress"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "h",
+      "d",
+      "h_prime"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "h",
+        "value": 63,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "d",
+        "value": 7,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "h_prime",
+        "value": 9,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s；总高度 h=63，层数 d=7。"
+  }
 }

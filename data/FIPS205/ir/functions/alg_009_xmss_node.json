@@ -1,56 +1,131 @@
 {
   "function_id": "alg_009_xmss_node",
-  "name": "xmss_node(SK.seed, i, z, PK.seed, ADRS)",
+  "name": "xmss_node",
   "label": "Algorithm 9",
-  "page_start": 23,
-  "page_end": 23,
+  "page_start": 33,
+  "page_end": 33,
   "inputs": [
     {
-      "name": "SK_seed",
+      "name": "SK.seed",
       "type": "byte_array",
-      "description": "secret seed"
+      "description": "Secret seed"
     },
     {
       "name": "i",
       "type": "int",
-      "description": "target node index"
+      "description": "Target node index"
     },
     {
       "name": "z",
       "type": "int",
-      "description": "target node height"
+      "description": "Target node height"
     },
     {
-      "name": "PK_seed",
+      "name": "PK.seed",
       "type": "byte_array",
-      "description": "public seed"
+      "description": "Public seed"
     },
     {
       "name": "ADRS",
-      "type": "byte_array",
-      "description": "address of XMSS tree"
+      "type": "address",
+      "description": "XMSS tree address"
     }
   ],
   "outputs": [
     {
       "name": "node",
       "type": "byte_array",
-      "description": "root of target Merkle subtree"
+      "description": "Root of the target XMSS subtree"
     }
   ],
   "body_raw": [
     "if z = 0 then",
-    "  ADRS.setTypeAndClear(WOTS_HASH)",
-    "  ADRS.setKeyPairAddress(i)",
-    "  node ← wots_pkGen(SK.seed, PK.seed, ADRS)",
+    "    ADRS.setTypeAndClear(WOTS_HASH)",
+    "    ADRS.setKeyPairAddress(i)",
+    "    node <- wots_pkGen(SK.seed, PK.seed, ADRS)",
     "else",
-    "  lnode ← xmss_node(SK.seed, 2*i, z - 1, PK.seed, ADRS)",
-    "  rnode ← xmss_node(SK.seed, 2*i + 1, z - 1, PK.seed, ADRS)",
-    "  ADRS.setTypeAndClear(TREE)",
-    "  ADRS.setTreeHeight(z)",
-    "  ADRS.setTreeIndex(i)",
-    "  node ← H(PK.seed, ADRS, lnode ∥ rnode)",
+    "    lnode <- xmss_node(SK.seed, 2*i, z - 1, PK.seed, ADRS)",
+    "    rnode <- xmss_node(SK.seed, 2*i + 1, z - 1, PK.seed, ADRS)",
+    "    ADRS.setTypeAndClear(TREE)",
+    "    ADRS.setTreeHeight(z)",
+    "    ADRS.setTreeIndex(i)",
+    "    node <- H(PK.seed, ADRS, lnode || rnode)",
     "end if",
     "return node"
-  ]
+  ],
+  "layer": 3,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_006_wots_pkgen",
+        "callee_name": "wots_pkGen",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_009_xmss_node",
+        "callee_name": "xmss_node",
+        "call_kind": "self_recursive_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "H"
+    ],
+    "support_functions": [
+      "ADRS.setTypeAndClear",
+      "ADRS.setKeyPairAddress",
+      "ADRS.setTreeHeight",
+      "ADRS.setTreeIndex"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "n",
+      "h_prime",
+      "len"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 16,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "h_prime",
+        "value": 9,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "len",
+        "value": 35,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s 时，XMSS 子树高度 h'=9。"
+  }
 }

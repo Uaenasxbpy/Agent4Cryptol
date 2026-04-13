@@ -1,4 +1,4 @@
-﻿"""统一配置管理，优先从 YAML 配置文件读取。"""
+"""统一配置管理，优先从 YAML 配置文件读取。"""
 
 from __future__ import annotations
 
@@ -13,7 +13,11 @@ def _default_project_root() -> Path:
     return Path(__file__).resolve().parent.parent
 
 
-def _resolve_project_path(value: Path | None, project_root: Path, default_relative_path: str) -> Path:
+def _resolve_project_path(
+    value: Path | None,
+    project_root: Path,
+    default_relative_path: str,
+) -> Path:
     if value is None:
         return project_root / default_relative_path
     return value if value.is_absolute() else project_root / value
@@ -49,7 +53,9 @@ class Settings(BaseModel):
 
     # === RAG 检索配置 ===
     RAG_TOP_K_RULES: int = 8
+    RAG_TOP_K_GUARDRAILS: int = 4
     RAG_TOP_K_PATTERNS: int = 5
+    RAG_TOP_K_TEMPLATES: int = 3
     RAG_TOP_K_EXAMPLES: int = 5
     RAG_ENABLE_CACHE: bool = True
 
@@ -115,7 +121,9 @@ def _normalize_yaml_config(data: dict[str, Any]) -> dict[str, Any]:
     rag = data.get("rag", {})
     if isinstance(rag, dict):
         normalized.setdefault("RAG_TOP_K_RULES", rag.get("top_k_rules"))
+        normalized.setdefault("RAG_TOP_K_GUARDRAILS", rag.get("top_k_guardrails"))
         normalized.setdefault("RAG_TOP_K_PATTERNS", rag.get("top_k_patterns"))
+        normalized.setdefault("RAG_TOP_K_TEMPLATES", rag.get("top_k_templates"))
         normalized.setdefault("RAG_TOP_K_EXAMPLES", rag.get("top_k_examples"))
         normalized.setdefault("RAG_ENABLE_CACHE", rag.get("enable_cache"))
 

@@ -8,22 +8,64 @@
     {
       "name": "b",
       "type": "int",
-      "description": "half byte value"
+      "description": "Half-byte value in [0,15]"
     }
   ],
   "outputs": [
     {
       "name": "z",
-      "type": "int",
-      "description": "coefficient or failure"
+      "type": "int_or_bottom",
+      "description": "Coefficient in [-eta,eta] or bottom"
     }
   ],
   "body_raw": [
     "if eta = 2 and b < 15 then return 2 - (b mod 5)",
-    "else",
-    "if eta = 4 and b < 9 then return 4 - b",
-    "else return failure",
-    "end if",
-    "end if"
-  ]
+    "else if eta = 4 and b < 9 then return 4 - b",
+    "else return bottom"
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "eta"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "eta",
+        "value": 2,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [
+      {
+        "variant_name": "CoeffFromHalfByte_eta2",
+        "bindings": {
+          "eta": 2
+        }
+      }
+    ],
+    "translation_note": "项目级固定 ML-DSA-44，仅需 eta=2 版本。"
+  }
 }

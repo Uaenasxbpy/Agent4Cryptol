@@ -8,23 +8,80 @@
     {
       "name": "rho",
       "type": "byte_array",
-      "description": "seed"
+      "description": "32-byte seed"
     }
   ],
   "outputs": [
     {
       "name": "A_hat",
-      "type": "matrix",
-      "description": "sampled NTT matrix"
+      "type": "ntt_matrix",
+      "description": "k x l matrix over T_q"
     }
   ],
   "body_raw": [
-    "for 𝑟 from 0 to 𝑘 − 1 do",
-    "for 𝑠 from 0 to ℓ − 1 do",
-    "𝜌′ ← 𝜌||IntegerToBytes(𝑠, 1)||IntegerToBytes(𝑟, 1) ̂",
-    "𝐀[𝑟, 𝑠] ← RejNTTPoly(𝜌′) ▷ seed 𝜌′ depends on 𝑠 and 𝑟",
+    "for r from 0 to k - 1 do",
+    "    for s from 0 to l - 1 do",
+    "        rho_prime <- rho || IntegerToBytes(s, 1) || IntegerToBytes(r, 1)",
+    "        A_hat[r, s] <- RejNTTPoly(rho_prime)",
+    "    end for",
     "end for",
-    "end for",
-    "return 𝐀̂"
-  ]
+    "return A_hat"
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_011_integer_to_bytes",
+        "callee_name": "IntegerToBytes",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_030_rej_ntt_poly",
+        "callee_name": "RejNTTPoly",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "k",
+      "l"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "k",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "l",
+        "value": 4,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定 ML-DSA-44，仅需 4x4 矩阵。"
+  }
 }

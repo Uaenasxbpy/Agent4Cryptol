@@ -8,33 +8,76 @@
     {
       "name": "rho",
       "type": "byte_array",
-      "description": "seed"
+      "description": "66-byte seed"
     }
   ],
   "outputs": [
     {
       "name": "a",
       "type": "poly",
-      "description": "sampled polynomial"
+      "description": "Polynomial with coefficients in [-eta,eta]"
     }
   ],
   "body_raw": [
-    "𝑗 ←",
-    "ctx ← H.Init()",
-    "ctx ← H.Absorb(ctx, 𝜌)",
-    "while 𝑗 < 256 do",
-    "𝑧 ← H.Squeeze(ctx, 1)",
-    "𝑧0 ← CoeffFromHalfByte(𝑧 mod 16)",
-    "𝑧1 ← CoeffFromHalfByte(⌊𝑧/16⌋)",
-    "if 𝑧0 ≠ ⊥ then",
-    "𝑎𝑗 ← 𝑧0",
-    "𝑗 ← 𝑗 +",
-    "end if",
-    "if 𝑧1 ≠ ⊥ and 𝑗 < 256 then",
-    "𝑎𝑗 ← 𝑧1",
-    "𝑗 ← 𝑗 +",
-    "end if",
+    "j <- 0",
+    "ctx <- H.Init()",
+    "ctx <- H.Absorb(ctx, rho)",
+    "while j < 256 do",
+    "    z <- H.Squeeze(ctx, 1)",
+    "    z0 <- CoeffFromHalfByte(z mod 16)",
+    "    z1 <- CoeffFromHalfByte(floor(z / 16))",
+    "    if z0 != bottom then a_j <- z0; j <- j + 1",
+    "    if z1 != bottom and j < 256 then a_j <- z1; j <- j + 1",
     "end while",
-    "return 𝑎"
-  ]
+    "return a"
+  ],
+  "layer": 1,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_015_coeff_from_half_byte",
+        "callee_name": "CoeffFromHalfByte",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "H.Init",
+      "H.Absorb",
+      "H.Squeeze"
+    ],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "eta"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "eta",
+        "value": 2,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定 ML-DSA-44，仅需 eta=2。"
+  }
 }

@@ -1,13 +1,18 @@
 module ForExample where
 
 // Algorithm 1: ForExample
-// Fills array A with [0..9] and array B with descending powers of two from 256 down to 2.
+// This function initializes two arrays A and B as described in the pseudocode.
+// - A[i] = i for i in [0, 10)
+// - B[j] = k, where k starts at 256 and is halved each iteration until it becomes 1 (exclusive)
 
-ForExample : ([10][4], [8][9])
+ForExample : ([10][8], [8][9])
 ForExample = (A, B)
   where
-    A : [10][4]
+    // Initialize A with A[i] = i
+    A : [10][8]
     A = [ i | i <- [0 .. 9] ]
 
+    // Initialize B by repeatedly halving 256 until > 1
+    // Sequence: 256, 128, 64, 32, 16, 8, 4, 2 → 8 elements
     B : [8][9]
     B = [ 256 / (2^^j) | j <- [0 .. 7] ]

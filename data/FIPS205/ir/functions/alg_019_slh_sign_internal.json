@@ -1,24 +1,24 @@
 {
   "function_id": "alg_019_slh_sign_internal",
-  "name": "slh_sign_internal(M, SK, addrnd)",
+  "name": "slh_sign_internal",
   "label": "Algorithm 19",
-  "page_start": 35,
-  "page_end": 35,
+  "page_start": 45,
+  "page_end": 45,
   "inputs": [
     {
       "name": "M",
       "type": "byte_array",
-      "description": "message"
+      "description": "Message or formatted message"
     },
     {
       "name": "SK",
       "type": "tuple",
-      "description": "private key tuple"
+      "description": "Private key tuple (SK.seed, SK.prf, PK.seed, PK.root)"
     },
     {
       "name": "addrnd",
       "type": "byte_array",
-      "description": "optional additional randomness"
+      "description": "Optional additional randomness"
     }
   ],
   "outputs": [
@@ -29,24 +29,141 @@
     }
   ],
   "body_raw": [
-    "ADRS ← toByte(0, 32)",
-    "opt_rand ← addrnd",
-    "R ← PRFmsg(SK.prf, opt_rand, M)",
-    "SIG ← R",
-    "digest ← Hmsg(R, PK.seed, PK.root, M)",
-    "md ← digest[0 : ceil(k*a/8)]",
-    "tmp_idxtree ← digest[ceil(k*a/8) : ceil(k*a/8) + ceil((h-h/d)/8)]",
-    "tmp_idxleaf ← digest[ceil(k*a/8) + ceil((h-h/d)/8) : ceil(k*a/8) + ceil((h-h/d)/8) + ceil(h/(8*d))]",
-    "idxtree ← toInt(tmp_idxtree, ceil((h-h/d)/8)) mod 2^(h-h/d)",
-    "idxleaf ← toInt(tmp_idxleaf, ceil(h/(8*d))) mod 2^(h/d)",
-    "ADRS.setTreeAddress(idxtree)",
+    "ADRS <- toByte(0, 32)",
+    "opt_rand <- addrnd  // deterministic variant uses PK.seed",
+    "R <- PRFmsg(SK.prf, opt_rand, M)",
+    "SIG <- R",
+    "digest <- Hmsg(R, PK.seed, PK.root, M)",
+    "md <- digest[0 : ceil(k * a / 8)]",
+    "tmp_idx_tree <- digest[ceil(k * a / 8) : ceil(k * a / 8) + ceil((h - h / d) / 8)]",
+    "tmp_idx_leaf <- digest[ceil(k * a / 8) + ceil((h - h / d) / 8) : ceil(k * a / 8) + ceil((h - h / d) / 8) + ceil((h / d) / 8)]",
+    "idx_tree <- toInt(tmp_idx_tree, ceil((h - h / d) / 8)) mod 2^(h - h / d)",
+    "idx_leaf <- toInt(tmp_idx_leaf, ceil((h / d) / 8)) mod 2^(h / d)",
+    "ADRS.setTreeAddress(idx_tree)",
     "ADRS.setTypeAndClear(FORS_TREE)",
-    "ADRS.setKeyPairAddress(idxleaf)",
-    "SIG_FORS ← fors_sign(md, SK.seed, PK.seed, ADRS)",
-    "SIG ← SIG ∥ SIG_FORS",
-    "PK_FORS ← fors_pkFromSig(SIG_FORS, md, PK.seed, ADRS)",
-    "SIG_HT ← ht_sign(PK_FORS, SK.seed, PK.seed, idxtree, idxleaf)",
-    "SIG ← SIG ∥ SIG_HT",
+    "ADRS.setKeyPairAddress(idx_leaf)",
+    "SIG_FORS <- fors_sign(md, SK.seed, PK.seed, ADRS)",
+    "SIG <- SIG || SIG_FORS",
+    "PK_FORS <- fors_pkFromSig(SIG_FORS, md, PK.seed, ADRS)",
+    "SIG_HT <- ht_sign(PK_FORS, SK.seed, PK.seed, idx_tree, idx_leaf)",
+    "SIG <- SIG || SIG_HT",
     "return SIG"
-  ]
+  ],
+  "layer": 4,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_002_to_int",
+        "callee_name": "toInt",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_003_to_byte",
+        "callee_name": "toByte",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_016_fors_sign",
+        "callee_name": "fors_sign",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_017_fors_pk_from_sig",
+        "callee_name": "fors_pkFromSig",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_012_ht_sign",
+        "callee_name": "ht_sign",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "PRFmsg",
+      "Hmsg"
+    ],
+    "support_functions": [
+      "ADRS.setTreeAddress",
+      "ADRS.setTypeAndClear",
+      "ADRS.setKeyPairAddress"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "n",
+      "h",
+      "d",
+      "h_prime",
+      "a",
+      "k",
+      "m"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 16,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "h",
+        "value": 63,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "d",
+        "value": 7,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "h_prime",
+        "value": 9,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "a",
+        "value": 12,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "k",
+        "value": 14,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "m",
+        "value": 30,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s；内部消息摘要长度 m=30。"
+  }
 }

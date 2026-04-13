@@ -8,27 +8,57 @@
     {
       "name": "x",
       "type": "int",
-      "description": "nonnegative integer"
+      "description": "Nonnegative integer"
     },
     {
       "name": "alpha",
       "type": "int",
-      "description": "bit length"
+      "description": "Positive length"
     }
   ],
   "outputs": [
     {
       "name": "y",
       "type": "bit_array",
-      "description": "bit string"
+      "description": "Bit string of length alpha"
     }
   ],
   "body_raw": [
-    "𝑥 ′ ← 𝑥",
-    "for 𝑖 from 0 to 𝛼 − 1 do",
-    "𝑦[𝑖] ← 𝑥 ′ mod 2",
-    "𝑥 ′ ← ⌊𝑥 ′ /2⌋",
+    "x_prime <- x",
+    "for i from 0 to alpha - 1 do",
+    "    y[i] <- x_prime mod 2",
+    "    x_prime <- floor(x_prime / 2)",
     "end for",
-    "return 𝑦"
-  ]
+    "return y"
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [],
+    "resolved_symbols": [],
+    "specializations": [],
+    "translation_note": "通用转换函数；与参数集无关。"
+  }
 }

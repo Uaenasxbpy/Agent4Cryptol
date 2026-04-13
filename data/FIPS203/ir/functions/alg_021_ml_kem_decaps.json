@@ -26,5 +26,57 @@
   "body_raw": [
     "K_prime ← ML-KEM.Decaps_internal(dk, c)",
     "return K_prime"
-  ]
+  ],
+  "layer": 4,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_018_ml_kem_decaps_internal",
+        "callee_name": "ML-KEM.Decaps_internal",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-KEM-512",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 256,
+      "q": 3329,
+      "k": 2,
+      "eta1": 3,
+      "eta2": 2,
+      "du": 10,
+      "dv": 4
+    },
+    "local_symbols_detected": [
+      "k",
+      "du",
+      "dv"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "k",
+        "value": 2,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "du",
+        "value": 10,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "dv",
+        "value": 4,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "公共接口仅保留 ML-KEM-512 版本。"
+  }
 }

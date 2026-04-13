@@ -32,5 +32,99 @@
     "w ← v_prime - NTT_inverse(s_hat_transpose ∘ NTT(u_prime))",
     "m ← ByteEncode1(Compress1(w))",
     "return m"
-  ]
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_009_ntt",
+        "callee_name": "NTT",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_010_ntt_inverse",
+        "callee_name": "NTT_inverse",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [
+      {
+        "callee_base_id": "alg_006_byte_decode_d",
+        "callee_base_name": "ByteDecode_d",
+        "instantiation": {
+          "d": "du"
+        },
+        "call_kind": "parameterized_algorithm_call"
+      },
+      {
+        "callee_base_id": "alg_006_byte_decode_d",
+        "callee_base_name": "ByteDecode_d",
+        "instantiation": {
+          "d": "dv"
+        },
+        "call_kind": "parameterized_algorithm_call"
+      },
+      {
+        "callee_base_id": "alg_006_byte_decode_d",
+        "callee_base_name": "ByteDecode_d",
+        "instantiation": {
+          "d": 12
+        },
+        "call_kind": "parameterized_algorithm_call"
+      },
+      {
+        "callee_base_id": "alg_005_byte_encode_d",
+        "callee_base_name": "ByteEncode_d",
+        "instantiation": {
+          "d": 1
+        },
+        "call_kind": "parameterized_algorithm_call"
+      }
+    ],
+    "trusted_primitives": [],
+    "support_functions": [
+      "Compress_d",
+      "Decompress_d"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-KEM-512",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 256,
+      "q": 3329,
+      "k": 2,
+      "eta1": 3,
+      "eta2": 2,
+      "du": 10,
+      "dv": 4
+    },
+    "local_symbols_detected": [
+      "k",
+      "du",
+      "dv"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "k",
+        "value": 2,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "du",
+        "value": 10,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "dv",
+        "value": 4,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目只做 ML-KEM-512 时，直接固定 k=2、du=10、dv=4。"
+  }
 }

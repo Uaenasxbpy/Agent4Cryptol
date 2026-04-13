@@ -1,0 +1,605 @@
+{
+  "document": "FIPS203",
+  "standard_name": "Module-Lattice-Based Key-Encapsulation Mechanism Standard",
+  "source_file": "NIST.FIPS.203.pdf",
+  "version": "initial_layered_build_plan_v1",
+  "layering_policy": {
+    "rule": "按 FIPS 203 中算法之间的依赖进行分层；只把编号算法（Algorithm 3-21）放入主拓扑层。受信任密码原语、数学辅助函数、参数化实例化单独记录，不作为主层级中的独立翻译节点。",
+    "translation_strategy": "先按 layer 从小到大翻译；当前层只允许依赖更低层已成功翻译的模块；参数化调用视为对同一基础算法的实例化，不单独拆成新函数。"
+  },
+  "excluded_algorithms": [
+    {
+      "function_id": "alg_001_for_example",
+      "name": "ForExample",
+      "reason": "示例性伪代码，不属于 ML-KEM 实现依赖链。"
+    },
+    {
+      "function_id": "alg_002_shake128example",
+      "name": "SHAKE128example",
+      "reason": "用于说明 SHAKE128 增量 API 与单次调用等价性的示例，不作为后续主算法子程序。"
+    }
+  ],
+  "trusted_primitive_modules": [
+    "SHA3_256",
+    "SHA3_512",
+    "SHAKE128",
+    "SHAKE256",
+    "PRF",
+    "H",
+    "J",
+    "G",
+    "XOF",
+    "RBG"
+  ],
+  "support_nonboxed_functions": [
+    "BitRev7",
+    "Compress_d",
+    "Decompress_d"
+  ],
+  "layer_order": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "layers": [
+    {
+      "layer": 0,
+      "description": "闭包函数 / 叶子函数：不依赖其他编号算法（可依赖受信任原语或数学辅助函数）。",
+      "functions": [
+        "alg_003_bits_to_bytes",
+        "alg_004_bytes_to_bits",
+        "alg_007_sample_ntt",
+        "alg_009_ntt",
+        "alg_010_ntt_inverse",
+        "alg_012_base_case_multiply"
+      ]
+    },
+    {
+      "layer": 1,
+      "description": "基础组合函数：只依赖 layer 0 或辅助函数。",
+      "functions": [
+        "alg_005_byte_encode_d",
+        "alg_006_byte_decode_d",
+        "alg_008_sample_poly_cbd_eta",
+        "alg_011_multiply_ntts"
+      ]
+    },
+    {
+      "layer": 2,
+      "description": "K-PKE 组件算法。",
+      "functions": [
+        "alg_013_k_pke_keygen",
+        "alg_014_k_pke_encrypt",
+        "alg_015_k_pke_decrypt"
+      ]
+    },
+    {
+      "layer": 3,
+      "description": "ML-KEM internal 算法。",
+      "functions": [
+        "alg_016_ml_kem_keygen_internal",
+        "alg_017_ml_kem_encaps_internal",
+        "alg_018_ml_kem_decaps_internal"
+      ]
+    },
+    {
+      "layer": 4,
+      "description": "ML-KEM public API 算法。",
+      "functions": [
+        "alg_019_ml_kem_keygen",
+        "alg_020_ml_kem_encaps",
+        "alg_021_ml_kem_decaps"
+      ]
+    }
+  ],
+
+
+  "functions": [
+    {
+      "function_id": "alg_003_bits_to_bytes",
+      "name": "BitsToBytes",
+      "label": "Algorithm 3",
+      "layer": 0,
+      "dependencies": {
+        "direct_calls": [],
+        "parameterized_calls": [],
+        "trusted_primitives": [],
+        "support_functions": [],
+        "import_strategy": "none"
+      }
+    },
+    
+    {
+      "function_id": "alg_004_bytes_to_bits",
+      "name": "BytesToBits",
+      "label": "Algorithm 4",
+      "layer": 0,
+      "dependencies": {
+        "direct_calls": [],
+        "parameterized_calls": [],
+        "trusted_primitives": [],
+        "support_functions": [],
+        "import_strategy": "none"
+      }
+    },
+    {
+      "function_id": "alg_005_byte_encode_d",
+      "name": "ByteEncode_d",
+      "label": "Algorithm 5",
+      "layer": 1,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_003_bits_to_bytes",
+            "callee_name": "BitsToBytes",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [],
+        "trusted_primitives": [],
+        "support_functions": [],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_006_byte_decode_d",
+      "name": "ByteDecode_d",
+      "label": "Algorithm 6",
+      "layer": 1,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_004_bytes_to_bits",
+            "callee_name": "BytesToBits",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [],
+        "trusted_primitives": [],
+        "support_functions": [],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_007_sample_ntt",
+      "name": "SampleNTT",
+      "label": "Algorithm 7",
+      "layer": 0,
+      "dependencies": {
+        "direct_calls": [],
+        "parameterized_calls": [],
+        "trusted_primitives": [
+          "XOF.Init",
+          "XOF.Absorb",
+          "XOF.Squeeze"
+        ],
+        "support_functions": [],
+        "import_strategy": "trusted_primitive_import"
+      }
+    },
+    {
+      "function_id": "alg_008_sample_poly_cbd_eta",
+      "name": "SamplePolyCBD_eta",
+      "label": "Algorithm 8",
+      "layer": 1,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_004_bytes_to_bits",
+            "callee_name": "BytesToBits",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [],
+        "trusted_primitives": [],
+        "support_functions": [],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_009_ntt",
+      "name": "NTT",
+      "label": "Algorithm 9",
+      "layer": 0,
+      "dependencies": {
+        "direct_calls": [],
+        "parameterized_calls": [],
+        "trusted_primitives": [],
+        "support_functions": [
+          "BitRev7",
+          "zeta_precomputed_table_optional"
+        ],
+        "import_strategy": "none"
+      }
+    },
+    {
+      "function_id": "alg_010_ntt_inverse",
+      "name": "NTT_inverse",
+      "label": "Algorithm 10",
+      "layer": 0,
+      "dependencies": {
+        "direct_calls": [],
+        "parameterized_calls": [],
+        "trusted_primitives": [],
+        "support_functions": [
+          "BitRev7",
+          "zeta_precomputed_table_optional"
+        ],
+        "import_strategy": "none"
+      }
+    },
+    {
+      "function_id": "alg_011_multiply_ntts",
+      "name": "MultiplyNTTs",
+      "label": "Algorithm 11",
+      "layer": 1,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_012_base_case_multiply",
+            "callee_name": "BaseCaseMultiply",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [],
+        "trusted_primitives": [],
+        "support_functions": [
+          "BitRev7",
+          "zeta2_bitrev_table_optional"
+        ],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_012_base_case_multiply",
+      "name": "BaseCaseMultiply",
+      "label": "Algorithm 12",
+      "layer": 0,
+      "dependencies": {
+        "direct_calls": [],
+        "parameterized_calls": [],
+        "trusted_primitives": [],
+        "support_functions": [],
+        "import_strategy": "none"
+      }
+    },
+    {
+      "function_id": "alg_013_k_pke_keygen",
+      "name": "K-PKE.KeyGen",
+      "label": "Algorithm 13",
+      "layer": 2,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_007_sample_ntt",
+            "callee_name": "SampleNTT",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          },
+          {
+            "callee_id": "alg_009_ntt",
+            "callee_name": "NTT",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [
+          {
+            "callee_base_id": "alg_008_sample_poly_cbd_eta",
+            "callee_base_name": "SamplePolyCBD_eta",
+            "instantiation": {
+              "eta": "eta1"
+            },
+            "call_kind": "parameterized_algorithm_call"
+          },
+          {
+            "callee_base_id": "alg_005_byte_encode_d",
+            "callee_base_name": "ByteEncode_d",
+            "instantiation": {
+              "d": 12
+            },
+            "call_kind": "parameterized_algorithm_call"
+          }
+        ],
+        "trusted_primitives": [
+          "G",
+          "PRF"
+        ],
+        "support_functions": [],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_014_k_pke_encrypt",
+      "name": "K-PKE.Encrypt",
+      "label": "Algorithm 14",
+      "layer": 2,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_007_sample_ntt",
+            "callee_name": "SampleNTT",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          },
+          {
+            "callee_id": "alg_009_ntt",
+            "callee_name": "NTT",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          },
+          {
+            "callee_id": "alg_010_ntt_inverse",
+            "callee_name": "NTT_inverse",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [
+          {
+            "callee_base_id": "alg_006_byte_decode_d",
+            "callee_base_name": "ByteDecode_d",
+            "instantiation": {
+              "d": 12
+            },
+            "call_kind": "parameterized_algorithm_call"
+          },
+          {
+            "callee_base_id": "alg_008_sample_poly_cbd_eta",
+            "callee_base_name": "SamplePolyCBD_eta",
+            "instantiation": {
+              "eta": "eta1"
+            },
+            "call_kind": "parameterized_algorithm_call"
+          },
+          {
+            "callee_base_id": "alg_008_sample_poly_cbd_eta",
+            "callee_base_name": "SamplePolyCBD_eta",
+            "instantiation": {
+              "eta": "eta2"
+            },
+            "call_kind": "parameterized_algorithm_call"
+          },
+          {
+            "callee_base_id": "alg_006_byte_decode_d",
+            "callee_base_name": "ByteDecode_d",
+            "instantiation": {
+              "d": 1
+            },
+            "call_kind": "parameterized_algorithm_call"
+          },
+          {
+            "callee_base_id": "alg_005_byte_encode_d",
+            "callee_base_name": "ByteEncode_d",
+            "instantiation": {
+              "d": "du"
+            },
+            "call_kind": "parameterized_algorithm_call"
+          },
+          {
+            "callee_base_id": "alg_005_byte_encode_d",
+            "callee_base_name": "ByteEncode_d",
+            "instantiation": {
+              "d": "dv"
+            },
+            "call_kind": "parameterized_algorithm_call"
+          }
+        ],
+        "trusted_primitives": [
+          "PRF"
+        ],
+        "support_functions": [
+          "Compress_d",
+          "Decompress_d"
+        ],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_015_k_pke_decrypt",
+      "name": "K-PKE.Decrypt",
+      "label": "Algorithm 15",
+      "layer": 2,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_009_ntt",
+            "callee_name": "NTT",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          },
+          {
+            "callee_id": "alg_010_ntt_inverse",
+            "callee_name": "NTT_inverse",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [
+          {
+            "callee_base_id": "alg_006_byte_decode_d",
+            "callee_base_name": "ByteDecode_d",
+            "instantiation": {
+              "d": "du"
+            },
+            "call_kind": "parameterized_algorithm_call"
+          },
+          {
+            "callee_base_id": "alg_006_byte_decode_d",
+            "callee_base_name": "ByteDecode_d",
+            "instantiation": {
+              "d": "dv"
+            },
+            "call_kind": "parameterized_algorithm_call"
+          },
+          {
+            "callee_base_id": "alg_006_byte_decode_d",
+            "callee_base_name": "ByteDecode_d",
+            "instantiation": {
+              "d": 12
+            },
+            "call_kind": "parameterized_algorithm_call"
+          },
+          {
+            "callee_base_id": "alg_005_byte_encode_d",
+            "callee_base_name": "ByteEncode_d",
+            "instantiation": {
+              "d": 1
+            },
+            "call_kind": "parameterized_algorithm_call"
+          }
+        ],
+        "trusted_primitives": [],
+        "support_functions": [
+          "Compress_d",
+          "Decompress_d"
+        ],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_016_ml_kem_keygen_internal",
+      "name": "ML-KEM.KeyGen_internal",
+      "label": "Algorithm 16",
+      "layer": 3,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_013_k_pke_keygen",
+            "callee_name": "K-PKE.KeyGen",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [],
+        "trusted_primitives": [
+          "H"
+        ],
+        "support_functions": [],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_017_ml_kem_encaps_internal",
+      "name": "ML-KEM.Encaps_internal",
+      "label": "Algorithm 17",
+      "layer": 3,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_014_k_pke_encrypt",
+            "callee_name": "K-PKE.Encrypt",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [],
+        "trusted_primitives": [
+          "G",
+          "H"
+        ],
+        "support_functions": [],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_018_ml_kem_decaps_internal",
+      "name": "ML-KEM.Decaps_internal",
+      "label": "Algorithm 18",
+      "layer": 3,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_015_k_pke_decrypt",
+            "callee_name": "K-PKE.Decrypt",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          },
+          {
+            "callee_id": "alg_014_k_pke_encrypt",
+            "callee_name": "K-PKE.Encrypt",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [],
+        "trusted_primitives": [
+          "G",
+          "J"
+        ],
+        "support_functions": [],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_019_ml_kem_keygen",
+      "name": "ML-KEM.KeyGen",
+      "label": "Algorithm 19",
+      "layer": 4,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_016_ml_kem_keygen_internal",
+            "callee_name": "ML-KEM.KeyGen_internal",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [],
+        "trusted_primitives": [
+          "RBG"
+        ],
+        "support_functions": [],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_020_ml_kem_encaps",
+      "name": "ML-KEM.Encaps",
+      "label": "Algorithm 20",
+      "layer": 4,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_017_ml_kem_encaps_internal",
+            "callee_name": "ML-KEM.Encaps_internal",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [],
+        "trusted_primitives": [
+          "RBG"
+        ],
+        "support_functions": [],
+        "import_strategy": "qualified_import"
+      }
+    },
+    {
+      "function_id": "alg_021_ml_kem_decaps",
+      "name": "ML-KEM.Decaps",
+      "label": "Algorithm 21",
+      "layer": 4,
+      "dependencies": {
+        "direct_calls": [
+          {
+            "callee_id": "alg_018_ml_kem_decaps_internal",
+            "callee_name": "ML-KEM.Decaps_internal",
+            "call_kind": "explicit_algorithm_call",
+            "required": true
+          }
+        ],
+        "parameterized_calls": [],
+        "trusted_primitives": [],
+        "support_functions": [],
+        "import_strategy": "qualified_import"
+      }
+    }
+  ]
+}

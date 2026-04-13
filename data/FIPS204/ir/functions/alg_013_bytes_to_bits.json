@@ -8,24 +8,54 @@
     {
       "name": "z",
       "type": "byte_array",
-      "description": "byte string"
+      "description": "Byte string"
     }
   ],
   "outputs": [
     {
       "name": "y",
       "type": "bit_array",
-      "description": "bit string"
+      "description": "Bit string of length 8*alpha"
     }
   ],
   "body_raw": [
-    "𝑧 ′ ← 𝑧",
-    "for 𝑖 from 0 to 𝛼 − 1 do",
-    "for 𝑗 from 0 to 7 do ▷ convert the byte 𝑧[𝑖] into 8 bits",
-    "𝑦[8𝑖 + 𝑗] ← 𝑧 ′ [𝑖] mod",
-    "𝑧 ′ [𝑖] ← ⌊𝑧 ′ [𝑖]/2⌋",
+    "z_prime <- z",
+    "for i from 0 to alpha - 1 do",
+    "    for j from 0 to 7 do",
+    "        y[8*i + j] <- z_prime[i] mod 2",
+    "        z_prime[i] <- floor(z_prime[i] / 2)",
+    "    end for",
     "end for",
-    "end for",
-    "return 𝑦 Algorithms 14 and 15 translate byte strings into coefficients of polynomials in 𝑅. CoeffFromThreeBytes uses a 3-byte string to either generate an element of {0, 1, … , 𝑞 − 1} or return the blank symbol ⊥. CoeffFromHalfByte uses an element of {0, 1, … , 15} to either generate an element of {−𝜂, −𝜂 +1, … , 𝜂} or return ⊥. These two procedures will be used in the uniform sampling algorithms RejNTTPoly and RejBoundedPoly, which are discussed in Section 7.3."
-  ]
+    "return y"
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [],
+    "resolved_symbols": [],
+    "specializations": [],
+    "translation_note": "通用转换函数；与参数集无关。"
+  }
 }

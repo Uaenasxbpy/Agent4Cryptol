@@ -1,9 +1,0 @@
-module BytesToBits where
-
-BytesToBits : {n} (fin n) => [n][8] -> [8*n]
-BytesToBits B = join [ bitsFromByte b | b <- B ]
-  where
-    bitsFromByte : [8] -> [8]
-    bitsFromByte x = [ x @ 0, x @ 1, x @ 2, x @ 3
-                     , x @ 4, x @ 5, x @ 6, x @ 7
-                     ]

@@ -1,9 +1,9 @@
 {
   "function_id": "alg_017_fors_pk_from_sig",
-  "name": "fors_pkFromSig(SIG_FORS, md, PK.seed, ADRS)",
+  "name": "fors_pkFromSig",
   "label": "Algorithm 17",
-  "page_start": 32,
-  "page_end": 32,
+  "page_start": 42,
+  "page_end": 42,
   "inputs": [
     {
       "name": "SIG_FORS",
@@ -13,51 +13,126 @@
     {
       "name": "md",
       "type": "byte_array",
-      "description": "message digest"
+      "description": "Message digest"
     },
     {
-      "name": "PK_seed",
+      "name": "PK.seed",
       "type": "byte_array",
-      "description": "public seed"
+      "description": "Public seed"
     },
     {
       "name": "ADRS",
-      "type": "byte_array",
-      "description": "FORS address"
+      "type": "address",
+      "description": "FORS tree address"
     }
   ],
   "outputs": [
     {
       "name": "pk",
       "type": "byte_array",
-      "description": "derived FORS public key"
+      "description": "Derived FORS public key"
     }
   ],
   "body_raw": [
-    "indices ← base_2b(md, a, k)",
+    "indices <- base_2b(md, a, k)",
     "for i from 0 to k - 1 do",
-    "  sk ← SIG_FORS.getSK(i)",
-    "  ADRS.setTreeHeight(0)",
-    "  ADRS.setTreeIndex(i * 2^a + indices[i])",
-    "  node[0] ← F(PK.seed, ADRS, sk)",
-    "  auth ← SIG_FORS.getAUTH(i)",
-    "  for j from 0 to a - 1 do",
-    "    ADRS.setTreeHeight(j + 1)",
-    "    if floor(indices[i] / 2^j) is even then",
-    "      ADRS.setTreeIndex(ADRS.getTreeIndex() / 2)",
-    "      node[1] ← H(PK.seed, ADRS, node[0] ∥ auth[j])",
-    "    else",
-    "      ADRS.setTreeIndex((ADRS.getTreeIndex() - 1) / 2)",
-    "      node[1] ← H(PK.seed, ADRS, auth[j] ∥ node[0])",
-    "    end if",
-    "    node[0] ← node[1]",
-    "  end for",
-    "  root[i] ← node[0]",
+    "    sk <- SIG_FORS.getSK(i)",
+    "    ADRS.setTreeHeight(0)",
+    "    ADRS.setTreeIndex(i * 2^a + indices[i])",
+    "    node[0] <- F(PK.seed, ADRS, sk)",
+    "    auth <- SIG_FORS.getAUTH(i)",
+    "    for j from 0 to a - 1 do",
+    "        ADRS.setTreeHeight(j + 1)",
+    "        if floor(indices[i] / 2^j) is even then",
+    "            ADRS.setTreeIndex(ADRS.getTreeIndex() / 2)",
+    "            node[1] <- H(PK.seed, ADRS, node[0] || auth[j])",
+    "        else",
+    "            ADRS.setTreeIndex((ADRS.getTreeIndex() - 1) / 2)",
+    "            node[1] <- H(PK.seed, ADRS, auth[j] || node[0])",
+    "        end if",
+    "        node[0] <- node[1]",
+    "    end for",
+    "    root[i] <- node[0]",
     "end for",
-    "forspkADRS ← ADRS",
+    "forspkADRS <- ADRS",
     "forspkADRS.setTypeAndClear(FORS_ROOTS)",
     "forspkADRS.setKeyPairAddress(ADRS.getKeyPairAddress())",
-    "pk ← T_k(PK.seed, forspkADRS, root)",
+    "pk <- T_k(PK.seed, forspkADRS, root)",
     "return pk"
-  ]
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_004_base_2b",
+        "callee_name": "base_2b",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "F",
+      "H",
+      "T_k"
+    ],
+    "support_functions": [
+      "SIG_FORS.getSK",
+      "SIG_FORS.getAUTH",
+      "ADRS.setTreeHeight",
+      "ADRS.setTreeIndex",
+      "ADRS.getTreeIndex",
+      "ADRS.setTypeAndClear",
+      "ADRS.getKeyPairAddress",
+      "ADRS.setKeyPairAddress"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "n",
+      "a",
+      "k"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 16,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "a",
+        "value": 12,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "k",
+        "value": 14,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s。"
+  }
 }

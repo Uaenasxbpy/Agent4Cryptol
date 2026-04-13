@@ -8,39 +8,182 @@
     {
       "name": "pk",
       "type": "byte_array",
-      "description": "public key"
+      "description": "Public key"
     },
     {
-      "name": "m_prime",
-      "type": "bit_array",
-      "description": "formatted message"
+      "name": "M_prime",
+      "type": "bit_string",
+      "description": "Formatted message"
     },
     {
       "name": "sigma",
       "type": "byte_array",
-      "description": "signature"
+      "description": "Signature"
     }
   ],
   "outputs": [
     {
-      "name": "is_valid",
+      "name": "ok",
       "type": "bool",
-      "description": "verification result"
+      "description": "Verification result"
     }
   ],
   "body_raw": [
-    "(𝜌, 𝐭1) ← pkDecode(𝑝𝑘)",
-    "(𝑐, 𝐳, 𝐡) ← sigDecode(𝜎) 𝑐,̃ response 𝐳, and hint 𝐡̃ ▷ signer’s commitment hash",
-    "if 𝐡 = ⊥ then return false ▷ hint was not properly encoded",
-    "end if ̂ ̂",
-    "𝐀 ← ExpandA(𝜌) ▷ 𝐀 is generated and stored in NTT representation as 𝐀",
-    "𝑡𝑟 ← H(𝑝𝑘, 64)",
-    "𝜇 ← (H(BytesToBits(𝑡𝑟)||𝑀 ′, 64)) ▷ message representative that may optionally be computed in a different cryptographic module",
-    "𝑐 ∈ 𝑅 𝑞 ← SampleInBall(𝑐)̃ ▷ compute verifier’s challenge from 𝑐̃",
-    "𝐰′ ← NTT−1(𝐀 ∘̂ NTT(𝐳) − NTT(𝑐) ∘ NTT(𝐭1 ⋅ 2𝑑)) ▷ 𝐰′ = 𝐀𝐳 − 𝑐𝐭1 ⋅ 2𝑑 Approx Approx",
-    "𝐰1 ′ ← UseHint(𝐡, 𝐰′ ) ▷ reconstruction of signer’s commitment Approx",
-    "▷ UseHint is applied componentwise (see explanatory text in Section 7.4)",
-    "𝑐′̃ ← H(𝜇||w1Encode(𝐰′ 1), 𝜆/4) ▷ hash it; this should match 𝑐̃",
-    "return [[ ||𝐳||∞ < 𝛾1 − 𝛽]] and [[𝑐̃ = 𝑐′̃ ]]"
-  ]
+    "(rho, t1) <- pkDecode(pk)",
+    "(c_tilde, z, h) <- sigDecode(sigma)",
+    "if h == bottom then return false",
+    "A_hat <- ExpandA(rho)",
+    "tr <- H(pk, 64)",
+    "mu <- H(BytesToBits(tr) || M_prime, 64)",
+    "c <- SampleInBall(c_tilde)",
+    "w_approx <- NTT_inverse(A_hat ∘ NTT(z) - NTT(c) ∘ NTT(t1 * 2^d))",
+    "w1_prime <- UseHint(h, w_approx)",
+    "c_tilde_prime <- H(mu || w1Encode(w1_prime), lambda/4)",
+    "return [[ ||z||_inf < gamma1 - beta ]] and [[ c_tilde == c_tilde_prime ]]"
+  ],
+  "layer": 3,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_023_pk_decode",
+        "callee_name": "pkDecode",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_027_sig_decode",
+        "callee_name": "sigDecode",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_032_expand_a",
+        "callee_name": "ExpandA",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_013_bytes_to_bits",
+        "callee_name": "BytesToBits",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_029_sample_in_ball",
+        "callee_name": "SampleInBall",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_041_ntt",
+        "callee_name": "NTT",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_042_ntt_inverse",
+        "callee_name": "NTT_inverse",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_040_use_hint",
+        "callee_name": "UseHint",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_028_w1_encode",
+        "callee_name": "w1Encode",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "H"
+    ],
+    "support_functions": [
+      "norm_inf"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "q",
+      "lambda",
+      "gamma1",
+      "gamma2",
+      "beta",
+      "omega",
+      "k",
+      "l",
+      "d"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "q",
+        "value": 8380417,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "lambda",
+        "value": 128,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "gamma1",
+        "value": 131072,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "gamma2",
+        "value": 95232,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "beta",
+        "value": 78,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "omega",
+        "value": 80,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "k",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "l",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "d",
+        "value": 13,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 ML-DSA-44；验证内部函数。"
+  }
 }

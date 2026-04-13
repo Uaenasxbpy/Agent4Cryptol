@@ -8,36 +8,127 @@
     {
       "name": "sk",
       "type": "byte_array",
-      "description": "private key"
+      "description": "Private key"
     },
     {
-      "name": "m",
-      "type": "bit_array",
-      "description": "message"
+      "name": "M",
+      "type": "bit_string",
+      "description": "Message bit string"
     },
     {
       "name": "ctx",
       "type": "byte_array",
-      "description": "context string"
+      "description": "Context string of <=255 bytes"
     }
   ],
   "outputs": [
     {
       "name": "sigma",
       "type": "byte_array",
-      "description": "signature"
+      "description": "Signature byte string or bottom"
     }
   ],
   "body_raw": [
-    "if |𝑐𝑡𝑥| > 255 then",
-    "return ⊥ ▷ return an error indication if the context string is too long",
-    "end if",
-    "𝑟𝑛𝑑 ← 𝔹32 ▷ for the optional deterministic variant, substitute 𝑟𝑛𝑑 ← {0}32",
-    "if 𝑟𝑛𝑑 = NULL then",
-    "return ⊥ ▷ return an error indication if random bit generation failed",
-    "end if",
-    "𝑀 ′ ← BytesToBits(IntegerToBytes(0, 1) ∥ IntegerToBytes(|𝑐𝑡𝑥|, 1) ∥ 𝑐𝑡𝑥) ∥ 𝑀",
-    "𝜎 ← ML-DSA.Sign_internal(𝑠𝑘, 𝑀 ′, 𝑟𝑛𝑑)",
-    "return 𝜎"
-  ]
+    "if |ctx| > 255 then return bottom",
+    "rnd <- random B^32  // deterministic variant uses {0}^32",
+    "if rnd == NULL then return bottom",
+    "M_prime <- BytesToBits(IntegerToBytes(0,1) || IntegerToBytes(|ctx|,1) || ctx) || M",
+    "sigma <- ML-DSA.Sign_internal(sk, M_prime, rnd)",
+    "return sigma"
+  ],
+  "layer": 4,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_007_ml_dsa_sign_internal",
+        "callee_name": "ML-DSA.Sign_internal",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_011_integer_to_bytes",
+        "callee_name": "IntegerToBytes",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_013_bytes_to_bits",
+        "callee_name": "BytesToBits",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "RBG"
+    ],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "lambda",
+      "gamma1",
+      "omega",
+      "k",
+      "l",
+      "eta",
+      "d"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "lambda",
+        "value": 128,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "gamma1",
+        "value": 131072,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "omega",
+        "value": 80,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "k",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "l",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "eta",
+        "value": 2,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "d",
+        "value": 13,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 ML-DSA-44；默认采用 hedged 版本。"
+  }
 }

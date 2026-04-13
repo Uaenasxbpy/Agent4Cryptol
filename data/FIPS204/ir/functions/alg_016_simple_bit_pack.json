@@ -8,26 +8,69 @@
     {
       "name": "w",
       "type": "poly",
-      "description": "polynomial"
+      "description": "Polynomial with coefficients in [0,b]"
     },
     {
       "name": "b",
       "type": "int",
-      "description": "upper bound"
+      "description": "Upper coefficient bound"
     }
   ],
   "outputs": [
     {
-      "name": "z",
+      "name": "out",
       "type": "byte_array",
-      "description": "encoded bytes"
+      "description": "Packed byte string"
     }
   ],
   "body_raw": [
-    "𝑧 ← () ▷ set 𝑧 to the empty bit string",
-    "for 𝑖 from 0 to 255 do",
-    "𝑧 ← 𝑧||IntegerToBits(𝑤𝑖, bitlen 𝑏)",
+    "z <- empty_bit_string",
+    "for i from 0 to 255 do",
+    "    z <- z || IntegerToBits(w_i, bitlen(b))",
     "end for",
-    "return BitsToBytes(𝑧)"
-  ]
+    "return BitsToBytes(z)"
+  ],
+  "layer": 1,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_009_integer_to_bits",
+        "callee_name": "IntegerToBits",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_012_bits_to_bytes",
+        "callee_name": "BitsToBytes",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [],
+    "resolved_symbols": [],
+    "specializations": [],
+    "translation_note": "通用打包函数；与参数集弱相关。"
+  }
 }

@@ -8,14 +8,14 @@
     {
       "name": "rho",
       "type": "byte_array",
-      "description": "seed"
+      "description": "34-byte seed"
     }
   ],
   "outputs": [
     {
       "name": "a_hat",
       "type": "ntt_poly",
-      "description": "sampled NTT polynomial"
+      "description": "NTT polynomial in T_q"
     }
   ],
   "body_raw": [
@@ -23,12 +23,59 @@
     "ctx <- G.Init()",
     "ctx <- G.Absorb(ctx, rho)",
     "while j < 256 do",
-    "(ctx, s) <- G.Squeeze(ctx, 3)",
-    "a_hat[j] <- CoeffFromThreeBytes(s[0], s[1], s[2])",
-    "if a_hat[j] != failure then",
-    "j <- j + 1",
-    "end if",
+    "    (ctx, s) <- G.Squeeze(ctx, 3)",
+    "    a_hat[j] <- CoeffFromThreeBytes(s[0], s[1], s[2])",
+    "    if a_hat[j] != bottom then j <- j + 1",
     "end while",
     "return a_hat"
-  ]
+  ],
+  "layer": 1,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_014_coeff_from_three_bytes",
+        "callee_name": "CoeffFromThreeBytes",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "G.Init",
+      "G.Absorb",
+      "G.Squeeze"
+    ],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "q"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "q",
+        "value": 8380417,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定 q=8380417。"
+  }
 }

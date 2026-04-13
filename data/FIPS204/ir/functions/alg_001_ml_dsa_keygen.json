@@ -9,19 +9,84 @@
     {
       "name": "pk",
       "type": "byte_array",
-      "description": "public key"
+      "description": "Public key byte string"
     },
     {
       "name": "sk",
       "type": "byte_array",
-      "description": "private key"
+      "description": "Private key byte string"
     }
   ],
   "body_raw": [
-    "xi <- B^32",
-    "if xi = NULL then",
-    "return failure",
+    "xi <- random B^32",
+    "if xi == NULL then",
+    "    return bottom",
     "end if",
     "return ML-DSA.KeyGen_internal(xi)"
-  ]
+  ],
+  "layer": 4,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_006_ml_dsa_keygen_internal",
+        "callee_name": "ML-DSA.KeyGen_internal",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "RBG"
+    ],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "k",
+      "l",
+      "eta",
+      "d"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "k",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "l",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "eta",
+        "value": 2,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "d",
+        "value": 13,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 ML-DSA-44；外部接口直接生成 32 字节种子并调用内部 KeyGen。"
+  }
 }

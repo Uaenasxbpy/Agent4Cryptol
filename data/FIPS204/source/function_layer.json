@@ -1,0 +1,87 @@
+{
+  "document": "FIPS204",
+  "file_role": "translation_order",
+  "active_parameter_set": "ML-DSA-44",
+  "description": "用于确定 FIPS 204 单函数代码生成与编译的先后顺序；按 layer 从小到大逐级生成代码。",
+  "layers": [
+    {
+      "layer": 0,
+      "description": "闭包函数 / 叶子函数：基础转换、位操作、低层算术。",
+      "functions": [
+        "alg_009_integer_to_bits",
+        "alg_010_bits_to_integer",
+        "alg_011_integer_to_bytes",
+        "alg_012_bits_to_bytes",
+        "alg_013_bytes_to_bits",
+        "alg_014_coeff_from_three_bytes",
+        "alg_015_coeff_from_half_byte",
+        "alg_035_power2round",
+        "alg_036_decompose",
+        "alg_037_high_bits",
+        "alg_038_low_bits",
+        "alg_039_make_hint",
+        "alg_040_use_hint",
+        "alg_043_bitrev8",
+        "alg_044_add_ntt",
+        "alg_045_multiply_ntt",
+        "alg_049_montgomery_reduce"
+      ]
+    },
+    {
+      "layer": 1,
+      "description": "基础打包与采样函数。",
+      "functions": [
+        "alg_016_simple_bit_pack",
+        "alg_017_bit_pack",
+        "alg_018_simple_bit_unpack",
+        "alg_019_bit_unpack",
+        "alg_020_hint_bit_pack",
+        "alg_021_hint_bit_unpack",
+        "alg_029_sample_in_ball",
+        "alg_030_rej_ntt_poly",
+        "alg_031_rej_bounded_poly"
+      ]
+    },
+    {
+      "layer": 2,
+      "description": "编码、展开、NTT 与向量/矩阵运算函数。",
+      "functions": [
+        "alg_022_pk_encode",
+        "alg_023_pk_decode",
+        "alg_024_sk_encode",
+        "alg_025_sk_decode",
+        "alg_026_sig_encode",
+        "alg_027_sig_decode",
+        "alg_028_w1_encode",
+        "alg_032_expand_a",
+        "alg_033_expand_s",
+        "alg_034_expand_mask",
+        "alg_041_ntt",
+        "alg_042_ntt_inverse",
+        "alg_046_add_vector_ntt",
+        "alg_047_scalar_vector_ntt",
+        "alg_048_matrix_vector_ntt"
+      ]
+    },
+    {
+      "layer": 3,
+      "description": "ML-DSA 内部核心算法。",
+      "functions": [
+        "alg_006_ml_dsa_keygen_internal",
+        "alg_007_ml_dsa_sign_internal",
+        "alg_008_ml_dsa_verify_internal"
+      ]
+    },
+    {
+      "layer": 4,
+      "description": "ML-DSA 外部 API 与预哈希 API。",
+      "functions": [
+        "alg_001_ml_dsa_keygen",
+        "alg_002_ml_dsa_sign",
+        "alg_003_ml_dsa_verify",
+        "alg_004_hashml_dsa_sign",
+        "alg_005_hashml_dsa_verify"
+      ]
+    }
+  ]
+}

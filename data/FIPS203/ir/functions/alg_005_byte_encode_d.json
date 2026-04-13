@@ -28,5 +28,76 @@
     "end for",
     "B ← BitsToBytes(b)",
     "return B"
-  ]
+  ],
+  "layer": 1,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_003_bits_to_bytes",
+        "callee_name": "BitsToBytes",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-KEM-512",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 256,
+      "q": 3329,
+      "k": 2,
+      "eta1": 3,
+      "eta2": 2,
+      "du": 10,
+      "dv": 4
+    },
+    "local_symbols_detected": [
+      "d"
+    ],
+    "resolved_symbols": [],
+    "specializations": [
+      {
+        "variant_name": "ByteEncode1",
+        "bindings": {
+          "d": 1
+        },
+        "used_by": [
+          "alg_015_k_pke_decrypt"
+        ]
+      },
+      {
+        "variant_name": "ByteEncode_dv",
+        "bindings": {
+          "d": 4
+        },
+        "used_by": [
+          "alg_014_k_pke_encrypt"
+        ]
+      },
+      {
+        "variant_name": "ByteEncode_du",
+        "bindings": {
+          "d": 10
+        },
+        "used_by": [
+          "alg_014_k_pke_encrypt"
+        ]
+      },
+      {
+        "variant_name": "ByteEncode12",
+        "bindings": {
+          "d": 12
+        },
+        "used_by": [
+          "alg_013_k_pke_keygen"
+        ]
+      }
+    ],
+    "translation_note": "项目级固定为 ML-KEM-512 时，优先生成上述 4 个特化版本，而不是维持完全泛型的 d。"
+  }
 }

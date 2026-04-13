@@ -1,0 +1,488 @@
+[fix_prompt_start] run=20260413_163356 retry=1 function=ByteEncode_d
+下面这段 Cryptol 代码编译失败了（第 1 次修复尝试）。
+
+==== 当前编译器错误 ====
+Parse error at F:\PgSpring\Agent4Cryptol\temp\ByteEncode_d.cry:12:56,
+  unexpected: let
+
+==== 完整编译输出 ====
+┏━╸┏━┓╻ ╻┏━┓╺┳╸┏━┓╻  
+┃  ┣┳┛┗┳┛┣━┛ ┃ ┃ ┃┃  
+┗━╸╹┗╸ ╹ ╹   ╹ ┗━┛┗━╸
+version 3.3.0 (285c30d, modified)
+https://cryptol.net  :? for help
+
+Loading module Cryptol
+Cryptol> 
+Parse error at F:\PgSpring\Agent4Cryptol\temp\ByteEncode_d.cry:12:56,
+  unexpected: let
+Cryptol>
+
+==== 当前失败代码摘要 ====
+Top-level overview:
+module ByteEncode_d where
+ByteEncode_d : {d} (fin d, d >= 1) => [256]Integer -> [32*d][8]
+ByteEncode_d F = BitsToBytes bits
+
+Error location excerpt:
+  10:     // Extract d bits from each of the 256 integers
+  11:     bits : [256*d]
+  12:     bits = [ bit | i <- [0 .. 255], j <- [0 .. (d-1)], let a0 = F@i, let bit = extractBit a0 j ]
+  13: 
+  14:     // Extract the j-th bit (LSB first) of integer a
+
+==== 当前代码 ====
+```cryptol
+module ByteEncode_d where
+
+// ASSUMPTION: d is resolved from caller context to either du=10 or dv=4 per FIPS203.
+// Since the function name includes "_d", and d is not an explicit input,
+// we parameterize over d as a type-level constant, consistent with output length 32*d.
+
+ByteEncode_d : {d} (fin d, d >= 1) => [256]Integer -> [32*d][8]
+ByteEncode_d F = BitsToBytes bits
+  where
+    // Extract d bits from each of the 256 integers
+    bits : [256*d]
+    bits = [ bit | i <- [0 .. 255], j <- [0 .. (d-1)], let a0 = F@i, let bit = extractBit a0 j ]
+
+    // Extract the j-th bit (LSB first) of integer a
+    extractBit : Integer -> Integer -> Bit
+    extractBit a j = if (a / (2^j)) % 2 == 1 then 1 else 0
+
+    // Convert bit array of length 8*k to byte array of length k
+    BitsToBytes : {k} (fin k) => [8*k] -> [k][8]
+    BitsToBytes bs = [ join (reverse (split chunk)) | chunk <- split bs ]
+      where
+        split : [8*k] -> [k][8]
+        split xs = groupBy`{8} xs
+
+// Note: groupBy is a standard Cryptol primitive that groups a sequence into chunks of given size.
+```
+
+==== 之前的修复尝试 ====
+No previous repair attempts.
+
+==== 原始函数规格（仅供参考） ====
+{
+  "name": "ByteEncode_d",
+  "inputs": [
+    {
+      "name": "F",
+      "type": "int_array",
+      "description": "Array of 256 integers modulo m where m=2^d if d<12, m=q if d=12"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "B",
+      "type": "byte_array",
+      "description": "Encoded byte array of length 32d"
+    }
+  ],
+  "body_raw": [
+    "for (i ← 0; i < 256; i ++)",
+    "    a ← F[i]",
+    "    for (j ← 0; j < d; j ++)",
+    "        b[i ⋅ d + j] ← a mod 2",
+    "        a ← (a - b[i ⋅ d + j]) / 2",
+    "    end for",
+    "end for",
+    "B ← BitsToBytes(b)",
+    "return B"
+  ]
+}
+
+==== 参数参考（相关时具有权威性） ====
+Document: FIPS203
+Parameter directory: F:\PgSpring\Agent4Cryptol\data\FIPS203\source\fips203_parameter
+Configured active parameter set: ML-KEM-512
+- Use explicit function inputs first.
+- If a symbol is not an explicit input, prefer documented global constants.
+- Use parameter-set values from the configured active parameter set when it is provided.
+- If no active parameter set is configured, keep parameter-set-dependent symbols symbolic unless the source data uniquely determines a concrete value.
+- Relevant symbols detected from this function: q
+
+Resolution rules from source data:
+- P1: Use explicit function inputs first.
+- P2: If a symbol is not an explicit input, resolve it from global_constants when available.
+- P3: If a symbol is parameter-set dependent, resolve it from parameter_sets using the active parameter set.
+- P4: If a local symbol such as eta or d appears in an algorithm name or body but is not explicitly defined, map it to the corresponding documented parameter family from surrounding prose.
+- P5: If a concrete value still cannot be uniquely determined, do not guess; generate parameterized code.
+
+Relevant global constants:
+- q = 3329 (global modulus)
+
+Relevant resolution notes:
+- ByteEncode_d: d may be a local algorithm parameter or a parameter-set value such as du or dv depending on caller context.
+
+Authoritative raw parameter JSON:
+global_parameters.json
+```json
+{
+  "document_name": "FIPS 203",
+  "algorithm_family": "ML-KEM",
+  "global_constants": [
+    {
+      "name": "n",
+      "value": 256,
+      "type": "int",
+      "description": "global polynomial degree"
+    },
+    {
+      "name": "q",
+      "value": 3329,
+      "type": "int",
+      "description": "global modulus"
+    }
+  ],
+  "parameter_variables": [
+    {
+      "name": "k",
+      "type": "int",
+      "description": "module dimension selected by parameter set"
+    },
+    {
+      "name": "eta1",
+      "type": "int",
+      "description": "CBD parameter for sampling s and e in K-PKE.KeyGen and y in K-PKE.Encrypt"
+    },
+    {
+      "name": "eta2",
+      "type": "int",
+      "description": "CBD parameter for sampling e1 and e2 in K-PKE.Encrypt"
+    },
+    {
+      "name": "du",
+      "type": "int",
+      "description": "compression and encoding parameter for ciphertext component u"
+    },
+    {
+      "name": "dv",
+      "type": "int",
+      "description": "compression and encoding parameter for ciphertext component v"
+    }
+  ]
+}
+```
+
+parameter_sets.json (active set: ML-KEM-512)
+```json
+{
+  "parameter_sets": [
+    {
+      "set_name": "ML-KEM-512",
+      "parameters": [
+        {
+          "name": "k",
+          "value": 2,
+          "type": "int",
+          "description": "module dimension"
+        },
+        {
+          "name": "eta1",
+          "value": 3,
+          "type": "int",
+          "description": "CBD parameter for s e and y"
+        },
+        {
+          "name": "eta2",
+          "value": 2,
+          "type": "int",
+          "description": "CBD parameter for e1 and e2"
+        },
+        {
+          "name": "du",
+          "value": 10,
+          "type": "int",
+          "description": "compression parameter for u"
+        },
+        {
+          "name": "dv",
+          "value": 4,
+          "type": "int",
+          "description": "compression parameter for v"
+        },
+        {
+          "name": "required_rbg_strength",
+          "value": 128,
+          "type": "int",
+          "description": "required RBG security strength in bits"
+        }
+      ]
+    }
+  ]
+}
+```
+
+parameter_resolution_notes.json
+```json
+{
+  "parameter_resolution_rules": [
+    {
+      "priority": 1,
+      "rule": "Use explicit function inputs first."
+    },
+    {
+      "priority": 2,
+      "rule": "If a symbol is not an explicit input, resolve it from global_constants when available."
+    },
+    {
+      "priority": 3,
+      "rule": "If a symbol is parameter-set dependent, resolve it from parameter_sets using the active parameter set."
+    },
+    {
+      "priority": 4,
+      "rule": "If a local symbol such as eta or d appears in an algorithm name or body but is not explicitly defined, map it to the corresponding documented parameter family from surrounding prose."
+    },
+    {
+      "priority": 5,
+      "rule": "If a concrete value still cannot be uniquely determined, do not guess; generate parameterized code."
+    }
+  ],
+  "examples": [
+    {
+      "function_like_symbol": "SamplePolyCBD_eta",
+      "resolution": "eta must be resolved from the active parameter set and caller context; eta may correspond to eta1 or eta2."
+    },
+    {
+      "function_like_symbol": "ByteEncode_d",
+      "resolution": "d may be a local algorithm parameter or a parameter-set value such as du or dv depending on caller context."
+    }
+  ]
+}
+```
+
+==== 检索到的 RAG 片段（语法指导） ====
+=== Syntax Rules ===
+
+// [SyntaxRule] If-expressions contain expressions, not assignment-style statement sequences
+// Rule: Each branch of an `if ... then ... else ...` must be a single expression. If a branch needs intermediate names, use a nested `where` or `let`; do not write assignment-style lines under `else` as though Cryptol were imperative.
+// Good:
+f x = if x == 0 then 0 else out
+  where
+    out = x + 1
+// Bad (avoid):
+f x = if x == 0 then 0 else
+  y = x + 1
+  y
+
+// [SyntaxRule] Comments do not place names in scope
+// Rule: A name is in scope only if it is built-in, imported, passed as a parameter, or defined in the module. Mentioning a dependency in a comment does not make the name available.
+// Good:
+import M as P
+x = P::f y
+// Bad (avoid):
+// assume f is provided elsewhere
+x = f y
+
+// [SyntaxRule] Finite sequence enumeration bounds must be type expressions, not value expressions
+// Rule: In a finite enumeration [a .. b], both a and b must be numeric TYPE expressions. Value-level expressions including backtick-demoted types are NOT allowed.
+// Good:
+[0 .. 7]          // literal: OK
+[0 .. (n-1)]      // type arithmetic: OK
+take`{n} [0 ...]  // take: OK
+// Bad (avoid):
+[0 .. `n - 1]     // WRONG: value expression
+[0 .. (`n - 1)]   // WRONG: still value
+
+// [SyntaxRule] Identifiers must start with a letter or underscore
+// Rule: An identifier must start with an English letter or underscore. Later characters may be letters, digits, underscores, or primes (`'`).
+// Good:
+name
+name1
+name'
+longer_name
+_Name
+// Bad (avoid):
+1name
+name-with-dash
+
+// [SyntaxRule] Enums define algebraic data types with uppercase constructors
+// Rule: An `enum` declaration defines a distinct algebraic data type using one or more constructors. Constructor names must start with an uppercase letter.
+// Good:
+enum Maybe a = Nothing | Just a
+// Bad (avoid):
+enum Maybe a = nothing | just a
+
+// [SyntaxRule] Infix operators follow Cryptol precedence and associativity rules
+// Rule: Infix expressions are parsed according to the built-in precedence table. For example, `*` binds tighter than `+`, and unary prefix operators are parsed with their own precedence.
+// Good:
+2 + 3 * 5
+// Bad (avoid):
+Assume `2 + 3 * 5` means `(2 + 3) * 5`.
+
+// [SyntaxRule] Type annotations bind to the nearest expression or pattern
+// Rule: An explicit type annotation applies to the nearest expression, pattern, or argument position where it is written, not necessarily to the larger surrounding expression.
+// Good:
+f (x : [8]) = x + 1
+2 + 3 : [8]
+// Bad (avoid):
+\x -> x : [8]    // annotates `x`, not the whole lambda
+if x then y else z : Bit  // annotates `z`, not the whole if
+
+// [SyntaxRule] Case patterns must be exhaustive and non-overlapping
+// Rule: Patterns in a `case` expression must cover all constructors of the enum and must be disjoint. A catch-all clause, if used, must occur last.
+// Good:
+isNothing x =
+  case x of
+    Nothing -> True
+    _       -> False
+// Bad (avoid):
+case x of
+  Nothing -> True
+
+case x of
+  Just _  -> False
+  _       -> True
+  Nothing -> False
+
+
+=== Guardrails ===
+
+// [Guardrail] When a branch body looks imperative, rebuild it as an expression before fixing smaller issues
+// Rule: If an `if` branch was translated as a statement sequence with assignment-like lines, fix the branch shape first using `where`, `let`, or a helper expression. Do not keep patching subexpressions inside an ill-formed branch.
+// Avoid:
+Continuing to edit names inside a branch that is still syntactically not a single expression.
+
+// [Guardrail] Do not invent Cryptol helper names or external primitives
+// Rule: If a helper or primitive is not in the retrieved context, built-ins, or provided dependency code, do not guess its name. Either implement a tiny local helper explicitly or fall back to a conservative unresolved skeleton.
+// Avoid:
+Using names like `bytesToBits`, `zeroExtend`, or `SHAKE128_Init` only because they sound plausible.
+
+// [Guardrail] Do not use type-level countdown to express a runtime loop
+// Rule: If the loop/control variable is runtime logic, model it as a value-level recursion variable. Do not count down a type parameter and recursively instantiate smaller result types to mimic a runtime loop.
+// Avoid:
+`if `j == 0 then ... else recurse `{j - 1}` ...`
+
+// [Guardrail] If a parameter resolves only to a parameter family, prefer a conservative skeleton over a pseudo-concrete implementation
+// Rule: When a symbol such as `eta` is only known to belong to a parameter family and the current function body needs a concrete semantic role, do not pretend the implementation is fully determined. Keep the code conservative and mark the unresolved dependency explicitly.
+// Avoid:
+Producing a fully executable body that silently assumes one family member without caller evidence.
+
+
+=== Code Patterns ===
+
+// [Pattern] Use type-level arithmetic in finite sequence enumeration bounds
+// Intent: Generate finite sequences whose length depends on a type parameter, using only type-level expressions in the bounds.
+// Template:
+// CORRECT: type-level bounds (no backtick)
+f : {n} (fin n, n >= 1) => [n][8]
+f = [ zero | i <- [0 .. (n-1)] ]
+
+// CORRECT: take from infinite enumeration
+g : {n} (fin n, n >= 1) => [n]Integer
+g = take`{n} [0 ...]
+
+// CORRECT: use the result type to drive length
+h : {n} (fin n) => [n]Integer
+h = [0 ...]
+// Example:
+indices : {n} (fin n, n >= 1) => [n]Integer
+indices = take`{n} [0 ...]
+
+ranged : {n} (fin n, n >= 1) => [n][8]
+ranged = [0 .. (n-1)]
+
+// [Pattern] Separate index-domain helpers from arithmetic-domain helpers
+// Intent: Keep array indexing and arithmetic/modular computation in clearly separated domains, with explicit conversion points.
+// Template:
+idxStep : IDX -> IDX
+idxStep i = ...
+
+termValue : WORD -> Integer
+termValue w = ...
+
+result = arr @ idx
+  where
+    idx = idxStep base
+// Example:
+idx2 = idx1 + len
+acc = (termA + termB) % modulus
+
+// [Pattern] Ensure consistent bitvector widths with zero-extension
+// Intent: Fix type mismatch errors from mixing bitvector widths.
+// Template:
+wider : [9]
+wider = zext narrowVal  // narrowVal : [7]
+
+wider2 : [9]
+wider2 = (zero : [2]) # narrowVal
+// Example:
+len : [9]
+len = zext (2 ^^ (layer + 1) : [8])
+
+// [Pattern] Thread heterogeneous loop state with a tuple or record accumulator
+// Intent: Model loop state that mixes arrays, counters, and flags by threading a tuple or record accumulator through recursion or foldl.
+// Template:
+step : (STATE_A, STATE_B) -> STEP_INPUT -> (STATE_A, STATE_B)
+step (a, b) x = (a', b')
+  where
+    a' = ...
+    b' = ...
+
+result = foldl step initState inputs
+// Example:
+processLayer : ([256][12], [8]) -> [8] -> ([256][12], [8])
+processLayer (f_hat, zetaIdx) layer = (f_hat', zetaIdx')
+
+// [Pattern] Treat words as sequences of bits and reuse sequence operators
+// Intent: Reuse generic sequence operators on words because `[n]` is just `[n]Bit`.
+// Template:
+hi = take`{k} w
+lo = drop`{k} w
+parts = split w
+// Example:
+take`{3} 0xFF
+drop`{3} (12:[6])
+split`{3} (12:[6])
+
+
+=== Code Templates ===
+
+// [Template] Conservative unresolved skeleton for missing external primitives
+// Notes: ['Use only when the missing primitive is genuinely unavailable in the retrieved evidence.', 'This is preferable to pretending the main algorithm is fully implemented while referencing undefined names.']
+module MODULE_NAME where
+
+// UNRESOLVED: DEPENDENCY_NOTE
+FUNC_NAME : INPUT_TYPE -> OUTPUT_TYPE
+FUNC_NAME x = undefined
+
+// [Template] Feistel round template
+// Notes: ['Use when modeling Feistel-family ciphers such as DES-like designs.', 'Switch to concatenation form `r # (...)` if the surrounding code expects a flat block instead of `[2]HALF_TYPE`.', 'Usually paired with a final half-swap before the final permutation.']
+round : (ROUND_KEY_TYPE, [2]HALF_TYPE) -> [2]HALF_TYPE
+round (k, [l, r]) = [r, l ^ F_FUNC (r, k)]
+
+// [Template] Convert 1-based specification indices to 0-based Cryptol indices
+// Notes: ['Very common when porting textbook or standards permutation tables into Cryptol.', 'Use the normalized table only for Cryptol indexing operators like `@`, `@@`, `!`, or `!!`.', 'Keep the original table as a separate artifact if traceability back to the standard matters.']
+zeroBasify xs = [ i - 1 | i <- xs ]
+
+NORMALIZED_NAME = zeroBasify TABLE_NAME
+
+说明：
+1. 基于当前代码修复当前编译错误，不要基于更早的版本。
+2. 利用当前失败代码摘要来聚焦精确报错位置。
+3. 阅读之前的修复尝试，避免重复任何已经失败过的编辑模式。
+4. 如果同一位置在仅做标点或格式改动后仍然失败，请做实质上不同的修复。
+5. 修复前先检查三件事：
+   - 出错位置使用的名字是否真的在作用域内；
+   - 出错位置的数字参数是类型级还是值级；
+   - 出错位置使用的运算符是否真的匹配当前操作数类型。
+6. 如果当前代码在报错位置混用了 Bit、位向量和 Integer，请先统一域，再继续修复；不要依赖隐式转换。
+7. 如果当前代码使用了伪代码风格的名字，而该名字没有在当前模块、参数参考或 RAG 片段里明确给出，就不要继续猜测新的辅助函数名。
+8. 如果当前错误或失败历史涉及 `^`，不要默认把它当作整数幂；应改用经过类型检查可成立的写法。
+9. 如果当前错误位置涉及 `take`、有限枚举、循环边界、`len`、`numBlocks`、`start`、`j` 等循环控制变量，先判断这里是不是把值级变量误用成了有限序列长度或边界。
+10. 如果状态里混有不同类型的字段，不要再用序列打包；应改用 tuple 或 record。
+11. 如果当前错误是索引位宽问题，不要只改某个被调用函数的类型签名；要沿 `len/start/j/j+len/...` 这条链回溯到值的生产位置。
+12. 如果当前代码在推导式里绑定了变量（例如 `i <- ...`），不要默认该变量能在并列的 `where` 定义中继续使用；若依赖它，应内联到推导式元素里，或显式作为 helper 参数传递。
+13. 反引号只用于数字类型参数；不要对普通值级变量、普通表达式或推导式绑定变量使用反引号。
+14. 如果当前代码把类型参数 `{j}`、`{n}` 之类当成运行时递归计数器，请不要继续对同一递归局部修补；应改为真正的类型级静态构造，或真正的值级递归，两者二选一。
+15. 如果参数参考只能把某个参数解析到“参数族/上下文映射”，却不能唯一确定具体值，就不要继续假装它已经足以支撑完整可执行实现；必要时应保守降级。
+16. 如果当前代码对外部 primitive/type 的依赖只写在注释里，而没有实际定义、依赖代码或显式 import，不要把它当作已满足依赖；应改用当前证据中真实存在的依赖，或回退为保守骨架。
+17. 如果当前代码对算法核心原语只给了 `undefined` 或名义占位 helper，而参数参考或 RAG 已提供常量表/查表证据，优先改用这些证据。
+18. 不要输出任何分析、分类、标题或解释。
+19. 不要重构、重命名或重写无关代码。
+20. 输出必须且只能包含一个 ```cryptol``` 代码块，代码块中应包含完整的修正后模块。
+21. 如果你无法有把握地改进代码，就在 ```cryptol``` 代码块中返回原始模块，而不是返回说明文字或空响应。
+
+[fix_prompt_end]

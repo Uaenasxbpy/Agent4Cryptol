@@ -8,60 +8,223 @@
     {
       "name": "sk",
       "type": "byte_array",
-      "description": "private key"
+      "description": "Private key"
     },
     {
-      "name": "m_prime",
-      "type": "bit_array",
-      "description": "formatted message"
+      "name": "M_prime",
+      "type": "bit_string",
+      "description": "Formatted message"
     },
     {
       "name": "rnd",
       "type": "byte_array",
-      "description": "per message randomness"
+      "description": "32-byte per-message randomness or zero string"
     }
   ],
   "outputs": [
     {
       "name": "sigma",
       "type": "byte_array",
-      "description": "signature"
+      "description": "Signature byte string"
     }
   ],
   "body_raw": [
-    "(𝜌, 𝐾, 𝑡𝑟, 𝐬1, 𝐬2, 𝐭0) ← skDecode(𝑠𝑘)",
-    "𝐬1̂ ← NTT(𝐬1)",
-    "𝐬2̂ ← NTT(𝐬2)",
-    "𝐭0̂ ← NTT(𝐭0) ̂ ̂",
-    "𝐀 ← ExpandA(𝜌) ▷ 𝐀 is generated and stored in NTT representation as 𝐀",
-    "𝜇 ← H(BytesToBits(𝑡𝑟)||𝑀 ′, 64) ▷ message representative that may optionally be computed in a different cryptographic module",
-    "𝜌″ ← H(𝐾||𝑟𝑛𝑑||𝜇, 64) ▷ compute private random seed",
-    "𝜅 ← 0 ▷ initialize counter 𝜅",
-    "(𝐳, 𝐡) ← ⊥",
-    "while (𝐳, 𝐡) = ⊥ do ▷ rejection sampling loop",
-    "𝐲 ∈ 𝑅 𝑞 ℓ ← ExpandMask(𝜌″, 𝜅)",
-    "𝐰 ← NTT−1(𝐀 ∘̂ NTT(𝐲))",
-    "𝐰1 ← HighBits(𝐰) ▷ signer’s commitment",
-    "▷ HighBits is applied componentwise (see explanatory text in Section 7.4)",
-    "̃ ▷ commitment hash𝑐 ← H(𝜇||w1Encode(𝐰1), 𝜆/4)",
-    "𝑐 ∈ 𝑅 𝑞 ← SampleInBall(𝑐)̃ ▷ verifier’s challenge",
-    "̂𝑐 ← NTT(𝑐)",
-    "⟨⟨𝑐𝐬1⟩⟩ ← NTT−1(𝑐 ∘ ̂ 𝐬1̂ )",
-    "⟨⟨𝑐𝐬2⟩⟩ ← NTT−1(𝑐 ∘ ̂ 𝐬2̂ )",
-    "𝐳 ← 𝐲 + ⟨⟨𝑐𝐬1⟩⟩ ▷ signer’s response",
-    "𝐫0 ← LowBits(𝐰 − ⟨⟨𝑐𝐬2⟩⟩)",
-    "▷ LowBits is applied componentwise (see explanatory text in Section 7.4)",
-    "if ||𝐳||∞ ≥ 𝛾1 − 𝛽 or ||𝐫0||∞ ≥ 𝛾2 − 𝛽 then (z, h) ← ⊥ ▷ validity checks",
-    "else",
-    "⟨⟨𝑐𝐭0⟩⟩ ← NTT−1(𝑐 ∘ ̂ 𝐭0̂ )",
-    "𝐡 ← MakeHint(−⟨⟨𝑐𝐭0⟩⟩, 𝐰 − ⟨⟨𝑐𝐬2⟩⟩ + ⟨⟨𝑐𝐭0⟩⟩) ▷ Signer’s hint",
-    "▷ MakeHint is applied componentwise (see explanatory text in Section 7.4)",
-    "if ||⟨⟨𝑐𝐭0⟩⟩||∞ ≥ 𝛾2 or the number of 1’s in 𝐡 is greater than 𝜔, then (z, h) ← ⊥",
-    "end if",
-    "end if",
-    "𝜅 ← 𝜅 + ℓ ▷ increment counter",
+    "(rho, K, tr, s1, s2, t0) <- skDecode(sk)",
+    "s1_hat <- NTT(s1); s2_hat <- NTT(s2); t0_hat <- NTT(t0)",
+    "A_hat <- ExpandA(rho)",
+    "mu <- H(BytesToBits(tr) || M_prime, 64)",
+    "rho_dblprime <- H(K || rnd || mu, 64)",
+    "kappa <- 0",
+    "while (z, h) == bottom do",
+    "    y <- ExpandMask(rho_dblprime, kappa)",
+    "    w <- NTT_inverse(A_hat ∘ NTT(y))",
+    "    w1 <- HighBits(w)",
+    "    c_tilde <- H(mu || w1Encode(w1), lambda/4)",
+    "    c <- SampleInBall(c_tilde)",
+    "    c_hat <- NTT(c)",
+    "    c_s1 <- NTT_inverse(c_hat ∘ s1_hat)",
+    "    c_s2 <- NTT_inverse(c_hat ∘ s2_hat)",
+    "    z <- y + c_s1",
+    "    r0 <- LowBits(w - c_s2)",
+    "    if ||z||_inf >= gamma1 - beta or ||r0||_inf >= gamma2 - beta then (z,h) <- bottom",
+    "    else",
+    "        c_t0 <- NTT_inverse(c_hat ∘ t0_hat)",
+    "        h <- MakeHint(-c_t0, w - c_s2 + c_t0)",
+    "        if ||c_t0||_inf >= gamma2 or number_of_ones(h) > omega then (z,h) <- bottom",
+    "    end if",
+    "    kappa <- kappa + l",
     "end while",
-    "𝜎 ← sigEncode(𝑐, 𝐳̃ mod±𝑞, 𝐡)",
-    "return 𝜎"
-  ]
+    "sigma <- sigEncode(c_tilde, z modpm q, h)",
+    "return sigma"
+  ],
+  "layer": 3,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_025_sk_decode",
+        "callee_name": "skDecode",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_041_ntt",
+        "callee_name": "NTT",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_042_ntt_inverse",
+        "callee_name": "NTT_inverse",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_032_expand_a",
+        "callee_name": "ExpandA",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_013_bytes_to_bits",
+        "callee_name": "BytesToBits",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_034_expand_mask",
+        "callee_name": "ExpandMask",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_037_high_bits",
+        "callee_name": "HighBits",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_028_w1_encode",
+        "callee_name": "w1Encode",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_029_sample_in_ball",
+        "callee_name": "SampleInBall",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_038_low_bits",
+        "callee_name": "LowBits",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_039_make_hint",
+        "callee_name": "MakeHint",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_026_sig_encode",
+        "callee_name": "sigEncode",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "H"
+    ],
+    "support_functions": [
+      "norm_inf",
+      "count_ones"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "q",
+      "lambda",
+      "gamma1",
+      "gamma2",
+      "beta",
+      "omega",
+      "k",
+      "l",
+      "eta",
+      "d"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "q",
+        "value": 8380417,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "lambda",
+        "value": 128,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "gamma1",
+        "value": 131072,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "gamma2",
+        "value": 95232,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "beta",
+        "value": 78,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "omega",
+        "value": 80,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "k",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "l",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "eta",
+        "value": 2,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "d",
+        "value": 13,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 ML-DSA-44；签名内部循环直接以该参数集常量实例化。"
+  }
 }

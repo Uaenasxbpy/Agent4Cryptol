@@ -8,52 +8,109 @@
     {
       "name": "sk",
       "type": "byte_array",
-      "description": "private key"
+      "description": "Encoded secret key"
     }
   ],
   "outputs": [
     {
       "name": "rho",
       "type": "byte_array",
-      "description": "public seed"
+      "description": "Public seed"
     },
     {
-      "name": "k",
+      "name": "K",
       "type": "byte_array",
-      "description": "signing seed"
+      "description": "Private signing seed"
     },
     {
       "name": "tr",
       "type": "byte_array",
-      "description": "public key hash"
+      "description": "Hash of public key"
     },
     {
       "name": "s1",
-      "type": "vector",
-      "description": "secret vector s1"
+      "type": "poly_vector",
+      "description": "Secret vector s1"
     },
     {
       "name": "s2",
-      "type": "vector",
-      "description": "secret vector s2"
+      "type": "poly_vector",
+      "description": "Secret vector s2"
     },
     {
       "name": "t0",
-      "type": "vector",
-      "description": "low bits vector"
+      "type": "poly_vector",
+      "description": "Low bits of t"
     }
   ],
   "body_raw": [
-    "(𝜌, 𝐾, 𝑡𝑟, 𝑦0, … , 𝑦ℓ−1, 𝑧0, … , 𝑧𝑘−1, 𝑤0, … , 𝑤𝑘−1) ∈ 𝔹32 × 𝔹32 × 𝔹64 × (𝔹32⋅bitlen (2𝜂)) ℓ × (𝔹32⋅bitlen (2𝜂)) 𝑘 × (𝔹32𝑑) 𝑘 ← 𝑠𝑘",
-    "for 𝑖 from 0 to ℓ − 1 do",
-    "𝐬1[𝑖] ← BitUnpack(𝑦𝑖, 𝜂, 𝜂) ▷ this may lie outside [−𝜂, 𝜂] if input is malformed",
-    "end for",
-    "for 𝑖 from 0 to 𝑘 − 1 do",
-    "𝐬2[𝑖] ← BitUnpack(𝑧𝑖, 𝜂, 𝜂) ▷ this may lie outside [−𝜂, 𝜂] if input is malformed",
-    "end for",
-    "for 𝑖 from 0 to 𝑘 − 1 do",
-    "𝐭0[𝑖] ← BitUnpack(𝑤𝑖, 2𝑑−1 − 1, 2𝑑−1) ▷ this is always in the correct range",
-    "end for",
-    "return (𝜌, 𝐾, 𝑡𝑟, 𝐬1, 𝐬2, 𝐭0) Next, sigEncode and sigDecode translate ML-DSA signatures into byte strings and vice versa. When verifying a signature, sigDecode might take input that comes from an untrusted source. Thus, care is required when using BitUnpack. As used here, BitUnpack always returns values in the correct range."
-  ]
+    "(rho, K, tr, y0..y{l-1}, z0..z{k-1}, w0..w{k-1}) <- sk",
+    "for i from 0 to l - 1 do s1[i] <- BitUnpack(y_i, eta, eta)",
+    "for i from 0 to k - 1 do s2[i] <- BitUnpack(z_i, eta, eta)",
+    "for i from 0 to k - 1 do t0[i] <- BitUnpack(w_i, 2^(d-1)-1, 2^(d-1))",
+    "return (rho, K, tr, s1, s2, t0)"
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_019_bit_unpack",
+        "callee_name": "BitUnpack",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "eta",
+      "d",
+      "k",
+      "l"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "eta",
+        "value": 2,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "d",
+        "value": 13,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "k",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "l",
+        "value": 4,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定 ML-DSA-44。"
+  }
 }

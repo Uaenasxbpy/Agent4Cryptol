@@ -1,9 +1,12 @@
 module BitsToBytes where
 
-// Convert bit array (length 8*n) to byte array (length n)
-// Bit i contributes to byte floor(i/8) at position (i mod 8) with weight 2^(i mod 8)
-BitsToBytes : {n} (fin n) => [8*n] -> [n][8]
-BitsToBytes b = result
+// Converts a bit array of length multiple of 8 into a byte array.
+// Each byte is formed as: B[j] = sum_{i=0}^{7} b[8*j + i] * 2^i
+BitsToBytes : {n} (fin n, n % 8 == 0) => [n] -> [n/8][8]
+BitsToBytes b = [ byteAt j | j <- [0 .. (n/8 - 1)] ]
   where
-    result : [n][8]
-    result = split b
+    byteAt : [32] -> [8]
+    byteAt j = sum [ bitToInt (b @ (8*j + i)) * (1 << i) | i <- [0 .. 7] ]
+
+    bitToInt : Bit -> [8]
+    bitToInt x = if x then 1 else 0

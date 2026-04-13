@@ -33,5 +33,47 @@
     "ek ← ekPKE",
     "dk ← (dkPKE || ek || H(ek) || z)",
     "return (ek, dk)"
-  ]
+  ],
+  "layer": 3,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_013_k_pke_keygen",
+        "callee_name": "K-PKE.KeyGen",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "H"
+    ],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-KEM-512",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 256,
+      "q": 3329,
+      "k": 2,
+      "eta1": 3,
+      "eta2": 2,
+      "du": 10,
+      "dv": 4
+    },
+    "local_symbols_detected": [
+      "k"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "k",
+        "value": 2,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "输出长度与 k 相关；项目内固定 k=2。"
+  }
 }

@@ -8,25 +8,70 @@
     {
       "name": "c_hat",
       "type": "ntt_poly",
-      "description": "scalar NTT element"
+      "description": "Scalar in T_q"
     },
     {
       "name": "v_hat",
-      "type": "vector",
-      "description": "NTT vector"
+      "type": "ntt_vector",
+      "description": "Vector over T_q"
     }
   ],
   "outputs": [
     {
       "name": "w_hat",
-      "type": "vector",
-      "description": "scaled vector"
+      "type": "ntt_vector",
+      "description": "Scaled vector over T_q"
     }
   ],
   "body_raw": [
-    "for i from 0 to ell - 1 do",
-    "w_hat[i] <- MultiplyNTT(c_hat, v_hat[i])",
+    "for i from 0 to l - 1 do",
+    "    w_hat[i] <- MultiplyNTT(c_hat, v_hat[i])",
     "end for",
     "return w_hat"
-  ]
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_045_multiply_ntt",
+        "callee_name": "MultiplyNTT",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [
+      "l"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "l",
+        "value": 4,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定 ML-DSA-44 时，常用向量长度为 l=4。"
+  }
 }

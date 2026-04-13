@@ -1,0 +1,123 @@
+{
+  "function_id": "alg_006_wots_pkgen",
+  "name": "wots_pkGen",
+  "label": "Algorithm 6",
+  "page_start": 28,
+  "page_end": 28,
+  "inputs": [
+    {
+      "name": "SK.seed",
+      "type": "byte_array",
+      "description": "Secret seed"
+    },
+    {
+      "name": "PK.seed",
+      "type": "byte_array",
+      "description": "Public seed"
+    },
+    {
+      "name": "ADRS",
+      "type": "address",
+      "description": "WOTS+ address"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "pk",
+      "type": "byte_array",
+      "description": "WOTS+ public key"
+    }
+  ],
+  "body_raw": [
+    "skADRS <- ADRS",
+    "skADRS.setTypeAndClear(WOTS_PRF)",
+    "skADRS.setKeyPairAddress(ADRS.getKeyPairAddress())",
+    "for i from 0 to len - 1 do",
+    "    skADRS.setChainAddress(i)",
+    "    sk <- PRF(PK.seed, SK.seed, skADRS)",
+    "    ADRS.setChainAddress(i)",
+    "    tmp[i] <- chain(sk, 0, w - 1, PK.seed, ADRS)",
+    "end for",
+    "wotspkADRS <- ADRS",
+    "wotspkADRS.setTypeAndClear(WOTS_PK)",
+    "wotspkADRS.setKeyPairAddress(ADRS.getKeyPairAddress())",
+    "pk <- T_len(PK.seed, wotspkADRS, tmp)",
+    "return pk"
+  ],
+  "layer": 2,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_005_chain",
+        "callee_name": "chain",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [
+      "PRF",
+      "T_len"
+    ],
+    "support_functions": [
+      "ADRS.setTypeAndClear",
+      "ADRS.getKeyPairAddress",
+      "ADRS.setKeyPairAddress",
+      "ADRS.setChainAddress"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "n",
+      "lgw",
+      "w",
+      "len"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "n",
+        "value": 16,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "lgw",
+        "value": 4,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "w",
+        "value": 16,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "len",
+        "value": 35,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s 时，len=35。"
+  }
+}

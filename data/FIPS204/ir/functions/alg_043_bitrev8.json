@@ -1,0 +1,71 @@
+{
+  "function_id": "alg_043_bitrev8",
+  "name": "BitRev8",
+  "label": "Algorithm 43",
+  "page_start": 44,
+  "page_end": 44,
+  "inputs": [
+    {
+      "name": "m",
+      "type": "byte",
+      "description": "Byte in [0,255]"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "r",
+      "type": "byte",
+      "description": "Bit-reversed byte"
+    }
+  ],
+  "body_raw": [
+    "b <- IntegerToBits(m, 8)",
+    "b_rev <- (0, ..., 0)",
+    "for i from 0 to 7 do b_rev[i] <- b[7 - i]",
+    "r <- BitsToInteger(b_rev, 8)",
+    "return r"
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_009_integer_to_bits",
+        "callee_name": "IntegerToBits",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_010_bits_to_integer",
+        "callee_name": "BitsToInteger",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "ML-DSA-44",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "q": 8380417,
+      "zeta": 1753,
+      "d": 13,
+      "tau": 39,
+      "lambda": 128,
+      "gamma1": 131072,
+      "gamma2": 95232,
+      "k": 4,
+      "l": 4,
+      "eta": 2,
+      "beta": 78,
+      "omega": 80
+    },
+    "local_symbols_detected": [],
+    "resolved_symbols": [],
+    "specializations": [],
+    "translation_note": "通用辅助函数；与参数集无关。"
+  }
+}

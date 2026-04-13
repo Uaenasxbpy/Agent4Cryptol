@@ -1,33 +1,68 @@
 {
   "function_id": "alg_002_to_int",
-  "name": "toInt(X, n)",
+  "name": "toInt",
   "label": "Algorithm 2",
-  "page_start": 15,
-  "page_end": 15,
+  "page_start": 25,
+  "page_end": 25,
   "inputs": [
     {
       "name": "X",
       "type": "byte_array",
-      "description": "n-byte input string"
+      "description": "Input byte string"
     },
     {
       "name": "n",
       "type": "int",
-      "description": "input length in bytes"
+      "description": "Input length in bytes"
     }
   ],
   "outputs": [
     {
       "name": "total",
       "type": "int",
-      "description": "integer value of X"
+      "description": "Big-endian integer value"
     }
   ],
   "body_raw": [
-    "total ← 0",
+    "total <- 0",
     "for i from 0 to n - 1 do",
-    "  total ← 256 * total + X[i]",
+    "    total <- 256 * total + X[i]",
     "end for",
     "return total"
-  ]
+  ],
+  "layer": 0,
+  "dependencies": {
+    "direct_calls": [],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [],
+    "import_strategy": "none"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [],
+    "resolved_symbols": [],
+    "specializations": [],
+    "translation_note": "基础转换函数；与参数集弱相关。"
+  }
 }

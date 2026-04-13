@@ -1,34 +1,34 @@
 {
   "function_id": "alg_010_xmss_sign",
-  "name": "xmss_sign(M, SK.seed, idx, PK.seed, ADRS)",
+  "name": "xmss_sign",
   "label": "Algorithm 10",
-  "page_start": 24,
-  "page_end": 24,
+  "page_start": 34,
+  "page_end": 34,
   "inputs": [
     {
       "name": "M",
       "type": "byte_array",
-      "description": "message"
+      "description": "n-byte message"
     },
     {
-      "name": "SK_seed",
+      "name": "SK.seed",
       "type": "byte_array",
-      "description": "secret seed"
+      "description": "Secret seed"
     },
     {
       "name": "idx",
       "type": "int",
-      "description": "leaf index"
+      "description": "Index of the WOTS+ key within the XMSS tree"
     },
     {
-      "name": "PK_seed",
+      "name": "PK.seed",
       "type": "byte_array",
-      "description": "public seed"
+      "description": "Public seed"
     },
     {
       "name": "ADRS",
-      "type": "byte_array",
-      "description": "address of XMSS tree"
+      "type": "address",
+      "description": "XMSS tree address"
     }
   ],
   "outputs": [
@@ -39,14 +39,79 @@
     }
   ],
   "body_raw": [
-    "for j from 0 to h′ - 1 do",
-    "  k ← floor(idx / 2^j) ⊕ 1",
-    "  AUTH[j] ← xmss_node(SK.seed, k, j, PK.seed, ADRS)",
+    "for j from 0 to h_prime - 1 do",
+    "    k <- floor(idx / 2^j) xor 1",
+    "    AUTH[j] <- xmss_node(SK.seed, k, j, PK.seed, ADRS)",
     "end for",
     "ADRS.setTypeAndClear(WOTS_HASH)",
     "ADRS.setKeyPairAddress(idx)",
-    "sig ← wots_sign(M, SK.seed, PK.seed, ADRS)",
-    "SIG_XMSS ← sig ∥ AUTH",
+    "sig <- wots_sign(M, SK.seed, PK.seed, ADRS)",
+    "SIG_XMSS <- sig || AUTH",
     "return SIG_XMSS"
-  ]
+  ],
+  "layer": 3,
+  "dependencies": {
+    "direct_calls": [
+      {
+        "callee_id": "alg_007_wots_sign",
+        "callee_name": "wots_sign",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      },
+      {
+        "callee_id": "alg_009_xmss_node",
+        "callee_name": "xmss_node",
+        "call_kind": "explicit_algorithm_call",
+        "required": true
+      }
+    ],
+    "parameterized_calls": [],
+    "trusted_primitives": [],
+    "support_functions": [
+      "ADRS.setTypeAndClear",
+      "ADRS.setKeyPairAddress"
+    ],
+    "import_strategy": "qualified_import"
+  },
+  "parameter_resolution": {
+    "active_parameter_set": "SLH-DSA-SHAKE-128s",
+    "project_mode": "specialized_code_generation",
+    "fixed_parameters": {
+      "n": 16,
+      "h": 63,
+      "d": 7,
+      "h_prime": 9,
+      "a": 12,
+      "k": 14,
+      "lgw": 4,
+      "m": 30,
+      "w": 16,
+      "len1": 32,
+      "len2": 3,
+      "len": 35,
+      "pk_bytes": 32,
+      "sig_bytes": 7856,
+      "security_category": 1,
+      "hash_family": "SHAKE",
+      "signature_profile": "small_signature"
+    },
+    "local_symbols_detected": [
+      "h_prime",
+      "len"
+    ],
+    "resolved_symbols": [
+      {
+        "symbol": "h_prime",
+        "value": 9,
+        "source": "active_parameter_set"
+      },
+      {
+        "symbol": "len",
+        "value": 35,
+        "source": "active_parameter_set"
+      }
+    ],
+    "specializations": [],
+    "translation_note": "项目级固定为 SLH-DSA-SHAKE-128s。"
+  }
 }
