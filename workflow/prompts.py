@@ -7,10 +7,8 @@ import json
 import logging
 import re
 from functools import lru_cache
-from pathlib import Path
 from string import Template
 
-from workflow.config import PROMPT_DIR
 from workflow.logging_utils import write_fix_prompt_log
 from workflow.settings import settings
 from workflow.state import RepairAttempt
@@ -22,7 +20,7 @@ logger = logging.getLogger(__name__)
 @lru_cache(maxsize=None)
 def _load_template(name: str) -> Template:
     """读取文本模板并缓存。"""
-    path = PROMPT_DIR / name
+    path = settings.PROMPT_DIR / name
     with open(path, "r", encoding="utf-8") as file:
         return Template(file.read())
 
@@ -34,274 +32,32 @@ FIX_PROMPT_TEMPLATE = _load_template("fix_user.txt")
 FIX_FOLLOWUP_TEMPLATE = _load_template("fix_followup.txt")
 
 
+def load_system_prompt(filename: str) -> str:
+    """按文件名加载系统提示词，支持消融实验替换提示词变体。"""
+    return _load_template(filename).template
+
+
 def _build_algorithm_json(function_data: dict) -> str:
-    """构造提示词中使用的算法 JSON 文本。"""
-    return json.dumps(
-        {
-            "name": function_data.get("name"),
-            "inputs": function_data.get("inputs", []),
-            "outputs": function_data.get("outputs", []),
-            "body_raw": function_data.get("body_raw", []),
-        },
-        indent=2,
-        ensure_ascii=False,
-    )
+    """构造提示词中使用的当前函数 JSON 文本。"""
+    payload = {
+        "function_id": function_data.get("function_id"),
+        "name": function_data.get("name"),
+        "label": function_data.get("label"),
+        "page_start": function_data.get("page_start"),
+        "page_end": function_data.get("page_end"),
+        "inputs": function_data.get("inputs", []),
+        "outputs": function_data.get("outputs", []),
+        "body_raw": function_data.get("body_raw", []),
+    }
 
+    if "layer" in function_data:
+        payload["layer"] = function_data.get("layer")
+    if "dependencies" in function_data:
+        payload["dependencies"] = function_data.get("dependencies", {})
+    if "parameter_resolution" in function_data:
+        payload["parameter_resolution"] = function_data.get("parameter_resolution", {})
 
-@lru_cache(maxsize=None)
-def _load_json_file(path: str) -> dict:
-    with open(path, "r", encoding="utf-8") as file:
-        return json.load(file)
-
-
-@lru_cache(maxsize=None)
-def _load_text_file(path: str) -> str:
-    with open(path, "r", encoding="utf-8") as file:
-        return file.read().strip()
-
-
-def _extract_spec_id(json_file_path: str | None) -> str | None:
-    if not json_file_path:
-        return None
-
-    json_path = Path(json_file_path).resolve()
-    for part in json_path.parts:
-        if re.fullmatch(r"FIPS\d+", part, re.IGNORECASE):
-            return part.upper()
-    return None
-
-
-def _resolve_parameter_root(json_file_path: str | None) -> Path | None:
-    spec_id = _extract_spec_id(json_file_path)
-    if spec_id is None or json_file_path is None:
-        return None
-
-    json_path = Path(json_file_path).resolve()
-    candidate = json_path.parents[2] / "source" / f"{spec_id.lower()}_parameter"
-    return candidate if candidate.exists() else None
-
-
-def _get_active_parameter_set(spec_id: str | None) -> str | None:
-    if spec_id is None:
-        return None
-    return settings.ACTIVE_PARAMETER_SETS.get(spec_id)
-
-
-def _collect_known_parameter_symbols(
-    global_parameters: dict,
-    parameter_sets: dict,
-    resolution_notes: dict,
-) -> set[str]:
-    symbols: set[str] = set()
-
-    for item in global_parameters.get("global_constants", []):
-        name = str(item.get("name", "")).strip().lower()
-        if name:
-            symbols.add(name)
-
-    for item in global_parameters.get("parameter_variables", []):
-        name = str(item.get("name", "")).strip().lower()
-        if name:
-            symbols.add(name)
-
-    for parameter_set in parameter_sets.get("parameter_sets", []):
-        for parameter in parameter_set.get("parameters", []):
-            name = str(parameter.get("name", "")).strip().lower()
-            if name:
-                symbols.add(name)
-
-    return symbols
-
-
-def _extract_relevant_parameter_symbols(
-    function_data: dict,
-    known_symbols: set[str],
-) -> list[str]:
-    text_chunks = [
-        str(function_data.get("name", "")),
-        " ".join(str(line) for line in function_data.get("body_raw", [])),
-        json.dumps(function_data.get("inputs", []), ensure_ascii=False),
-        json.dumps(function_data.get("outputs", []), ensure_ascii=False),
-    ]
-    text = " ".join(text_chunks)
-    lowered_text = text.lower()
-
-    func_name = str(function_data.get("name", ""))
-    name_tokens = {t.lower() for t in func_name.split("_") if t}
-
-    found_symbols: set[str] = set()
-
-    for symbol in known_symbols:
-        if re.search(rf"\b{re.escape(symbol)}\b", lowered_text):
-            found_symbols.add(symbol)
-        elif symbol in name_tokens:
-            found_symbols.add(symbol)
-
-    expanded: set[str] = set()
-    for symbol in found_symbols:
-        for candidate in known_symbols:
-            if candidate != symbol and candidate.startswith(symbol):
-                expanded.add(candidate)
-    found_symbols |= expanded
-
-    return sorted(found_symbols)
-
-
-def _build_parameter_context(function_data: dict, json_file_path: str | None) -> str:
-    """Build parameter reference plus raw JSON payload for the active FIPS document."""
-    parameter_root = _resolve_parameter_root(json_file_path)
-    spec_id = _extract_spec_id(json_file_path)
-    if parameter_root is None or spec_id is None:
-        return ""
-    active_parameter_set = _get_active_parameter_set(spec_id)
-
-    parameter_sets_path = parameter_root / "parameter_sets.json"
-    global_parameters_path = parameter_root / "global_parameters.json"
-    resolution_notes_path = parameter_root / "parameter_resolution_notes.json"
-
-    if not (
-        parameter_sets_path.exists()
-        and global_parameters_path.exists()
-        and resolution_notes_path.exists()
-    ):
-        return ""
-
-    parameter_sets = _load_json_file(str(parameter_sets_path))
-    global_parameters = _load_json_file(str(global_parameters_path))
-    resolution_notes = _load_json_file(str(resolution_notes_path))
-    known_symbols = _collect_known_parameter_symbols(
-        global_parameters,
-        parameter_sets,
-        resolution_notes,
-    )
-    relevant_symbols = _extract_relevant_parameter_symbols(function_data, known_symbols)
-
-    lines = [
-        f"Document: {spec_id}",
-        f"Parameter directory: {parameter_root}",
-        f"Configured active parameter set: {active_parameter_set or 'NONE'}",
-        "- Use explicit function inputs first.",
-        "- If a symbol is not an explicit input, prefer documented global constants.",
-        "- Use parameter-set values from the configured active parameter set when it is provided.",
-        "- If no active parameter set is configured, keep parameter-set-dependent symbols symbolic unless the source data uniquely determines a concrete value.",
-    ]
-
-    if relevant_symbols:
-        lines.append(f"- Relevant symbols detected from this function: {', '.join(relevant_symbols)}")
-
-    rules = resolution_notes.get("parameter_resolution_rules", [])
-    if rules:
-        lines.append("")
-        lines.append("Resolution rules from source data:")
-        for rule in sorted(rules, key=lambda item: item.get("priority", 999)):
-            lines.append(f"- P{rule.get('priority', '?')}: {rule.get('rule', '')}")
-
-    matched_globals = [
-        item
-        for item in global_parameters.get("global_constants", [])
-        if not relevant_symbols or str(item.get("name", "")).lower() in relevant_symbols
-    ]
-    if matched_globals:
-        lines.append("")
-        lines.append("Relevant global constants:")
-        for item in matched_globals:
-            lines.append(
-                f"- {item.get('name')} = {item.get('value')} ({item.get('description', '')})"
-            )
-
-    matched_variables = [
-        item
-        for item in global_parameters.get("parameter_variables", [])
-        if not relevant_symbols or str(item.get("name", "")).lower() in relevant_symbols
-    ]
-    if matched_variables:
-        lines.append("")
-        lines.append("Relevant parameter variables:")
-        for item in matched_variables:
-            lines.append(f"- {item.get('name')}: {item.get('description', '')}")
-
-    matched_set_lines: list[str] = []
-    for parameter_set in parameter_sets.get("parameter_sets", []):
-        set_name = str(parameter_set.get("set_name", ""))
-        if active_parameter_set and set_name != active_parameter_set:
-            continue
-
-        relevant_entries = [
-            parameter
-            for parameter in parameter_set.get("parameters", [])
-            if not relevant_symbols or str(parameter.get("name", "")).lower() in relevant_symbols
-        ]
-        if relevant_entries:
-            matched_set_lines.append(
-                "- "
-                + set_name
-                + ": "
-                + ", ".join(
-                    f"{entry.get('name')}={entry.get('value')}" for entry in relevant_entries
-                )
-            )
-    if matched_set_lines:
-        lines.append("")
-        lines.append(
-            "Relevant parameter-set values:"
-            if not active_parameter_set
-            else f"Relevant parameter-set values from active set {active_parameter_set}:"
-        )
-        lines.extend(matched_set_lines)
-
-    matched_examples = [
-        item
-        for item in resolution_notes.get("examples", [])
-        if str(item.get("function_like_symbol", "")).lower() in function_data.get("name", "").lower()
-        or any(
-            re.search(rf"\b{re.escape(symbol)}\b", str(item.get("resolution", "")).lower())
-            for symbol in relevant_symbols
-        )
-    ]
-    if matched_examples:
-        lines.append("")
-        lines.append("Relevant resolution notes:")
-        for item in matched_examples:
-            lines.append(
-                f"- {item.get('function_like_symbol')}: {item.get('resolution', '')}"
-            )
-
-    raw_global_parameters = _load_text_file(str(global_parameters_path))
-    raw_resolution_notes = _load_text_file(str(resolution_notes_path))
-
-    if active_parameter_set:
-        active_set_data = [
-            ps for ps in parameter_sets.get("parameter_sets", [])
-            if ps.get("set_name") == active_parameter_set
-        ]
-        raw_parameter_sets = json.dumps(
-            {"parameter_sets": active_set_data}, indent=2, ensure_ascii=False,
-        )
-    else:
-        raw_parameter_sets = _load_text_file(str(parameter_sets_path))
-
-    lines.extend(
-        [
-            "",
-            "Authoritative raw parameter JSON:",
-            "global_parameters.json",
-            "```json",
-            raw_global_parameters,
-            "```",
-            "",
-            f"parameter_sets.json (active set: {active_parameter_set or 'ALL'})",
-            "```json",
-            raw_parameter_sets,
-            "```",
-            "",
-            "parameter_resolution_notes.json",
-            "```json",
-            raw_resolution_notes,
-            "```",
-        ]
-    )
-
-    return "\n".join(lines)
+    return json.dumps(payload, indent=2, ensure_ascii=False)
 
 
 def _extract_error_line(compile_error: str) -> int | None:
@@ -444,6 +200,7 @@ def build_translation_prompt(
     function_data: dict,
     rag_context: str,
     json_file_path: str | None = None,
+    dependency_context: str = "",
 ) -> str:
     """构造首次翻译时的用户提示词。"""
     return TRANSLATION_PROMPT_TEMPLATE.substitute(
@@ -451,7 +208,7 @@ def build_translation_prompt(
         label=function_data.get("label", ""),
         function_name=function_data.get("name", ""),
         algorithm_json=_build_algorithm_json(function_data),
-        parameter_context=_build_parameter_context(function_data, json_file_path),
+        dependency_context=dependency_context or "// 无外部依赖（layer 0 函数）",
         rag_context=rag_context,
     )
 
@@ -465,6 +222,7 @@ def build_fix_prompt(
     repair_history: list[RepairAttempt],
     json_file_path: str | None = None,
     rag_context: str = "",
+    dependency_context: str = "",
 ) -> str:
     """构造编译失败后的修复提示词，并写入每轮独立日志文件。"""
     prompt_text = FIX_PROMPT_TEMPLATE.substitute(
@@ -475,7 +233,7 @@ def build_fix_prompt(
         cryptol_code=cryptol_code,
         repair_history=format_repair_history(repair_history),
         algorithm_json=_build_algorithm_json(function_data),
-        parameter_context=_build_parameter_context(function_data, json_file_path),
+        dependency_context=dependency_context or "// 无外部依赖",
         rag_context=rag_context or "No RAG snippets available.",
     )
 

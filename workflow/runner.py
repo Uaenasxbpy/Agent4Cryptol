@@ -11,15 +11,24 @@ from workflow.state import WorkflowState
 logger = logging.getLogger(__name__)
 
 
-def run_workflow(json_file_path: str) -> dict:
+def run_workflow(json_file_path: str, experiment_config: dict | None = None) -> dict:
     """运行单个函数 JSON 的完整工作流。
+
+    Args:
+        json_file_path: 函数 JSON 文件路径
+        experiment_config: 消融实验配置字典，None 表示使用完整系统。
+            支持字段：enable_gen_rag, enable_fix_rag, enable_repair_history,
+                      max_retries, translation_system_prompt, fix_system_prompt,
+                      rag_top_k_override, experiment_name
 
     返回的字典除原有 WorkflowState 字段外，额外包含：
     - elapsed_seconds: float  运行总耗时（秒）
     - workflow_error: str     若工作流本身抛异常，记录错误信息
     """
+    exp_config = experiment_config or {}
     setup_logging(json_file_path)
-    logger.info("工作流启动：json_file_path=%s", json_file_path)
+    exp_name = exp_config.get("experiment_name", "full")
+    logger.info("工作流启动：json_file_path=%s experiment=%s", json_file_path, exp_name)
 
     graph = build_graph()
     initial_state: WorkflowState = {
@@ -34,6 +43,7 @@ def run_workflow(json_file_path: str) -> dict:
         "output_path": "",
         "repair_history": [],
         "fix_messages": [],
+        "experiment_config": exp_config,
     }
 
     result = dict(initial_state)

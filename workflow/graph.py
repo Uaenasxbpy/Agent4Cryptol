@@ -18,10 +18,13 @@ from workflow.state import WorkflowState
 def route_after_compile(state: WorkflowState) -> str:
     """
     根据编译结果决定下一步路由。
+    max_retries 优先从 experiment_config 读取，允许消融实验覆盖。
     """
     if state["compile_success"]:
         return "save"
-    if state.get("retry_count", 0) >= MAX_RETRIES:
+    exp_max = state.get("experiment_config", {}).get("max_retries")
+    max_retries = exp_max if exp_max is not None else MAX_RETRIES
+    if state.get("retry_count", 0) >= max_retries:
         return "save_failed"
     return "fix"
 

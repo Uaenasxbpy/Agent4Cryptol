@@ -17,6 +17,7 @@ batch_run.py
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -28,33 +29,73 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_DIR = PROJECT_ROOT / "data"
 
 
+def _load_layer_order(spec_dir: Path) -> dict[str, int]:
+    """读取 source/function_layer.json，返回 {函数文件名stem: 全局排序键} 映射。
+
+    排序键格式为 layer * 1000 + 层内位置，保证同 layer 内按声明顺序排列。
+    若文件不存在则返回空字典，调用方回退到文件名字典序。
+    """
+    layer_file = spec_dir / "source" / "function_layer.json"
+    if not layer_file.exists():
+        return {}
+    try:
+        data = json.loads(layer_file.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+    order: dict[str, int] = {}
+    for layer_entry in data.get("layers", []):
+        layer_idx = layer_entry.get("layer", 0)
+        for pos, func_stem in enumerate(layer_entry.get("functions", [])):
+            order[func_stem] = layer_idx * 1000 + pos
+    return order
+
+
 def discover_functions(specs: list[str] | None = None) -> list[Path]:
-    """发现 data/ 下所有函数 JSON 文件。
+    """发现 data/ 下所有函数 JSON 文件，按 function_layer.json 定义的 layer 顺序排列。
 
     Args:
         specs: 可选的 FIPS 标准过滤列表，如 ["FIPS203", "FIPS204"]。
                为 None 时返回所有标准。
 
     Returns:
-        按标准和文件名排序的 JSON 文件路径列表。
+        按 layer 层级（再按层内位置）排序的 JSON 文件路径列表。
+        若某 spec 无 function_layer.json，则该 spec 的函数按文件名字典序排列。
+        多 spec 时各 spec 结果顺序拼接。
     """
-    patterns = []
+    spec_dirs: list[Path] = []
     if specs:
         for spec in specs:
-            spec_upper = spec.upper()
-            spec_dir = DATA_DIR / spec_upper / "ir" / "functions"
-            if spec_dir.exists():
-                patterns.extend(sorted(spec_dir.glob("*.json")))
+            spec_dir = DATA_DIR / spec.upper()
+            if (spec_dir / "ir" / "functions").exists():
+                spec_dirs.append(spec_dir)
             else:
-                print(f"[WARN] 标准目录不存在：{spec_dir}")
+                print(f"[WARN] 标准目录不存在：{spec_dir / 'ir' / 'functions'}")
     else:
         for spec_dir in sorted(DATA_DIR.iterdir()):
             if spec_dir.is_dir() and re.fullmatch(r"FIPS\d+", spec_dir.name, re.IGNORECASE):
-                func_dir = spec_dir / "ir" / "functions"
-                if func_dir.exists():
-                    patterns.extend(sorted(func_dir.glob("*.json")))
+                if (spec_dir / "ir" / "functions").exists():
+                    spec_dirs.append(spec_dir)
 
-    return patterns
+    result: list[Path] = []
+    for spec_dir in spec_dirs:
+        func_dir = spec_dir / "ir" / "functions"
+        all_files = list(func_dir.glob("*.json"))
+        layer_order = _load_layer_order(spec_dir)
+
+        if layer_order:
+            # 按 layer 排序；不在 layer 文件中的函数排到最后，按文件名保持相对顺序
+            max_key = max(layer_order.values()) + 1
+            all_files.sort(key=lambda p: (layer_order.get(p.stem, max_key), p.stem))
+            missing = [p.stem for p in all_files if p.stem not in layer_order]
+            if missing:
+                print(f"[WARN] {spec_dir.name}: 以下函数不在 function_layer.json 中，将排在末尾：{missing}")
+        else:
+            all_files.sort()
+
+        result.extend(all_files)
+
+    return result
 
 
 def _extract_spec_from_path(path: Path) -> str:
@@ -67,7 +108,6 @@ def _extract_spec_from_path(path: Path) -> str:
 
 def _extract_function_name_from_json(path: Path) -> str:
     """从 JSON 文件中提取函数名，失败时回退到文件名。"""
-    import json
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -182,11 +222,20 @@ def main():
 
     # dry-run 模式
     if args.dry_run:
+        # 预加载各 spec 的 layer 顺序，用于 dry-run 显示
+        _layer_cache: dict[str, dict[str, int]] = {}
         for idx, p in enumerate(json_files, 1):
-            spec = _extract_spec_from_path(p)
+            spec_upper = _extract_spec_from_path(p).upper()
+            if spec_upper not in _layer_cache:
+                spec_dir = DATA_DIR / spec_upper
+                _layer_cache[spec_upper] = _load_layer_order(spec_dir)
+            layer_order = _layer_cache[spec_upper]
+            layer_key = layer_order.get(p.stem)
+            layer_str = f"layer{layer_key // 1000}" if layer_key is not None else "layer?"
+            spec = spec_upper.lower()
             name = _extract_function_name_from_json(p)
             skip_mark = " [SKIP]" if args.skip_existing and _has_successful_output(p) else ""
-            print(f"  {idx:>3}. {spec}/{name}{skip_mark}")
+            print(f"  {idx:>3}. [{layer_str}] {spec}/{name}{skip_mark}")
         print(f"\n共 {len(json_files)} 个文件（dry-run 模式，未执行）")
         return
 

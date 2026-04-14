@@ -103,12 +103,12 @@ def extract_keywords(function_data: dict) -> set[str]:
 
     body_text = " ".join(function_data.get("body_raw", [])).lower()
     domain_keywords = [
-        "for", "loop", "array", "byte", "bit", "integer", "mod", "ntt",
+        "array", "byte", "bit", "integer", "mod", "ntt",
         "shake", "hash", "xof", "sequence", "encode", "decode", "sample",
         "multiply", "inverse", "compress", "decompress", "keygen", "encrypt",
         "decrypt", "reduce", "transpose", "split", "join", "take", "drop",
-        "fold", "recur", "permut", "substitut", "round", "schedule",
-        "guardrail", "scope", "template", "update", "tuple", "record",
+        "fold", "recur", "permut", "substitut", "schedule",
+        "guardrail", "template", "update", "tuple", "record",
     ]
     for keyword in domain_keywords:
         if keyword in body_text or keyword in name.lower():
@@ -166,7 +166,7 @@ def extract_error_keywords(compile_error: str) -> set[str]:
 
 
 def score_record(record: dict, keywords: set[str]) -> float:
-    """根据关键词重叠度给 RAG 记录打分。"""
+    """根据关键词重叠度给 RAG 记录打分。使用词边界匹配，减少误命中。"""
     text_parts = []
     for field in [
         "title",
@@ -195,7 +195,11 @@ def score_record(record: dict, keywords: set[str]) -> float:
             text_parts.append(value)
 
     combined = " ".join(text_parts).lower()
-    score = sum(1 for keyword in keywords if keyword in combined)
+    # 使用词边界匹配，避免 "bit" 命中 "bitvector"、"for" 命中 "formula" 等误判
+    score = sum(
+        1 for kw in keywords
+        if re.search(r"\b" + re.escape(kw) + r"\b", combined)
+    )
 
     priority = record.get("priority", "low")
     if priority == "high":

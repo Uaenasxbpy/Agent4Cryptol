@@ -25,3 +25,8 @@ class WorkflowState(TypedDict):
     output_path: str
     repair_history: list[RepairAttempt]
     fix_messages: list[Any]  # 多轮修复对话的消息历史
+    # 消融实验配置：控制各功能组件是否启用
+    # 支持字段：enable_gen_rag, enable_fix_rag, enable_repair_history,
+    #           max_retries, translation_system_prompt, fix_system_prompt,
+    #           rag_top_k_override, experiment_name
+    experiment_config: dict

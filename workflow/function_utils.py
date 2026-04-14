@@ -21,6 +21,7 @@ class FunctionInfo:
         self.json_file_path = Path(json_file_path).resolve() if json_file_path else None
         self.name = self._sanitize_name()
         self.group = self._extract_group()
+        self.experiment_name = self._extract_experiment_name()
 
     def _sanitize_name(self) -> str:
         """从函数名提取合法的文件名。"""
@@ -47,9 +48,19 @@ class FunctionInfo:
                 return part.lower()
         return "misc"
 
+    def _extract_experiment_name(self) -> str:
+        """从原始数据里提取消融实验名；普通运行返回空字符串。"""
+        experiment_name = self.raw_data.get("__experiment_name__", "")
+        if not isinstance(experiment_name, str):
+            return ""
+        sanitized = re.sub(r'[\\/:*?"<>|]', "_", experiment_name.strip())
+        return sanitized
+
     def build_output_path(self, tag: Optional[str] = None) -> Path:
         """根据函数名和标签构造输出路径。"""
         output_dir = settings.CRYPTOL_OUTPUT_DIR / self.group
+        if self.experiment_name:
+            output_dir = output_dir / self.experiment_name
         output_dir.mkdir(parents=True, exist_ok=True)
         if tag:
             return output_dir / f"{self.name}_{tag}.cry"

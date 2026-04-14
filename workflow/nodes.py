@@ -7,6 +7,7 @@ from pathlib import Path
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from workflow.cryptol_compiler import compile_cryptol_code
+from workflow.dependency_resolver import load_dependencies
 from workflow.fix_agent import run_fix_agent
 from workflow.function_utils import FunctionInfo
 from workflow.model import get_model
@@ -14,9 +15,11 @@ from workflow.prompts import (
     TRANSLATION_SYSTEM_PROMPT,
     build_translation_prompt,
     extract_code_block,
+    load_system_prompt,
     summarize_code_changes,
 )
 from workflow.rag import retrieve_rag_context
+from workflow.settings import settings
 from workflow.state import WorkflowState
 
 
@@ -25,7 +28,11 @@ logger = logging.getLogger(__name__)
 
 def _get_function_info(state: WorkflowState) -> FunctionInfo:
     """构造带输入路径上下文的函数信息对象。"""
-    return FunctionInfo(state["function_data"], state["json_file_path"])
+    function_data = dict(state["function_data"])
+    experiment_name = state.get("experiment_config", {}).get("experiment_name", "")
+    if experiment_name:
+        function_data["__experiment_name__"] = experiment_name
+    return FunctionInfo(function_data, state["json_file_path"])
 
 
 def node_load_json(state: WorkflowState) -> dict:
@@ -38,29 +45,59 @@ def node_load_json(state: WorkflowState) -> dict:
 
 
 def node_rag_retrieval(state: WorkflowState) -> dict:
-    """节点 2：根据函数内容检索翻译阶段 RAG 上下文。"""
+    """节点 2：根据函数内容检索翻译阶段 RAG 上下文。
+    若 experiment_config.enable_gen_rag 为 False，跳过检索，返回空上下文。
+    """
+    exp_config = state.get("experiment_config", {})
+    if not exp_config.get("enable_gen_rag", True):
+        logger.info("RAG 检索已禁用（消融实验）：function=%s", state["function_data"].get("name", "?"))
+        return {"rag_context": ""}
+
     function_data = state["function_data"]
     func_info = _get_function_info(state)
     logger.info("开始检索 RAG 上下文：function=%s", func_info.name)
-    context = retrieve_rag_context(function_data)
+
+    top_k_override = exp_config.get("rag_top_k_override", {})
+    context = retrieve_rag_context(
+        function_data,
+        top_k_guardrails=top_k_override.get("guardrails"),
+        top_k_patterns=top_k_override.get("patterns"),
+        top_k_templates=top_k_override.get("templates"),
+        top_k_rules=top_k_override.get("rules"),
+        top_k_examples=top_k_override.get("examples"),
+    )
     logger.info("RAG 检索完成：function=%s context_length=%s", func_info.name, len(context))
     return {"rag_context": context}
 
 
 def node_translate(state: WorkflowState) -> dict:
-    """节点 3：首次调用模型，将 JSON 翻译为 Cryptol。"""
+    """节点 3：首次调用模型，将 JSON 翻译为 Cryptol。
+    系统提示词文件名可由 experiment_config.translation_system_prompt 覆盖。
+    """
     function_data = state["function_data"]
     func_info = _get_function_info(state)
     logger.info("开始首次翻译：function=%s", func_info.name)
 
+    exp_config = state.get("experiment_config", {})
+    system_prompt_file = exp_config.get("translation_system_prompt")
+    system_prompt = load_system_prompt(system_prompt_file) if system_prompt_file else TRANSLATION_SYSTEM_PROMPT
+
     model = get_model()
+    dependency_context = load_dependencies(
+        function_data,
+        state["json_file_path"],
+        experiment_name=exp_config.get("experiment_name", ""),
+    )
+    if dependency_context:
+        logger.info("已加载依赖上下文：function=%s dep_length=%s", func_info.name, len(dependency_context))
     messages = [
-        SystemMessage(content=TRANSLATION_SYSTEM_PROMPT),
+        SystemMessage(content=system_prompt),
         HumanMessage(
             content=build_translation_prompt(
                 function_data,
                 state["rag_context"],
                 state["json_file_path"],
+                dependency_context=dependency_context,
             )
         ),
     ]
@@ -72,14 +109,26 @@ def node_translate(state: WorkflowState) -> dict:
 
 
 def node_compile(state: WorkflowState) -> dict:
-    """节点 4：直接调用本地 Cryptol 编译器编译代码。"""
+    """节点 4：直接调用本地 Cryptol 编译器编译代码。
+    将 spec 输出目录（如 Cryptol/fips203/）加入 CRYPTOLPATH，使依赖模块可被找到。
+    """
     func_info = _get_function_info(state)
     attempt = state.get("retry_count", 0)
     logger.info("开始编译：function=%s attempt=%s", func_info.name, attempt + 1)
 
+    # 依赖搜索路径：spec 专属输出目录（已生成的 .cry 文件所在位置）
+    search_paths = []
+    if func_info.group:
+        dep_dir = settings.CRYPTOL_OUTPUT_DIR / func_info.group
+        if func_info.experiment_name:
+            dep_dir = dep_dir / func_info.experiment_name
+        if dep_dir.exists():
+            search_paths.append(dep_dir)
+
     try:
         success, compile_text, info_text, warning_text, error_text = compile_cryptol_code(
-            cryptol_code=state["cryptol_code"]
+            cryptol_code=state["cryptol_code"],
+            search_paths=search_paths or None,
         )
 
         if success:
@@ -138,6 +187,7 @@ def node_fix(state: WorkflowState) -> dict:
         retry_count=retry_count,
         fix_messages=fix_messages,
         json_file_path=state["json_file_path"],
+        experiment_config=state.get("experiment_config", {}),
     )
 
     updated_history = repair_history + [

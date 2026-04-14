@@ -1,6 +1,7 @@
 """Cryptol编译器模块 - 直接调用本地Cryptol编译器。"""
 
 import logging
+import os
 import re
 import subprocess
 import uuid
@@ -170,8 +171,14 @@ def compile_cryptol_code(
     file_name: Optional[str] = None,
     cryptol_cmd: Optional[str] = None,
     timeout: Optional[int] = None,
+    search_paths: Optional[list] = None,
 ) -> Tuple[bool, str, str, str, str]:
-    """编译 Cryptol 代码，直接调用本地Cryptol编译器。"""
+    """编译 Cryptol 代码，直接调用本地Cryptol编译器。
+
+    Args:
+        search_paths: 额外的模块搜索目录列表（追加到 CRYPTOLPATH）。
+                      用于让 Cryptol 找到依赖模块（如 Cryptol/fips203/）。
+    """
     if not cryptol_code.strip():
         error_text = "Empty Cryptol source: refusing to compile blank output."
         logger.warning("编译输入为空，直接判定失败")
@@ -180,6 +187,14 @@ def compile_cryptol_code(
     cryptol_cmd = cryptol_cmd or settings.CRYPTOL_CMD
     timeout = timeout or settings.COMPILE_TIMEOUT
     temp_filename = get_temp_filename(cryptol_code, module_name, file_name)
+
+    # 构造子进程环境变量：把 search_paths 追加到 CRYPTOLPATH
+    proc_env = os.environ.copy()
+    if search_paths:
+        extra = os.pathsep.join(str(p) for p in search_paths if p)
+        existing = proc_env.get("CRYPTOLPATH", "")
+        proc_env["CRYPTOLPATH"] = f"{extra}{os.pathsep}{existing}" if existing else extra
+        logger.debug("CRYPTOLPATH 已设置：%s", proc_env["CRYPTOLPATH"])
 
     process = None
     try:
@@ -198,6 +213,7 @@ def compile_cryptol_code(
                 stderr=subprocess.STDOUT,
                 text=True,
                 encoding="utf-8",
+                env=proc_env,
             )
 
             try:
